@@ -1,0 +1,423 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  Send,
+  MessageCircle,
+  Calendar,
+  ArrowRight,
+  Globe,
+  Building
+} from "lucide-react";
+
+const contactMethods = [
+  {
+    icon: Building,
+    title: "Headquarters",
+    details: [
+      "AE&SC House",
+      "Victoria Island, Lagos",
+      "Nigeria"
+    ],
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+  },
+  {
+    icon: Phone,
+    title: "Phone",
+    details: [
+      "+234 (0) 901 234 5678",
+      "+234 (0) 901 234 5679",
+      "Available 9am - 5pm WAT"
+    ],
+    color: "text-secondary",
+    bgColor: "bg-secondary/10",
+  },
+  {
+    icon: Mail,
+    title: "Email",
+    details: [
+      "info@aesc-africa.org",
+      "partnerships@aesc-africa.org",
+      "research@aesc-africa.org"
+    ],
+    color: "text-accent",
+    bgColor: "bg-accent/10",
+  },
+  {
+    icon: Globe,
+    title: "Regional Offices",
+    details: [
+      "Accra, Ghana",
+      "Nairobi, Kenya",
+      "Cape Town, South Africa"
+    ],
+    color: "text-earth",
+    bgColor: "bg-earth/10",
+  },
+];
+
+const teamMembers = [
+  {
+    name: "Dr. Daere Akobo",
+    title: "Founder & CEO",
+    email: "daere.akobo@aesc-africa.org",
+    focus: "Strategic Leadership & Policy",
+  },
+  {
+    name: "Sarah Ndombe",
+    title: "Director of Partnerships",
+    email: "sarah.ndombe@aesc-africa.org",
+    focus: "Stakeholder Engagement",
+  },
+  {
+    name: "Prof. James Okello",
+    title: "Head of Research",
+    email: "james.okello@aesc-africa.org",
+    focus: "Sustainability Research",
+  },
+  {
+    name: "Amina Hassan",
+    title: "Program Director",
+    email: "amina.hassan@aesc-africa.org",
+    focus: "Project Implementation",
+  },
+];
+
+const socialLinks = [
+  { name: "LinkedIn", url: "#", icon: "🔗" },
+  { name: "Twitter", url: "#", icon: "🐦" },
+  { name: "Facebook", url: "#", icon: "📘" },
+  { name: "YouTube", url: "#", icon: "📺" },
+];
+
+export default function Contact() {
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-primary african-pattern">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <MessageCircle className="h-16 w-16 mx-auto mb-6 text-accent animate-float" />
+          <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6 animate-fade-in">
+            Get In{" "}
+            <span className="text-accent">
+              Touch
+            </span>
+          </h1>
+          <p className="text-xl leading-relaxed animate-fade-in delay-200">
+            Ready to partner with us or learn more about our work? 
+            We'd love to hear from you.
+          </p>
+        </div>
+      </section>
+
+      {/* Contact Methods */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-heading font-bold text-foreground mb-4">
+              How to Reach Us
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Multiple ways to connect with our team across Africa
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {contactMethods.map((method, index) => {
+              const Icon = method.icon;
+              return (
+                <Card 
+                  key={method.title}
+                  className="text-center hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <CardContent className="p-6">
+                    <div className={`w-16 h-16 ${method.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
+                      <Icon className={`h-8 w-8 ${method.color}`} />
+                    </div>
+                    <h3 className="font-heading font-semibold text-lg mb-4">
+                      {method.title}
+                    </h3>
+                    <div className="space-y-2">
+                      {method.details.map((detail, i) => (
+                        <p key={i} className="text-muted-foreground text-sm">
+                          {detail}
+                        </p>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form and Info */}
+      <section className="py-20 bg-muted/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <div>
+              <h2 className="text-3xl font-heading font-bold text-foreground mb-6">
+                Send Us a Message
+              </h2>
+              <p className="text-muted-foreground mb-8 leading-relaxed">
+                Whether you're interested in partnerships, research collaboration, 
+                or have questions about our initiatives, we're here to help.
+              </p>
+
+              <Card className="border-0 shadow-medium">
+                <CardContent className="p-8">
+                  <form className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">First Name</label>
+                        <Input placeholder="Your first name" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Last Name</label>
+                        <Input placeholder="Your last name" />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Email Address</label>
+                      <Input type="email" placeholder="your.email@example.com" />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Organization</label>
+                      <Input placeholder="Your organization (optional)" />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Subject</label>
+                      <Input placeholder="Brief subject of your message" />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Message</label>
+                      <Textarea 
+                        placeholder="Tell us about your inquiry, partnership interest, or how we can help..."
+                        className="min-h-[150px]"
+                      />
+                    </div>
+
+                    <Button type="submit" variant="hero" size="lg" className="w-full">
+                      Send Message
+                      <Send className="ml-2 h-5 w-5" />
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Team and Additional Info */}
+            <div className="space-y-8">
+              {/* Team Contacts */}
+              <div>
+                <h3 className="text-2xl font-heading font-bold text-foreground mb-6">
+                  Key Contacts
+                </h3>
+                <div className="space-y-4">
+                  {teamMembers.map((member, index) => (
+                    <Card 
+                      key={member.name}
+                      className="hover:shadow-medium transition-all duration-300 border-0 shadow-soft"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                      <CardContent className="p-6">
+                        <h4 className="font-heading font-semibold text-lg mb-1">
+                          {member.name}
+                        </h4>
+                        <p className="text-primary font-medium text-sm mb-2">
+                          {member.title}
+                        </p>
+                        <p className="text-muted-foreground text-sm mb-3">
+                          {member.focus}
+                        </p>
+                        <a 
+                          href={`mailto:${member.email}`} 
+                          className="text-sm text-secondary hover:underline flex items-center gap-1"
+                        >
+                          <Mail className="h-4 w-4" />
+                          {member.email}
+                        </a>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* Office Hours */}
+              <Card className="border-0 shadow-medium">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-primary" />
+                    Office Hours
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Monday - Friday</span>
+                      <span className="font-medium">9:00 AM - 5:00 PM WAT</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Saturday</span>
+                      <span className="font-medium">10:00 AM - 2:00 PM WAT</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Sunday</span>
+                      <span className="text-muted-foreground">Closed</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Quick Actions */}
+              <Card className="border-0 shadow-medium bg-gradient-primary text-white">
+                <CardContent className="p-6">
+                  <h3 className="font-heading font-bold text-xl mb-4">
+                    Quick Actions
+                  </h3>
+                  <div className="space-y-3">
+                    <Button 
+                      variant="outline" 
+                      className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20"
+                      asChild
+                    >
+                      <a href="mailto:partnerships@aesc-africa.org">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        Schedule a Partnership Meeting
+                      </a>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20"
+                      asChild
+                    >
+                      <a href="mailto:research@aesc-africa.org">
+                        <MessageCircle className="mr-2 h-4 w-4" />
+                        Research Collaboration
+                      </a>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20"
+                      asChild
+                    >
+                      <a href="mailto:info@aesc-africa.org">
+                        <Send className="mr-2 h-4 w-4" />
+                        General Inquiry
+                      </a>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Social Media */}
+              <Card className="border-0 shadow-medium">
+                <CardHeader>
+                  <CardTitle>Connect With Us</CardTitle>
+                  <CardDescription>
+                    Follow our journey on social media
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex gap-4">
+                    {socialLinks.map((social) => (
+                      <a
+                        key={social.name}
+                        href={social.url}
+                        className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center text-white hover:scale-110 transition-transform"
+                        title={social.name}
+                      >
+                        <span className="text-lg">{social.icon}</span>
+                      </a>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Map and Location */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-heading font-bold text-foreground mb-4">
+              Visit Our Offices
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              We're located across key African cities to serve you better
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="text-center border-0 shadow-medium">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-heading font-semibold text-lg mb-2">Lagos</h3>
+                <p className="text-muted-foreground text-sm">
+                  Headquarters<br />
+                  Victoria Island
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center border-0 shadow-medium">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="h-6 w-6 text-secondary" />
+                </div>
+                <h3 className="font-heading font-semibold text-lg mb-2">Accra</h3>
+                <p className="text-muted-foreground text-sm">
+                  West Africa Hub<br />
+                  Airport City
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center border-0 shadow-medium">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="font-heading font-semibold text-lg mb-2">Nairobi</h3>
+                <p className="text-muted-foreground text-sm">
+                  East Africa Hub<br />
+                  Westlands
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center border-0 shadow-medium">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-earth/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <MapPin className="h-6 w-6 text-earth" />
+                </div>
+                <h3 className="font-heading font-semibold text-lg mb-2">Cape Town</h3>
+                <p className="text-muted-foreground text-sm">
+                  Southern Africa Hub<br />
+                  V&A Waterfront
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
