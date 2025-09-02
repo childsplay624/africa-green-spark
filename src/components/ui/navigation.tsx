@@ -11,6 +11,7 @@ const navItems = [
   { name: "Strategic Focus", href: "/strategic-focus" },
   { name: "Partnerships", href: "/partnerships" },
   { name: "Resources", href: "/resources" },
+  { name: "Community", href: "/forum" },
   { name: "Contact", href: "/contact" },
 ];
 
