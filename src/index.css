@@ -3,52 +3,52 @@
 @tailwind utilities;
 
 /* African Energy & Sustainability Consortium Design System
-All colors MUST be HSL. African-inspired sustainable design.
+All colors MUST be HSL. Brand-compliant color palette.
 */
 
 @layer base {
   :root {
     /* Core Brand Colors */
     --background: 0 0% 100%;
-    --foreground: 154 12% 15%;
+    --foreground: 166 45% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 154 12% 15%;
+    --card-foreground: 166 45% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 154 12% 15%;
+    --popover-foreground: 166 45% 13%;
 
-    /* Sustainability Green - Primary */
-    --primary: 142 72% 29%;
+    /* Brand Primary - Dark Green */
+    --primary: 166 45% 13%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 142 65% 40%;
-    --primary-dark: 142 80% 20%;
+    --primary-light: 121 83% 35%;
+    --primary-dark: 166 45% 10%;
 
-    /* Energy Blue - Secondary */
-    --secondary: 213 84% 45%;
+    /* Brand Secondary - Bright Green */
+    --secondary: 121 83% 35%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 213 75% 60%;
-    --secondary-dark: 213 90% 35%;
+    --secondary-light: 87 91% 45%;
+    --secondary-dark: 121 83% 25%;
 
-    /* African Earth Tones */
-    --accent: 28 85% 65%;
-    --accent-foreground: 154 12% 15%;
-    --earth: 25 70% 55%;
-    --earth-light: 25 60% 70%;
+    /* Brand Accent - Lime Green */
+    --accent: 87 91% 45%;
+    --accent-foreground: 166 45% 13%;
+    --earth: 65 88% 45%;
+    --earth-light: 65 88% 60%;
 
-    --muted: 45 20% 95%;
-    --muted-foreground: 154 8% 45%;
+    --muted: 192 17% 95%;
+    --muted-foreground: 0 0% 51%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 142 25% 88%;
-    --input: 142 25% 88%;
-    --ring: 142 72% 29%;
+    --border: 195 13% 90%;
+    --input: 195 13% 90%;
+    --ring: 166 45% 13%;
 
     --radius: 0.75rem;
 
-    /* Gradients */
+    /* Brand Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
     --gradient-earth: linear-gradient(135deg, hsl(var(--earth)), hsl(var(--accent)));
     --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
@@ -81,33 +81,33 @@ All colors MUST be HSL. African-inspired sustainable design.
   }
 
   .dark {
-    --background: 154 25% 8%;
+    --background: 166 45% 8%;
     --foreground: 0 0% 95%;
 
-    --card: 154 20% 10%;
+    --card: 166 40% 10%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 154 20% 10%;
+    --popover: 166 40% 10%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 142 65% 45%;
-    --primary-foreground: 154 25% 8%;
+    --primary: 121 83% 45%;
+    --primary-foreground: 166 45% 8%;
 
-    --secondary: 213 75% 55%;
+    --secondary: 87 91% 55%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 154 15% 15%;
+    --muted: 166 25% 15%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 28 80% 60%;
-    --accent-foreground: 154 25% 8%;
+    --accent: 65 88% 50%;
+    --accent-foreground: 166 45% 8%;
 
     --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 154 15% 20%;
-    --input: 154 15% 20%;
-    --ring: 142 65% 45%;
+    --border: 166 25% 20%;
+    --input: 166 25% 20%;
+    --ring: 121 83% 45%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -128,9 +128,11 @@ All colors MUST be HSL. African-inspired sustainable design.
     @apply bg-background text-foreground font-body;
   }
 
-  /* Custom Typography */
-  .font-heading { font-family: 'Outfit', system-ui, sans-serif; }
-  .font-body { font-family: 'Inter', system-ui, sans-serif; }
+  /* Brand Typography */
+  .font-heading { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; }
+  .font-display { font-family: 'Inter', system-ui, sans-serif; font-weight: 900; }
+  .font-body { font-family: 'Inter', system-ui, sans-serif; font-weight: 400; }
+  .font-light { font-family: 'Inter', system-ui, sans-serif; font-weight: 300; }
 
   /* Custom Utilities */
   .bg-gradient-primary { background: var(--gradient-primary); }
