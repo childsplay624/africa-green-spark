@@ -15,6 +15,7 @@ import {
   Globe,
   Factory
 } from "lucide-react";
+import strategicHero from "@/assets/strategic-hero.jpg";
 
 const focusAreas = [
   {
@@ -170,9 +171,12 @@ export default function StrategicFocus() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-hero african-pattern">
+      <section 
+        className="py-20 relative bg-cover bg-center bg-no-repeat african-pattern"
+        style={{ backgroundImage: `linear-gradient(rgba(19, 50, 44, 0.8), rgba(19, 50, 44, 0.8)), url(${strategicHero})` }}
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6 animate-fade-in">
+          <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 animate-fade-in text-white">
             Strategic{" "}
             <span className="text-accent">
               Focus Areas

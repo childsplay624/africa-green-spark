@@ -21,6 +21,7 @@ import {
   Eye,
   Reply
 } from "lucide-react";
+import forumHero from "@/assets/forum-hero.jpg";
 
 // Simulated forum data
 const forumCategories = [
@@ -122,7 +123,10 @@ export default function Forum() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <AnimatedSection animation="fade-in">
-        <section className="py-20 bg-gradient-primary african-pattern">
+        <section 
+          className="py-20 relative bg-cover bg-center bg-no-repeat african-pattern"
+          style={{ backgroundImage: `linear-gradient(rgba(19, 50, 44, 0.8), rgba(19, 50, 44, 0.8)), url(${forumHero})` }}
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
             <h1 className="text-5xl md:text-6xl font-display font-bold mb-6">
               Community{" "}

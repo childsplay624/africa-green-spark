@@ -2,20 +2,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Target, Eye, Award, Users, ArrowRight, Lightbulb } from "lucide-react";
+import aboutHero from "@/assets/about-hero.jpg";
 
 export default function About() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-subtle african-pattern">
+      <section 
+        className="py-20 relative bg-cover bg-center bg-no-repeat african-pattern"
+        style={{ backgroundImage: `linear-gradient(rgba(19, 50, 44, 0.8), rgba(19, 50, 44, 0.8)), url(${aboutHero})` }}
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl md:text-6xl font-heading font-bold text-foreground mb-6 animate-fade-in">
+          <h1 className="text-5xl md:text-6xl font-display font-bold text-white mb-6 animate-fade-in">
             About{" "}
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
+            <span className="text-accent">
               AE&SC
             </span>
           </h1>
-          <p className="text-xl text-muted-foreground leading-relaxed animate-fade-in delay-200">
+          <p className="text-xl text-white/90 leading-relaxed animate-fade-in delay-200">
             Driving Africa's transformation towards a sustainable energy future through 
             innovation, collaboration, and strategic partnerships.
           </p>
