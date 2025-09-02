@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: africa-green-spark.vercel.app
+**URL**: https://africa-green-spark.vercel.app 
 
 ## How can I edit this code?
 
