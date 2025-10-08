@@ -9,9 +9,9 @@ import {
   Instagram,
   Mail,
   Phone,
-  MapPin,
-  Leaf
+  MapPin
 } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   return (
@@ -21,9 +21,11 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="max-w-2xl mx-auto text-center">
             <div className="flex justify-center mb-4">
-              <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center">
-                <Leaf className="h-6 w-6 text-white" />
-              </div>
+              <img 
+                src={logo} 
+                alt="AE&SC Logo" 
+                className="h-16 w-16 object-contain"
+              />
             </div>
             <h3 className="text-2xl font-heading font-bold mb-4">
               Stay Updated on Africa's Energy Transition
@@ -50,10 +52,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Organization Info */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
-                <Leaf className="h-5 w-5 text-white" />
-              </div>
+            <div className="flex items-center gap-3 mb-4">
+              <img 
+                src={logo} 
+                alt="AE&SC Logo" 
+                className="h-10 w-10 object-contain"
+              />
               <span className="font-heading font-bold text-lg">AE&SC</span>
             </div>
             <p className="text-primary-foreground/80 mb-6 leading-relaxed">
