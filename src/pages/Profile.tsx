@@ -153,109 +153,165 @@ export default function Profile() {
   const isTrialActive = profile.payment_status === "trial" && trialDaysRemaining > 0;
 
   return (
-    <div className="min-h-screen bg-background py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-6 mb-6">
-            <Avatar className="w-24 h-24">
-              <AvatarImage src={profile.avatar_url || undefined} />
-              <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
-                {profile.full_name?.split(' ').map(n => n[0]).join('') || profile.email[0].toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-3xl font-display font-bold mb-2">{profile.full_name || "User Profile"}</h1>
-              <p className="text-muted-foreground flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                {profile.email}
-              </p>
-            </div>
-          </div>
+    <div className="min-h-screen bg-muted/30">
+      {/* Hero Banner Section */}
+      <div className="relative h-48 bg-gradient-primary">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLW9wYWNpdHk9Ii4wNSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
+      </div>
 
-          {/* Trial Status */}
-          {isTrialActive && (
-            <Card className="border-accent bg-accent/5">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-accent" />
-                    <div>
-                      <p className="font-semibold">Trial Period Active</p>
-                      <p className="text-sm text-muted-foreground">
-                        {trialDaysRemaining} days remaining
-                      </p>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 pb-12">
+        {/* Profile Card */}
+        <Card className="mb-6 shadow-elegant overflow-hidden">
+          <CardContent className="p-6 md:p-8">
+            <div className="flex flex-col md:flex-row gap-6 items-start">
+              {/* Avatar */}
+              <Avatar className="w-32 h-32 border-4 border-background shadow-lg">
+                <AvatarImage src={profile.avatar_url || undefined} />
+                <AvatarFallback className="text-4xl bg-gradient-primary text-primary-foreground font-bold">
+                  {profile.full_name?.split(' ').map(n => n[0]).join('') || profile.email[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
+              {/* Profile Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                  <div>
+                    <h1 className="text-3xl md:text-4xl font-display font-bold mb-2">
+                      {profile.full_name || "User Profile"}
+                    </h1>
+                    {profile.bio && (
+                      <p className="text-muted-foreground text-lg mb-3">{profile.bio}</p>
+                    )}
+                    <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1.5">
+                        <Mail className="w-4 h-4" />
+                        {profile.email}
+                      </span>
+                      {profile.location && (
+                        <span className="flex items-center gap-1.5">
+                          <MapPin className="w-4 h-4" />
+                          {profile.location}
+                        </span>
+                      )}
+                      {profile.organization && (
+                        <span className="flex items-center gap-1.5">
+                          <Building className="w-4 h-4" />
+                          {profile.organization}
+                        </span>
+                      )}
+                      {profile.website && (
+                        <a 
+                          href={profile.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 hover:text-primary transition-smooth"
+                        >
+                          <Globe className="w-4 h-4" />
+                          Website
+                        </a>
+                      )}
                     </div>
                   </div>
-                  <Button variant="secondary" onClick={() => navigate("/membership")}>
-                    Upgrade Now
-                  </Button>
+
+                  {/* Membership Badge */}
+                  <div className="flex flex-col gap-2">
+                    {profile.payment_status === "active" && (
+                      <Badge variant="secondary" className="w-fit">
+                        <CreditCard className="w-3 h-3 mr-1" />
+                        Premium Member
+                      </Badge>
+                    )}
+                    {isTrialActive && (
+                      <Badge variant="outline" className="w-fit border-accent text-accent">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        Trial: {trialDaysRemaining}d left
+                      </Badge>
+                    )}
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          )}
 
-          {profile.payment_status === "active" && (
-            <Badge variant="secondary" className="mb-4">
-              <CreditCard className="w-3 h-3 mr-1" />
-              Active Membership
-            </Badge>
-          )}
-        </div>
+                {/* Trial Alert */}
+                {isTrialActive && trialDaysRemaining < 7 && (
+                  <div className="flex items-center gap-3 p-4 bg-accent/10 border border-accent/20 rounded-lg">
+                    <Calendar className="w-5 h-5 text-accent flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm">Your trial expires soon!</p>
+                      <p className="text-xs text-muted-foreground">
+                        Upgrade to continue accessing premium features
+                      </p>
+                    </div>
+                    <Button variant="secondary" size="sm" onClick={() => navigate("/membership")}>
+                      Upgrade
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Tabs */}
+        {/* Main Content Tabs */}
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="profile">
+          <TabsList className="w-full justify-start bg-card border border-border mb-6 h-auto p-1">
+            <TabsTrigger value="profile" className="data-[state=active]:bg-background">
               <User className="w-4 h-4 mr-2" />
               Profile
             </TabsTrigger>
-            <TabsTrigger value="notifications">
+            <TabsTrigger value="notifications" className="data-[state=active]:bg-background">
               <Bell className="w-4 h-4 mr-2" />
               Notifications
             </TabsTrigger>
-            <TabsTrigger value="settings">
+            <TabsTrigger value="settings" className="data-[state=active]:bg-background">
               <Settings className="w-4 h-4 mr-2" />
               Settings
             </TabsTrigger>
           </TabsList>
 
-          {/* Profile Tab */}
-          <TabsContent value="profile">
-            <Card>
-              <CardHeader>
-                <CardTitle>Edit Profile</CardTitle>
+          {/* Edit Profile Tab */}
+          <TabsContent value="profile" className="space-y-6">
+            <Card className="shadow-sm">
+              <CardHeader className="border-b">
+                <CardTitle className="text-xl">Edit Profile</CardTitle>
                 <CardDescription>
-                  Update your profile information and let others know more about you
+                  Update your profile information to help others connect with you
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <form onSubmit={handleUpdateProfile} className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="full_name">Full Name</Label>
+                    <Label htmlFor="full_name" className="text-base font-semibold">
+                      Full Name *
+                    </Label>
                     <Input
                       id="full_name"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                      placeholder="Your full name"
+                      placeholder="e.g., John Doe"
+                      className="h-11"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="bio">Bio</Label>
+                    <Label htmlFor="bio" className="text-base font-semibold">
+                      Professional Headline
+                    </Label>
                     <Textarea
                       id="bio"
                       value={formData.bio}
                       onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                      placeholder="Tell us about yourself"
-                      rows={4}
+                      placeholder="e.g., Energy Consultant | Sustainability Advocate | Climate Action Leader"
+                      rows={3}
+                      className="resize-none"
                     />
+                    <p className="text-xs text-muted-foreground">
+                      A brief description of your professional role and interests
+                    </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="location">
-                        <MapPin className="w-4 h-4 inline mr-1" />
+                      <Label htmlFor="location" className="text-base font-semibold">
+                        <MapPin className="w-4 h-4 inline mr-1.5" />
                         Location
                       </Label>
                       <Input
@@ -263,26 +319,28 @@ export default function Profile() {
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                         placeholder="City, Country"
+                        className="h-11"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="organization">
-                        <Building className="w-4 h-4 inline mr-1" />
+                      <Label htmlFor="organization" className="text-base font-semibold">
+                        <Building className="w-4 h-4 inline mr-1.5" />
                         Organization
                       </Label>
                       <Input
                         id="organization"
                         value={formData.organization}
                         onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                        placeholder="Your organization"
+                        placeholder="Your company or institution"
+                        className="h-11"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="website">
-                      <Globe className="w-4 h-4 inline mr-1" />
+                    <Label htmlFor="website" className="text-base font-semibold">
+                      <Globe className="w-4 h-4 inline mr-1.5" />
                       Website
                     </Label>
                     <Input
@@ -291,12 +349,15 @@ export default function Profile() {
                       value={formData.website}
                       onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                       placeholder="https://yourwebsite.com"
+                      className="h-11"
                     />
                   </div>
 
-                  <Button type="submit" disabled={saving} className="w-full md:w-auto">
-                    {saving ? "Saving..." : "Save Changes"}
-                  </Button>
+                  <div className="flex justify-end pt-4 border-t">
+                    <Button type="submit" disabled={saving} size="lg" className="min-w-32">
+                      {saving ? "Saving..." : "Save Changes"}
+                    </Button>
+                  </div>
                 </form>
               </CardContent>
             </Card>
@@ -304,71 +365,128 @@ export default function Profile() {
 
           {/* Notifications Tab */}
           <TabsContent value="notifications">
-            <Card>
-              <CardHeader>
-                <CardTitle>Notification Preferences</CardTitle>
+            <Card className="shadow-sm">
+              <CardHeader className="border-b">
+                <CardTitle className="text-xl">Notification Preferences</CardTitle>
                 <CardDescription>
-                  Manage how you receive notifications from forums and discussions
+                  Manage how you receive updates from forums and discussions
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Notification settings will appear here. Subscribe to forums to receive updates.
-                </p>
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4 p-6 bg-muted/50 rounded-lg border border-border">
+                  <Bell className="w-8 h-8 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium mb-1">Forum Notifications</p>
+                    <p className="text-sm text-muted-foreground">
+                      Subscribe to specific forums to receive notifications about new posts and replies.
+                      Visit the forum page to manage your subscriptions.
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Settings Tab */}
-          <TabsContent value="settings">
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Settings</CardTitle>
+          <TabsContent value="settings" className="space-y-6">
+            {/* Account Status Card */}
+            <Card className="shadow-sm">
+              <CardHeader className="border-b">
+                <CardTitle className="text-xl">Account Status</CardTitle>
                 <CardDescription>
-                  Manage your account preferences and security
+                  View your membership details and trial information
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <h3 className="font-semibold">Trial Information</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Started: {profile.trial_started_at ? new Date(profile.trial_started_at).toLocaleDateString() : "N/A"}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Expires: {profile.trial_expires_at ? new Date(profile.trial_expires_at).toLocaleDateString() : "N/A"}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Status: <Badge variant={isTrialActive ? "secondary" : "outline"}>{profile.payment_status}</Badge>
-                  </p>
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Status</p>
+                      <Badge variant={isTrialActive ? "outline" : "secondary"} className="text-sm">
+                        {profile.payment_status === "active" ? "Premium Member" : "Trial Period"}
+                      </Badge>
+                    </div>
+                    
+                    {profile.trial_started_at && (
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Trial Started</p>
+                        <p className="text-base">
+                          {new Date(profile.trial_started_at).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-3">
+                    {isTrialActive && profile.trial_expires_at && (
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Trial Expires</p>
+                        <p className="text-base">
+                          {new Date(profile.trial_expires_at).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {isTrialActive && trialDaysRemaining < 7 && (
-                  <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-                    <p className="text-sm font-semibold text-destructive">
-                      Your trial is expiring soon!
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Subscribe to a membership plan to continue accessing all features.
-                    </p>
-                    <Button 
-                      variant="destructive" 
-                      className="mt-3"
-                      onClick={() => navigate("/membership")}
-                    >
-                      View Membership Plans
-                    </Button>
+                {isTrialActive && (
+                  <div className="mt-6 p-5 bg-gradient-subtle border border-primary/20 rounded-lg">
+                    <div className="flex items-start gap-4">
+                      <CreditCard className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg mb-2">Unlock Premium Features</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Get unlimited access to all forums, exclusive content, and priority support
+                        </p>
+                        <Button 
+                          onClick={() => navigate("/membership")}
+                          className="w-full md:w-auto"
+                        >
+                          View Membership Plans
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 )}
+              </CardContent>
+            </Card>
 
-                <Button 
-                  variant="outline" 
-                  onClick={async () => {
-                    await supabase.auth.signOut();
-                    navigate("/");
-                  }}
-                >
-                  Sign Out
-                </Button>
+            {/* Account Actions Card */}
+            <Card className="shadow-sm">
+              <CardHeader className="border-b">
+                <CardTitle className="text-xl">Account Actions</CardTitle>
+                <CardDescription>
+                  Manage your account security and preferences
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-smooth">
+                    <div>
+                      <p className="font-medium">Sign Out</p>
+                      <p className="text-sm text-muted-foreground">
+                        End your current session
+                      </p>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      onClick={async () => {
+                        await supabase.auth.signOut();
+                        navigate("/");
+                      }}
+                    >
+                      Sign Out
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
