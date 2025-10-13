@@ -1,6 +1,6 @@
 import { useAdminCheck } from "@/hooks/use-admin-check";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, MessageSquare, CreditCard, Shield, Bell, LayoutDashboard, FileText } from "lucide-react";
+import { Users, MessageSquare, CreditCard, Shield, Bell, LayoutDashboard, FileText, Key } from "lucide-react";
 import { AdminUsers } from "@/components/admin/admin-users";
 import { AdminForums } from "@/components/admin/admin-forums";
 import { AdminPosts } from "@/components/admin/admin-posts";
@@ -10,6 +10,7 @@ import { AdminDashboard } from "@/components/admin/admin-dashboard";
 import { CmsHeroSections } from "@/components/admin/cms-hero-sections";
 import { CmsNewsArticles } from "@/components/admin/cms-news-articles";
 import { CmsImpactStats } from "@/components/admin/cms-impact-stats";
+import { AdminApiKeys } from "@/components/admin/admin-api-keys";
 
 export default function Admin() {
   const { loading } = useAdminCheck();
@@ -67,6 +68,10 @@ export default function Admin() {
               <FileText className="w-4 h-4 mr-2" />
               CMS
             </TabsTrigger>
+            <TabsTrigger value="api-keys" className="data-[state=active]:bg-background">
+              <Key className="w-4 h-4 mr-2" />
+              API Keys
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard">
@@ -97,6 +102,10 @@ export default function Admin() {
             <CmsHeroSections />
             <CmsImpactStats />
             <CmsNewsArticles />
+          </TabsContent>
+
+          <TabsContent value="api-keys">
+            <AdminApiKeys />
           </TabsContent>
         </Tabs>
       </div>

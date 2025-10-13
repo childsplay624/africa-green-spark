@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navigation } from "@/components/ui/navigation";
+import { useForumEmailNotifications } from "@/hooks/use-forum-email-notifications";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Initiatives from "./pages/Initiatives";
@@ -22,33 +23,42 @@ import Footer from "@/components/ui/footer";
 
 const queryClient = new QueryClient();
 
+function AppContent() {
+  // Initialize email notifications hook
+  useForumEmailNotifications();
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/initiatives" element={<Initiatives />} />
+        <Route path="/strategic-focus" element={<StrategicFocus />} />
+        <Route path="/partnerships" element={<Partnerships />} />
+        <Route path="/resources" element={<Resources />} />
+        <Route path="/forum" element={<Forum />} />
+        <Route path="/forum/:postId" element={<ForumDetail />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/membership" element={<Membership />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/admin" element={<Admin />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Footer />
+    </div>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="min-h-screen bg-background">
-          <Navigation />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/initiatives" element={<Initiatives />} />
-            <Route path="/strategic-focus" element={<StrategicFocus />} />
-            <Route path="/partnerships" element={<Partnerships />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/forum" element={<Forum />} />
-            <Route path="/forum/:postId" element={<ForumDetail />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/membership" element={<Membership />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/admin" element={<Admin />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
-        </div>
+        <AppContent />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
