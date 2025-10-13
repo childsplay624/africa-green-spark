@@ -232,7 +232,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-100 pb-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-120 pb-12">
         {/* Profile Card */}
         <Card className="mb-6 shadow-elegant overflow-hidden">
           <CardContent className="p-6 md:p-8">
