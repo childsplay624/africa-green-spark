@@ -60,6 +60,7 @@ export type Database = {
           created_at: string
           email: string
           full_name: string | null
+          header_image_url: string | null
           id: string
           location: string | null
           organization: string | null
@@ -75,6 +76,7 @@ export type Database = {
           created_at?: string
           email: string
           full_name?: string | null
+          header_image_url?: string | null
           id: string
           location?: string | null
           organization?: string | null
@@ -90,6 +92,7 @@ export type Database = {
           created_at?: string
           email?: string
           full_name?: string | null
+          header_image_url?: string | null
           id?: string
           location?: string | null
           organization?: string | null

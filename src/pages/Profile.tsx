@@ -19,7 +19,9 @@ import {
   Calendar, 
   CreditCard,
   Bell,
-  Settings
+  Settings,
+  Camera,
+  Upload
 } from "lucide-react";
 
 interface UserProfile {
@@ -31,6 +33,7 @@ interface UserProfile {
   organization: string | null;
   website: string | null;
   avatar_url: string | null;
+  header_image_url: string | null;
   trial_started_at: string | null;
   trial_expires_at: string | null;
   payment_status: string;
@@ -41,6 +44,7 @@ export default function Profile() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [formData, setFormData] = useState({
     full_name: "",
@@ -130,6 +134,49 @@ export default function Profile() {
     }
   };
 
+  const handleImageUpload = async (file: File, type: 'avatar' | 'header') => {
+    if (!profile) return;
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${profile.id}/${Math.random()}.${fileExt}`;
+      const bucket = type === 'avatar' ? 'avatars' : 'header-images';
+
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(fileName);
+
+      const updateField = type === 'avatar' ? 'avatar_url' : 'header_image_url';
+      const { error: updateError } = await supabase
+        .from('aesc_profiles')
+        .update({ [updateField]: publicUrl })
+        .eq('id', profile.id);
+
+      if (updateError) throw updateError;
+
+      setProfile({ ...profile, [updateField]: publicUrl });
+      toast({
+        title: "Success",
+        description: `${type === 'avatar' ? 'Profile picture' : 'Header image'} updated successfully`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const calculateTrialDaysRemaining = () => {
     if (!profile?.trial_expires_at) return 0;
     const expiryDate = new Date(profile.trial_expires_at);
@@ -155,8 +202,34 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Hero Banner Section */}
-      <div className="relative h-48 bg-gradient-primary">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLW9wYWNpdHk9Ii4wNSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
+      <div className="relative h-48 bg-gradient-primary group">
+        {profile?.header_image_url ? (
+          <img 
+            src={profile.header_image_url} 
+            alt="Header" 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLW9wYWNpdHk9Ii4wNSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
+        )}
+        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Label htmlFor="header-upload" className="cursor-pointer">
+            <div className="bg-background/90 backdrop-blur-sm p-2 rounded-lg shadow-lg hover:bg-background transition-colors">
+              <Upload className="h-5 w-5" />
+            </div>
+            <Input
+              id="header-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleImageUpload(file, 'header');
+              }}
+              disabled={uploading}
+            />
+          </Label>
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 pb-12">
@@ -165,12 +238,30 @@ export default function Profile() {
           <CardContent className="p-6 md:p-8">
             <div className="flex flex-col md:flex-row gap-6 items-start">
               {/* Avatar */}
-              <Avatar className="w-32 h-32 border-4 border-background shadow-lg">
-                <AvatarImage src={profile.avatar_url || undefined} />
-                <AvatarFallback className="text-4xl bg-gradient-primary text-primary-foreground font-bold">
-                  {profile.full_name?.split(' ').map(n => n[0]).join('') || profile.email[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative group">
+                <Avatar className="w-32 h-32 border-4 border-background shadow-lg">
+                  <AvatarImage src={profile.avatar_url || undefined} />
+                  <AvatarFallback className="text-4xl bg-gradient-primary text-primary-foreground font-bold">
+                    {profile.full_name?.split(' ').map(n => n[0]).join('') || profile.email[0].toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <Label htmlFor="avatar-upload" className="absolute bottom-0 right-0 cursor-pointer">
+                  <div className="p-2 bg-primary text-primary-foreground rounded-full shadow-lg hover:bg-primary/90 transition-colors">
+                    <Camera className="h-4 w-4" />
+                  </div>
+                  <Input
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleImageUpload(file, 'avatar');
+                    }}
+                    disabled={uploading}
+                  />
+                </Label>
+              </div>
 
               {/* Profile Info */}
               <div className="flex-1 min-w-0">
