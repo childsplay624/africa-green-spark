@@ -12,6 +12,7 @@ import { CmsNewsArticles } from "@/components/admin/cms-news-articles";
 import { CmsImpactStats } from "@/components/admin/cms-impact-stats";
 import { CmsInitiatives } from "@/components/admin/cms-initiatives";
 import { CmsPartners } from "@/components/admin/cms-partners";
+import { CmsSiteSettings } from "@/components/admin/cms-site-settings";
 import { AdminApiKeys } from "@/components/admin/admin-api-keys";
 
 export default function Admin() {
@@ -70,6 +71,10 @@ export default function Admin() {
               <FileText className="w-4 h-4 mr-2" />
               CMS
             </TabsTrigger>
+            <TabsTrigger value="branding" className="data-[state=active]:bg-background">
+              <Shield className="w-4 h-4 mr-2" />
+              Branding
+            </TabsTrigger>
             <TabsTrigger value="api-keys" className="data-[state=active]:bg-background">
               <Key className="w-4 h-4 mr-2" />
               API Keys
@@ -106,6 +111,10 @@ export default function Admin() {
             <CmsInitiatives />
             <CmsPartners />
             <CmsNewsArticles />
+          </TabsContent>
+
+          <TabsContent value="branding">
+            <CmsSiteSettings />
           </TabsContent>
 
           <TabsContent value="api-keys">

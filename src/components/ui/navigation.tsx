@@ -5,7 +5,6 @@ import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationCenter } from "@/components/notification-center";
 import { supabase } from "@/integrations/supabase/client";
-import logo from "@/assets/logo.png";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -21,10 +20,12 @@ const navItems = [
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [logoUrl, setLogoUrl] = useState("/logo.png");
   const location = useLocation();
 
   useEffect(() => {
     checkAuth();
+    loadLogo();
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
     });
@@ -33,6 +34,22 @@ export function Navigation() {
       authListener.subscription.unsubscribe();
     };
   }, []);
+
+  const loadLogo = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("cms_site_settings")
+        .select("setting_value")
+        .eq("setting_key", "site_logo")
+        .single();
+      
+      if (data?.setting_value) {
+        setLogoUrl(data.setting_value);
+      }
+    } catch (error) {
+      console.error("Error loading logo:", error);
+    }
+  };
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -54,7 +71,7 @@ export function Navigation() {
           <div className="flex-shrink-0 mr-auto">
             <Link to="/" className="flex items-center space-x-3 group">
               <img 
-                src={logo} 
+                src={logoUrl} 
                 alt="AE&SC Logo" 
                 className="h-12 w-12 object-contain transition-transform group-hover:scale-105"
               />
