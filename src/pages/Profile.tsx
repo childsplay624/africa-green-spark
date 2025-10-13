@@ -202,7 +202,7 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Hero Banner Section */}
-      <div className="relative h-64 bg-gradient-primary group">
+      <div className="relative h-[30rem] bg-gradient-primary group">
         {profile?.header_image_url ? (
           <img 
             src={profile.header_image_url} 
