@@ -202,7 +202,7 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Hero Banner Section */}
-      <div className="relative h-48 bg-gradient-primary group">
+      <div className="relative h-64 bg-gradient-primary group">
         {profile?.header_image_url ? (
           <img 
             src={profile.header_image_url} 
@@ -232,7 +232,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 pb-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 pb-12">
         {/* Profile Card */}
         <Card className="mb-6 shadow-elegant overflow-hidden">
           <CardContent className="p-6 md:p-8">
