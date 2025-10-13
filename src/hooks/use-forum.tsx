@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
 
 export interface ForumCategory {
   id: string;
@@ -115,7 +116,17 @@ export function useForum() {
     content: string,
     tags: string[]
   ) => {
+    // Validation schema
+    const postSchema = z.object({
+      title: z.string().trim().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
+      content: z.string().trim().min(1, "Content is required").max(5000, "Content must be less than 5000 characters"),
+      tags: z.array(z.string().max(20)).max(5, "Maximum 5 tags allowed"),
+    });
+
     try {
+      // Validate input
+      const validated = postSchema.parse({ title, content, tags });
+
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast({
@@ -144,9 +155,9 @@ export function useForum() {
       const { error } = await supabase.from("forum_posts").insert({
         forum_id: forum.id,
         author_id: session.user.id,
-        title,
-        content,
-        tags,
+        title: validated.title,
+        content: validated.content,
+        tags: validated.tags,
       });
 
       if (error) throw error;
@@ -159,11 +170,19 @@ export function useForum() {
       await loadPosts();
       return true;
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Failed to create discussion",
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to create discussion",
+          variant: "destructive",
+        });
+      }
       return false;
     }
   };

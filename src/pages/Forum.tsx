@@ -9,8 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { AnimatedSection } from "@/hooks/use-scroll-animation";
 import { useForum } from "@/hooks/use-forum";
+import { useForumLikes } from "@/hooks/use-forum-likes";
 import { NewPostDialog } from "@/components/forum/new-post-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { 
   MessageCircle, 
   ThumbsUp,
@@ -42,6 +44,7 @@ export default function Forum() {
   const [showNewPost, setShowNewPost] = useState(false);
   const [user, setUser] = useState<any>(null);
   const { categories, posts, loading, loadPosts, createPost, incrementViews } = useForum();
+  const { likedPosts, togglePostLike } = useForumLikes(user?.id);
 
   useEffect(() => {
     checkUser();
@@ -72,6 +75,14 @@ export default function Forum() {
   const handlePostClick = (postId: string) => {
     incrementViews(postId);
     navigate(`/forum/${postId}`);
+  };
+
+  const handleLikePost = async (e: React.MouseEvent, postId: string) => {
+    e.stopPropagation();
+    const success = await togglePostLike(postId);
+    if (success) {
+      await loadPosts(selectedCategory);
+    }
   };
 
   const getTimeAgo = (dateString: string) => {
@@ -287,8 +298,13 @@ export default function Forum() {
                               </div>
                               
                               <div className="flex items-center gap-2">
-                                <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
-                                  <ThumbsUp className="w-4 h-4 mr-1" />
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={(e) => handleLikePost(e, discussion.id)}
+                                  className={cn(likedPosts.has(discussion.id) && "text-primary")}
+                                >
+                                  <ThumbsUp className={cn("w-4 h-4 mr-1", likedPosts.has(discussion.id) && "fill-current")} />
                                   {discussion.likes_count}
                                 </Button>
                                 <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>

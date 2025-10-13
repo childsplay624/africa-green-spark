@@ -7,12 +7,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useForumLikes } from "@/hooks/use-forum-likes";
+import { useAdmin } from "@/hooks/use-admin";
+import { z } from "zod";
 import { 
   ThumbsUp, 
   MessageCircle, 
   ArrowLeft,
-  Send
+  Send,
+  Pin,
+  Trash2
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Post {
   id: string;
@@ -23,6 +29,8 @@ interface Post {
   replies_count: number;
   views_count: number;
   created_at: string;
+  is_pinned: boolean | null;
+  author_id: string;
   author: {
     full_name: string | null;
     email: string;
@@ -35,6 +43,7 @@ interface Reply {
   content: string;
   likes_count: number;
   created_at: string;
+  author_id: string;
   author: {
     full_name: string | null;
     email: string;
@@ -52,6 +61,9 @@ export default function ForumDetail() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [user, setUser] = useState<any>(null);
+  
+  const { likedPosts, likedReplies, togglePostLike, toggleReplyLike } = useForumLikes(user?.id);
+  const { canModerate, togglePostPin, deletePost: adminDeletePost, deleteReply: adminDeleteReply } = useAdmin(user?.id);
 
   useEffect(() => {
     checkUser();
@@ -125,14 +137,21 @@ export default function ForumDetail() {
     e.preventDefault();
     if (!user || !postId || !newReply.trim()) return;
 
+    // Validation
+    const replySchema = z.object({
+      content: z.string().trim().min(1, "Reply cannot be empty").max(5000, "Reply must be less than 5000 characters"),
+    });
+
     setSubmitting(true);
     try {
+      const validated = replySchema.parse({ content: newReply });
+
       const { error } = await supabase
         .from("forum_replies")
         .insert({
           post_id: postId,
           author_id: user.id,
-          content: newReply.trim(),
+          content: validated.content,
         });
 
       if (error) throw error;
@@ -146,13 +165,61 @@ export default function ForumDetail() {
       await loadReplies();
       await loadPost();
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to post reply",
+          variant: "destructive",
+        });
+      }
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleLikePost = async () => {
+    if (!post) return;
+    const success = await togglePostLike(post.id);
+    if (success) {
+      await loadPost();
+    }
+  };
+
+  const handleLikeReply = async (replyId: string) => {
+    const success = await toggleReplyLike(replyId);
+    if (success) {
+      await loadReplies();
+    }
+  };
+
+  const handlePinPost = async () => {
+    if (!post) return;
+    const success = await togglePostPin(post.id, post.is_pinned || false);
+    if (success) {
+      await loadPost();
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!post || !confirm("Are you sure you want to delete this post?")) return;
+    const success = await adminDeletePost(post.id);
+    if (success) {
+      navigate("/forum");
+    }
+  };
+
+  const handleDeleteReply = async (replyId: string) => {
+    if (!confirm("Are you sure you want to delete this reply?")) return;
+    const success = await adminDeleteReply(replyId);
+    if (success) {
+      await loadReplies();
+      await loadPost();
     }
   };
 
@@ -201,11 +268,41 @@ export default function ForumDetail() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h1 className="text-2xl font-display font-bold mb-2">{post.title}</h1>
+                <div className="flex items-center gap-2 mb-2">
+                  <h1 className="text-2xl font-display font-bold">{post.title}</h1>
+                  {post.is_pinned && (
+                    <Badge variant="secondary" className="gap-1">
+                      <Pin className="h-3 w-3" />
+                      Pinned
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground">
                   by {post.author.full_name || post.author.email} • {new Date(post.created_at).toLocaleDateString()}
                 </p>
               </div>
+              {canModerate && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePinPost}
+                    className="gap-2"
+                  >
+                    <Pin className={cn("h-4 w-4", post.is_pinned && "fill-current")} />
+                    {post.is_pinned ? "Unpin" : "Pin"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDeletePost}
+                    className="gap-2 text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete
+                  </Button>
+                </div>
+              )}
             </div>
 
             <div className="prose max-w-none mb-6">
@@ -220,12 +317,20 @@ export default function ForumDetail() {
               ))}
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-muted-foreground border-t pt-4">
-              <div className="flex items-center gap-1">
-                <ThumbsUp className="w-4 h-4" />
+            <div className="flex items-center gap-4 text-sm border-t pt-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLikePost}
+                className={cn(
+                  "gap-1",
+                  likedPosts.has(post.id) && "text-primary"
+                )}
+              >
+                <ThumbsUp className={cn("w-4 h-4", likedPosts.has(post.id) && "fill-current")} />
                 <span>{post.likes_count}</span>
-              </div>
-              <div className="flex items-center gap-1">
+              </Button>
+              <div className="flex items-center gap-1 text-muted-foreground">
                 <MessageCircle className="w-4 h-4" />
                 <span>{post.replies_count} replies</span>
               </div>
@@ -259,10 +364,31 @@ export default function ForumDetail() {
                         </span>
                       </div>
                       <p className="text-sm text-foreground mb-2">{reply.content}</p>
-                      <Button variant="ghost" size="sm">
-                        <ThumbsUp className="w-3 h-3 mr-1" />
-                        {reply.likes_count}
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleLikeReply(reply.id)}
+                          className={cn(
+                            "gap-1",
+                            likedReplies.has(reply.id) && "text-primary"
+                          )}
+                        >
+                          <ThumbsUp className={cn("w-3 h-3", likedReplies.has(reply.id) && "fill-current")} />
+                          {reply.likes_count}
+                        </Button>
+                        {canModerate && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteReply(reply.id)}
+                            className="gap-1 text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            Delete
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -283,7 +409,11 @@ export default function ForumDetail() {
                   placeholder="Share your thoughts..."
                   rows={4}
                   className="mb-4"
+                  maxLength={5000}
                 />
+                <p className="text-xs text-muted-foreground mb-4">
+                  {newReply.length}/5000 characters
+                </p>
                 <Button type="submit" disabled={submitting || !newReply.trim()}>
                   <Send className="mr-2 h-4 w-4" />
                   {submitting ? "Posting..." : "Post Reply"}
