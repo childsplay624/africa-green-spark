@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   Leaf, 
   Zap, 
@@ -168,6 +170,23 @@ const agenda2063Aspirations = [
 ];
 
 export default function StrategicFocus() {
+  const [heroData, setHeroData] = useState<any>(null);
+
+  useEffect(() => {
+    loadHeroSection();
+  }, []);
+
+  const loadHeroSection = async () => {
+    const { data } = await supabase
+      .from('cms_hero_sections')
+      .select('*')
+      .eq('page', 'strategic-focus')
+      .eq('is_active', true)
+      .single();
+    
+    if (data) setHeroData(data);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -177,14 +196,10 @@ export default function StrategicFocus() {
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 animate-fade-in text-white">
-            Strategic{" "}
-            <span className="text-accent">
-              Focus Areas
-            </span>
+            {heroData?.title || "Strategic Focus Areas"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            Six pillars driving Africa's comprehensive approach to sustainable development 
-            and energy transformation.
+            {heroData?.subtitle || "Six pillars driving Africa's comprehensive approach to sustainable development and energy transformation."}
           </p>
         </div>
       </section>

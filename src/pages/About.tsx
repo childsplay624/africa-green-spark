@@ -5,6 +5,7 @@ import { Target, Eye, Award, Users, ArrowRight, Lightbulb, Globe, Leaf, BarChart
 import aboutHero from "@/assets/about-hero.jpg";
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { supabase } from "@/integrations/supabase/client";
 
 const AnimatedCard = ({ children, delay = 0 }) => (
   <motion.div
@@ -24,6 +25,22 @@ export default function About() {
     { value: 0, max: 1, label: 'Million Lives Impacted', suffix: 'M+' },
     { value: 0, max: 85, label: 'Success Rate', suffix: '%' }
   ]);
+  const [heroData, setHeroData] = useState<any>(null);
+
+  useEffect(() => {
+    loadHeroSection();
+  }, []);
+
+  const loadHeroSection = async () => {
+    const { data } = await supabase
+      .from('cms_hero_sections')
+      .select('*')
+      .eq('page', 'about')
+      .eq('is_active', true)
+      .single();
+    
+    if (data) setHeroData(data);
+  };
 
   useEffect(() => {
     // Animate stats counting
@@ -65,7 +82,7 @@ export default function About() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            About <span className="text-accent">AE&SC</span>
+            {heroData?.title || "About AE&SC"}
           </motion.h1>
           <motion.p 
             className="text-xl md:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto"
@@ -73,7 +90,7 @@ export default function About() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Powering Africa's sustainable future through innovation and collaboration
+            {heroData?.subtitle || "Powering Africa's sustainable future through innovation and collaboration"}
           </motion.p>
         </div>
       </section>

@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   Lightbulb, 
   Users, 
@@ -98,20 +100,33 @@ const focusAreas = [
 ];
 
 export default function Initiatives() {
+  const [heroData, setHeroData] = useState<any>(null);
+  const [initiatives, setInitiatives] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    const [heroResult, initiativesResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'initiatives').eq('is_active', true).single(),
+      supabase.from('cms_initiatives').select('*').eq('is_active', true).order('display_order')
+    ]);
+    
+    if (heroResult.data) setHeroData(heroResult.data);
+    if (initiativesResult.data) setInitiatives(initiativesResult.data);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-primary african-pattern">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6 animate-fade-in">
-            Our{" "}
-            <span className="text-accent">
-              Key Initiatives
-            </span>
+            {heroData?.title || "Our Key Initiatives"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            Strategic programs driving Africa's energy transition through innovation, 
-            collaboration, and sustainable development.
+            {heroData?.subtitle || "Strategic programs driving Africa's energy transition through innovation, collaboration, and sustainable development."}
           </p>
         </div>
       </section>

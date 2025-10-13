@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   MapPin, 
   Phone, 
@@ -98,6 +100,23 @@ const socialLinks = [
 ];
 
 export default function Contact() {
+  const [heroData, setHeroData] = useState<any>(null);
+
+  useEffect(() => {
+    loadHeroSection();
+  }, []);
+
+  const loadHeroSection = async () => {
+    const { data } = await supabase
+      .from('cms_hero_sections')
+      .select('*')
+      .eq('page', 'contact')
+      .eq('is_active', true)
+      .single();
+    
+    if (data) setHeroData(data);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -108,14 +127,10 @@ export default function Contact() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <MessageCircle className="h-16 w-16 mx-auto mb-6 text-accent animate-float" />
           <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 animate-fade-in text-white">
-            Get In{" "}
-            <span className="text-accent">
-              Touch
-            </span>
+            {heroData?.title || "Get In Touch"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            Ready to partner with us or learn more about our work? 
-            We'd love to hear from you.
+            {heroData?.subtitle || "Ready to partner with us or learn more about our work? We'd love to hear from you."}
           </p>
         </div>
       </section>

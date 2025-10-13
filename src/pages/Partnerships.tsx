@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   Handshake, 
   Building2, 
@@ -132,6 +134,23 @@ const currentPartners = [
 ];
 
 export default function Partnerships() {
+  const [heroData, setHeroData] = useState<any>(null);
+  const [partners, setPartners] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    const [heroResult, partnersResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'partnerships').eq('is_active', true).single(),
+      supabase.from('cms_partners').select('*').eq('is_active', true).order('display_order')
+    ]);
+    
+    if (heroResult.data) setHeroData(heroResult.data);
+    if (partnersResult.data) setPartners(partnersResult.data);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -142,14 +161,10 @@ export default function Partnerships() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <Handshake className="h-16 w-16 mx-auto mb-6 text-accent animate-float" />
           <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 animate-fade-in text-white">
-            Strategic{" "}
-            <span className="text-accent">
-              Partnerships
-            </span>
+            {heroData?.title || "Strategic Partnerships"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            Building collaborative networks that amplify our impact across Africa's 
-            energy and sustainability landscape.
+            {heroData?.subtitle || "Building collaborative networks that amplify our impact across Africa's energy and sustainability landscape."}
           </p>
         </div>
       </section>
@@ -288,22 +303,32 @@ export default function Partnerships() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentPartners.map((partner, index) => (
+            {(partners.length > 0 ? partners : currentPartners).map((partner, index) => (
               <Card 
                 key={partner.name}
                 className="hover:shadow-medium transition-all duration-300 border-0 shadow-soft"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <CardContent className="p-6 text-center">
+                  {partner.logo_url && (
+                    <img src={partner.logo_url} alt={partner.name} className="w-16 h-16 object-contain mx-auto mb-3" />
+                  )}
                   <h3 className="font-heading font-semibold text-lg mb-2">
                     {partner.name}
                   </h3>
                   <Badge variant="secondary" className="mb-2">
-                    {partner.type}
+                    {partner.category || partner.type}
                   </Badge>
-                  <p className="text-sm text-muted-foreground">
-                    Partner since {partner.since}
-                  </p>
+                  {partner.description && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {partner.description}
+                    </p>
+                  )}
+                  {partner.since && (
+                    <p className="text-sm text-muted-foreground">
+                      Partner since {partner.since}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             ))}

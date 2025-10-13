@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   FileText, 
   BookOpen, 
@@ -136,6 +138,23 @@ const upcomingEvents = [
 ];
 
 export default function Resources() {
+  const [heroData, setHeroData] = useState<any>(null);
+  const [articles, setArticles] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    const [heroResult, articlesResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'resources').eq('is_active', true).single(),
+      supabase.from('cms_news_articles').select('*').eq('is_published', true).order('published_date', { ascending: false }).limit(4)
+    ]);
+    
+    if (heroResult.data) setHeroData(heroResult.data);
+    if (articlesResult.data) setArticles(articlesResult.data);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -146,14 +165,10 @@ export default function Resources() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <BookOpen className="h-16 w-16 mx-auto mb-6 text-accent animate-float" />
           <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 animate-fade-in text-white">
-            Resources &{" "}
-            <span className="text-accent">
-              Insights
-            </span>
+            {heroData?.title || "Resources & Insights"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            Access our comprehensive library of research, analysis, and insights 
-            on Africa's energy transition and sustainability journey.
+            {heroData?.subtitle || "Access our comprehensive library of research, analysis, and insights on Africa's energy transition and sustainability journey."}
           </p>
         </div>
       </section>
@@ -299,7 +314,7 @@ export default function Resources() {
               </div>
 
               <div className="space-y-6">
-                {recentNews.map((article, index) => (
+                {(articles.length > 0 ? articles : recentNews).map((article, index) => (
                   <Card 
                     key={article.title}
                     className="hover:shadow-medium transition-all duration-300 border-0 shadow-soft"
@@ -312,12 +327,14 @@ export default function Resources() {
                         </Badge>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Calendar className="h-4 w-4" />
-                          {new Date(article.date).toLocaleDateString()}
+                          {new Date(article.published_date || article.date).toLocaleDateString()}
                         </div>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Clock className="h-4 w-4" />
-                          {article.readTime}
-                        </div>
+                        {article.readTime && (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Clock className="h-4 w-4" />
+                            {article.readTime}
+                          </div>
+                        )}
                       </div>
                       <h3 className="font-heading font-semibold text-lg mb-2 hover:text-primary transition-colors cursor-pointer">
                         {article.title}
