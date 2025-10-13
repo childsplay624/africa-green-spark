@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { NotificationCenter } from "@/components/notification-center";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 
 const navItems = [
@@ -18,7 +20,24 @@ const navItems = [
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    checkAuth();
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+    });
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    setIsAuthenticated(!!session);
+  };
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -73,12 +92,25 @@ export function Navigation() {
 
           {/* Right-aligned Buttons */}
           <div className="hidden md:flex items-center space-x-4 ml-auto">
-            <Button variant="ghost" asChild>
-              <Link to="/auth">Join Us</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/partnerships">Partner With Us</Link>
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <NotificationCenter />
+                <Button variant="ghost" size="icon" asChild>
+                  <Link to="/profile">
+                    <User className="h-5 w-5" />
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link to="/auth">Join Us</Link>
+                </Button>
+                <Button asChild>
+                  <Link to="/partnerships">Partner With Us</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -110,16 +142,27 @@ export function Navigation() {
                 </Link>
               ))}
               <div className="pt-4 space-y-2">
-                <Button variant="outline" className="w-full" asChild>
-                  <Link to="/partnerships" onClick={() => setIsOpen(false)}>
-                    Partner With Us
-                  </Link>
-                </Button>
-                <Button variant="hero" className="w-full" asChild>
-                  <Link to="/auth" onClick={() => setIsOpen(false)}>
-                    Join Us
-                  </Link>
-                </Button>
+                {isAuthenticated ? (
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link to="/profile" onClick={() => setIsOpen(false)}>
+                      <User className="mr-2 h-4 w-4" />
+                      My Profile
+                    </Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link to="/partnerships" onClick={() => setIsOpen(false)}>
+                        Partner With Us
+                      </Link>
+                    </Button>
+                    <Button variant="hero" className="w-full" asChild>
+                      <Link to="/auth" onClick={() => setIsOpen(false)}>
+                        Join Us
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

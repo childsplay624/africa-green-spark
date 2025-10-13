@@ -6,6 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
+import { usePayment } from "@/hooks/use-payment";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { User } from '@supabase/supabase-js';
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -31,10 +39,12 @@ interface UserMembership {
 
 const Membership = () => {
   const navigate = useNavigate();
+  const { initializeFlutterwave, initializePaystack, isProcessing } = usePayment();
   const [user, setUser] = useState<User | null>(null);
   const [plans, setPlans] = useState<MembershipPlan[]>([]);
   const [userMembership, setUserMembership] = useState<UserMembership | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("flutterwave");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -99,26 +109,57 @@ const Membership = () => {
     }
   };
 
-  const handleSubscribe = async (planId: string) => {
+  const handleSubscribe = async (planId: string, planPrice: number) => {
     if (!user) return;
 
-    const { error } = await supabase
-      .from("aesc_user_memberships")
-      .insert({
-        user_id: user.id,
-        plan_id: planId,
-        status: "active",
-      });
+    // Get user profile for email and name
+    const { data: profile } = await supabase
+      .from("aesc_profiles")
+      .select("email, full_name")
+      .eq("id", user.id)
+      .single();
 
-    if (error) {
-      if (error.code === "23505") {
-        toast.error("You already have this membership plan");
-      } else {
-        toast.error("Failed to subscribe to plan");
-      }
+    if (!profile) {
+      toast.error("Profile not found");
+      return;
+    }
+
+    const paymentConfig = {
+      publicKey: "dummy_key", // This would be replaced with actual keys
+      amount: planPrice,
+      currency: "USD",
+      customerEmail: profile.email,
+      customerName: profile.full_name || profile.email,
+      planId: planId,
+    };
+
+    let result;
+    if (selectedPaymentMethod === "flutterwave") {
+      result = await initializeFlutterwave(paymentConfig);
     } else {
-      toast.success("Successfully subscribed to plan!");
-      fetchUserMembership();
+      result = await initializePaystack(paymentConfig);
+    }
+
+    if (result.success) {
+      // Create membership record
+      const { error } = await supabase
+        .from("aesc_user_memberships")
+        .insert({
+          user_id: user.id,
+          plan_id: planId,
+          status: "active",
+        });
+
+      if (error) {
+        if (error.code === "23505") {
+          toast.error("You already have this membership plan");
+        } else {
+          toast.error("Failed to subscribe to plan");
+        }
+      } else {
+        toast.success("Successfully subscribed to plan!");
+        fetchUserMembership();
+      }
     }
   };
 
@@ -133,11 +174,23 @@ const Membership = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+      <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Choose Your Membership Plan</h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-lg mb-6">
             Select the perfect plan for your needs
           </p>
+          
+          <div className="max-w-xs mx-auto">
+            <Select value={selectedPaymentMethod} onValueChange={setSelectedPaymentMethod}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select payment method" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="flutterwave">Flutterwave</SelectItem>
+                <SelectItem value="paystack">Paystack</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -168,11 +221,11 @@ const Membership = () => {
                   </ul>
                   <Button
                     className="w-full"
-                    onClick={() => handleSubscribe(plan.id)}
-                    disabled={isCurrentPlan}
+                    onClick={() => handleSubscribe(plan.id, plan.price)}
+                    disabled={isCurrentPlan || isProcessing}
                     variant={isCurrentPlan ? "outline" : "default"}
                   >
-                    {isCurrentPlan ? "Subscribed" : "Subscribe Now"}
+                    {isProcessing ? "Processing..." : isCurrentPlan ? "Subscribed" : "Subscribe Now"}
                   </Button>
                 </CardContent>
               </Card>

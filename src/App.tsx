@@ -12,8 +12,10 @@ import Partnerships from "./pages/Partnerships";
 import Resources from "./pages/Resources";
 import Contact from "./pages/Contact";
 import Forum from "./pages/Forum";
+import ForumDetail from "./pages/ForumDetail";
 import Auth from "./pages/Auth";
 import Membership from "./pages/Membership";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Footer from "@/components/ui/footer";
 
@@ -35,9 +37,11 @@ const App = () => (
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/forum" element={<Forum />} />
+            <Route path="/forum/:postId" element={<ForumDetail />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/membership" element={<Membership />} />
+            <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
