@@ -171,20 +171,20 @@ const agenda2063Aspirations = [
 
 export default function StrategicFocus() {
   const [heroData, setHeroData] = useState<any>(null);
+  const [pageContent, setPageContent] = useState<any>(null);
 
   useEffect(() => {
-    loadHeroSection();
+    loadData();
   }, []);
 
-  const loadHeroSection = async () => {
-    const { data } = await supabase
-      .from('cms_hero_sections')
-      .select('*')
-      .eq('page', 'strategic-focus')
-      .eq('is_active', true)
-      .single();
+  const loadData = async () => {
+    const [heroResult, contentResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'strategic-focus').eq('is_active', true).maybeSingle(),
+      supabase.from('cms_page_content').select('*').eq('page_slug', 'strategic-focus').eq('is_published', true).maybeSingle()
+    ]);
     
-    if (data) setHeroData(data);
+    if (heroResult.data) setHeroData(heroResult.data);
+    if (contentResult.data) setPageContent(contentResult.data.content);
   };
 
   return (
@@ -199,7 +199,7 @@ export default function StrategicFocus() {
             {heroData?.title || "Strategic Focus Areas"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            {heroData?.subtitle || "Six pillars driving Africa's comprehensive approach to sustainable development and energy transformation."}
+            {heroData?.subtitle || pageContent?.subtitle || "Six pillars driving Africa's comprehensive approach to sustainable development and energy transformation."}
           </p>
         </div>
       </section>
@@ -217,8 +217,15 @@ export default function StrategicFocus() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {focusAreas.map((area, index) => {
-              const Icon = area.icon;
+            {(pageContent?.focusAreas || focusAreas).map((area: any, index: number) => {
+              const iconName = typeof area.icon === 'string' ? area.icon : 'Leaf';
+              let Icon = Leaf;
+              if (iconName === 'Leaf') Icon = Leaf;
+              if (iconName === 'Zap') Icon = Zap;
+              if (iconName === 'Building') Icon = Building;
+              if (iconName === 'Recycle') Icon = Recycle;
+              if (iconName === 'Factory') Icon = Factory;
+              if (iconName === 'Lightbulb') Icon = Lightbulb;
               return (
                 <Card 
                   key={area.title}
@@ -303,7 +310,7 @@ export default function StrategicFocus() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {agenda2063Aspirations.map((aspiration, index) => (
+            {(pageContent?.agenda2063 || agenda2063Aspirations).map((aspiration: any, index: number) => (
               <Card 
                 key={aspiration.number}
                 className="text-center hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft"

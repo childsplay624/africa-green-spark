@@ -140,19 +140,22 @@ const upcomingEvents = [
 export default function Resources() {
   const [heroData, setHeroData] = useState<any>(null);
   const [articles, setArticles] = useState<any[]>([]);
+  const [pageContent, setPageContent] = useState<any>(null);
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = async () => {
-    const [heroResult, articlesResult] = await Promise.all([
-      supabase.from('cms_hero_sections').select('*').eq('page', 'resources').eq('is_active', true).single(),
-      supabase.from('cms_news_articles').select('*').eq('is_published', true).order('published_date', { ascending: false }).limit(4)
+    const [heroResult, articlesResult, contentResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'resources').eq('is_active', true).maybeSingle(),
+      supabase.from('cms_news_articles').select('*').eq('is_published', true).order('published_date', { ascending: false }).limit(4),
+      supabase.from('cms_page_content').select('*').eq('page_slug', 'resources').eq('is_published', true).maybeSingle()
     ]);
     
     if (heroResult.data) setHeroData(heroResult.data);
     if (articlesResult.data) setArticles(articlesResult.data);
+    if (contentResult.data) setPageContent(contentResult.data.content);
   };
 
   return (
@@ -168,7 +171,7 @@ export default function Resources() {
             {heroData?.title || "Resources & Insights"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            {heroData?.subtitle || "Access our comprehensive library of research, analysis, and insights on Africa's energy transition and sustainability journey."}
+            {heroData?.subtitle || pageContent?.subtitle || "Access our comprehensive library of research, analysis, and insights on Africa's energy transition and sustainability journey."}
           </p>
         </div>
       </section>
@@ -186,8 +189,13 @@ export default function Resources() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {resourceCategories.map((category, index) => {
-              const Icon = category.icon;
+            {(pageContent?.resourceCategories || resourceCategories).map((category: any, index: number) => {
+              const iconName = typeof category.icon === 'string' ? category.icon : 'FileText';
+              let Icon = FileText;
+              if (iconName === 'FileText') Icon = FileText;
+              if (iconName === 'BookOpen') Icon = BookOpen;
+              if (iconName === 'Video') Icon = Video;
+              if (iconName === 'TrendingUp') Icon = TrendingUp;
               return (
                 <Card 
                   key={category.title}
@@ -240,7 +248,7 @@ export default function Resources() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {featuredResources.map((resource, index) => (
+            {(pageContent?.featuredResources || featuredResources).map((resource: any, index: number) => (
               <Card 
                 key={resource.title}
                 className="group hover:shadow-strong transition-all duration-300 border-0 shadow-medium"
@@ -363,7 +371,7 @@ export default function Resources() {
               </div>
 
               <div className="space-y-6">
-                {upcomingEvents.map((event, index) => (
+                {(pageContent?.upcomingEvents || upcomingEvents).map((event: any, index: number) => (
                   <Card 
                     key={event.title}
                     className="hover:shadow-medium transition-all duration-300 border-0 shadow-soft"

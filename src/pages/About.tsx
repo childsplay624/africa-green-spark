@@ -26,20 +26,20 @@ export default function About() {
     { value: 0, max: 85, label: 'Success Rate', suffix: '%' }
   ]);
   const [heroData, setHeroData] = useState<any>(null);
+  const [pageContent, setPageContent] = useState<any>(null);
 
   useEffect(() => {
-    loadHeroSection();
+    loadData();
   }, []);
 
-  const loadHeroSection = async () => {
-    const { data } = await supabase
-      .from('cms_hero_sections')
-      .select('*')
-      .eq('page', 'about')
-      .eq('is_active', true)
-      .single();
+  const loadData = async () => {
+    const [heroResult, contentResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'about').eq('is_active', true).maybeSingle(),
+      supabase.from('cms_page_content').select('*').eq('page_slug', 'about').eq('is_published', true).maybeSingle()
+    ]);
     
-    if (data) setHeroData(data);
+    if (heroResult.data) setHeroData(heroResult.data);
+    if (contentResult.data) setPageContent(contentResult.data.content);
   };
 
   useEffect(() => {
@@ -119,39 +119,38 @@ export default function About() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="space-y-6"
-            >
-              <div className="inline-block px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
-                Our Mission
-              </div>
-              <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground">
-                Leading Africa's <span className="text-primary">Green Revolution</span>
-              </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                The African Energy and Sustainability Consortium (AE&SC) is at the forefront of Africa's 
-                transition to sustainable energy. We're a dynamic non-profit organization committed to 
-                driving innovation, fostering collaboration, and delivering impactful solutions across 
-                the continent.
-              </p>
-              <div className="space-y-4 pt-4">
-                {[
-                  { icon: <Globe className="h-6 w-6 text-primary" />, text: 'Pan-African presence in 45+ countries' },
-                  { icon: <Leaf className="h-6 w-6 text-primary" />, text: '100+ renewable energy projects completed' },
-                  { icon: <HeartHandshake className="h-6 w-6 text-primary" />, text: '500+ strategic partnerships' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 mt-1">
-                      {item.icon}
-                    </div>
-                    <p className="text-muted-foreground">{item.text}</p>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="space-y-6"
+          >
+            <div className="inline-block px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+              {pageContent?.introduction?.badge || "Our Mission"}
+            </div>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground">
+              {pageContent?.introduction?.heading || "Leading Africa's Green Revolution"}
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              {pageContent?.introduction?.description || "The African Energy and Sustainability Consortium (AE&SC) is at the forefront of Africa's transition to sustainable energy. We're a dynamic non-profit organization committed to driving innovation, fostering collaboration, and delivering impactful solutions across the continent."}
+            </p>
+            <div className="space-y-4 pt-4">
+              {(pageContent?.introduction?.highlights || [
+                { icon: "Globe", text: 'Pan-African presence in 45+ countries' },
+                { icon: "Leaf", text: '100+ renewable energy projects completed' },
+                { icon: "HeartHandshake", text: '500+ strategic partnerships' },
+              ]).map((item: any, i: number) => (
+                <div key={i} className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 mt-1">
+                    {item.icon === "Globe" && <Globe className="h-6 w-6 text-primary" />}
+                    {item.icon === "Leaf" && <Leaf className="h-6 w-6 text-primary" />}
+                    {item.icon === "HeartHandshake" && <HeartHandshake className="h-6 w-6 text-primary" />}
                   </div>
-                ))}
-              </div>
+                  <p className="text-muted-foreground">{item.text}</p>
+                </div>
+              ))}
+            </div>
               <Button variant="hero" size="lg" className="mt-6" asChild>
                 <Link to="/initiatives">
                   Explore Our Work
@@ -180,11 +179,10 @@ export default function About() {
                     <div className="p-2 bg-white/10 rounded-lg">
                       <Target className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white">Our Vision</h3>
+                    <h3 className="text-2xl font-bold text-white">{pageContent?.vision?.title || "Our Vision"}</h3>
                   </div>
                   <p className="text-white/90">
-                    A prosperous Africa powered by clean, sustainable energy that drives economic growth, 
-                    improves lives, and preserves our environment for future generations.
+                    {pageContent?.vision?.description || "A prosperous Africa powered by clean, sustainable energy that drives economic growth, improves lives, and preserves our environment for future generations."}
                   </p>
                 </div>
               </div>
@@ -202,14 +200,11 @@ export default function About() {
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
                   <Target className="h-6 w-6 text-primary" />
                 </div>
-                <CardTitle className="text-2xl font-heading font-bold">Our Mission</CardTitle>
+                <CardTitle className="text-2xl font-heading font-bold">{pageContent?.mission?.title || "Our Mission"}</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base leading-relaxed">
-                  To accelerate Africa's energy transition by fostering innovation, 
-                  building strategic partnerships, and implementing sustainable solutions 
-                  that address the continent's unique challenges while creating lasting 
-                  economic and environmental benefits for all African communities.
+                  {pageContent?.mission?.description || "To accelerate Africa's energy transition by fostering innovation, building strategic partnerships, and implementing sustainable solutions that address the continent's unique challenges while creating lasting economic and environmental benefits for all African communities."}
                 </CardDescription>
               </CardContent>
             </Card>
@@ -219,14 +214,11 @@ export default function About() {
                 <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mb-4">
                   <Eye className="h-6 w-6 text-secondary" />
                 </div>
-                <CardTitle className="text-2xl font-heading font-bold">Our Vision</CardTitle>
+                <CardTitle className="text-2xl font-heading font-bold">{pageContent?.vision?.title || "Our Vision"}</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base leading-relaxed">
-                  To see Africa emerge as a global leader in sustainable energy and 
-                  environmental stewardship, where every African has access to clean, 
-                  affordable energy that powers economic growth while preserving our 
-                  continent's natural heritage for future generations.
+                  {pageContent?.vision?.description || "To see Africa emerge as a global leader in sustainable energy and environmental stewardship, where every African has access to clean, affordable energy that powers economic growth while preserving our continent's natural heritage for future generations."}
                 </CardDescription>
               </CardContent>
             </Card>
@@ -257,50 +249,55 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
+            {(pageContent?.values || [
               {
-                icon: <Lightbulb className="h-6 w-6" />,
+                icon: "Lightbulb",
                 title: "Innovation",
                 description: "We champion cutting-edge solutions to Africa's energy challenges.",
                 color: "from-blue-500 to-blue-600"
               },
               {
-                icon: <Users className="h-6 w-6" />,
+                icon: "Users",
                 title: "Collaboration",
                 description: "Stronger together through strategic partnerships.",
                 color: "from-green-500 to-green-600"
               },
               {
-                icon: <BarChart2 className="h-6 w-6" />,
+                icon: "BarChart2",
                 title: "Impact",
                 description: "Measurable, sustainable change is our benchmark for success.",
                 color: "from-purple-500 to-purple-600"
               },
               {
-                icon: <Eye className="h-6 w-6" />,
+                icon: "Eye",
                 title: "Transparency",
                 description: "Openness and accountability in all our endeavors.",
                 color: "from-amber-500 to-amber-600"
               },
               {
-                icon: <Award className="h-6 w-6" />,
+                icon: "Award",
                 title: "Excellence",
                 description: "Pursuing the highest standards in every project.",
                 color: "from-rose-500 to-rose-600"
               },
               {
-                icon: <Leaf className="h-6 w-6" />,
+                icon: "Leaf",
                 title: "Sustainability",
                 description: "Solutions that last, for people and the planet.",
                 color: "from-emerald-500 to-emerald-600"
               }
-            ].map((value, index) => (
+            ]).map((value: any, index: number) => (
               <AnimatedCard key={value.title} delay={index * 0.1}>
                 <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
                   <div className={`absolute inset-0 bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                   <CardHeader className="relative">
                     <div className={`h-14 w-14 rounded-xl bg-gradient-to-br ${value.color} flex items-center justify-center text-white mb-4`}>
-                      {value.icon}
+                      {value.icon === "Lightbulb" && <Lightbulb className="h-6 w-6" />}
+                      {value.icon === "Users" && <Users className="h-6 w-6" />}
+                      {value.icon === "BarChart2" && <BarChart2 className="h-6 w-6" />}
+                      {value.icon === "Eye" && <Eye className="h-6 w-6" />}
+                      {value.icon === "Award" && <Award className="h-6 w-6" />}
+                      {value.icon === "Leaf" && <Leaf className="h-6 w-6" />}
                     </div>
                     <CardTitle className="text-2xl font-bold text-foreground">{value.title}</CardTitle>
                   </CardHeader>
@@ -320,16 +317,15 @@ export default function About() {
       <section className="py-16 bg-gradient-primary african-pattern">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <h2 className="text-4xl font-heading font-bold mb-6">
-            Join Our Mission
+            {pageContent?.cta?.title || "Join Our Mission"}
           </h2>
           <p className="text-xl leading-relaxed mb-8 text-white/90">
-            Be part of Africa's sustainable energy transformation. Together, we can build 
-            a cleaner, more prosperous future for all Africans.
+            {pageContent?.cta?.description || "Be part of Africa's sustainable energy transformation. Together, we can build a cleaner, more prosperous future for all Africans."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="cta" size="lg" asChild>
-              <Link to="/partnerships">
-                Become a Partner
+              <Link to={pageContent?.cta?.primaryButton?.link || "/partnerships"}>
+                {pageContent?.cta?.primaryButton?.text || "Become a Partner"}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -339,7 +335,9 @@ export default function About() {
               className="bg-white/10 border-white/30 text-white hover:bg-white/20"
               asChild
             >
-              <Link to="/contact">Get Involved</Link>
+              <Link to={pageContent?.cta?.secondaryButton?.link || "/contact"}>
+                {pageContent?.cta?.secondaryButton?.text || "Get Involved"}
+              </Link>
             </Button>
           </div>
         </div>

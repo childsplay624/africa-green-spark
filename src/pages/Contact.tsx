@@ -101,20 +101,20 @@ const socialLinks = [
 
 export default function Contact() {
   const [heroData, setHeroData] = useState<any>(null);
+  const [pageContent, setPageContent] = useState<any>(null);
 
   useEffect(() => {
-    loadHeroSection();
+    loadData();
   }, []);
 
-  const loadHeroSection = async () => {
-    const { data } = await supabase
-      .from('cms_hero_sections')
-      .select('*')
-      .eq('page', 'contact')
-      .eq('is_active', true)
-      .single();
+  const loadData = async () => {
+    const [heroResult, contentResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'contact').eq('is_active', true).maybeSingle(),
+      supabase.from('cms_page_content').select('*').eq('page_slug', 'contact').eq('is_published', true).maybeSingle()
+    ]);
     
-    if (data) setHeroData(data);
+    if (heroResult.data) setHeroData(heroResult.data);
+    if (contentResult.data) setPageContent(contentResult.data.content);
   };
 
   return (
@@ -130,7 +130,7 @@ export default function Contact() {
             {heroData?.title || "Get In Touch"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            {heroData?.subtitle || "Ready to partner with us or learn more about our work? We'd love to hear from you."}
+            {heroData?.subtitle || pageContent?.subtitle || "Ready to partner with us or learn more about our work? We'd love to hear from you."}
           </p>
         </div>
       </section>
@@ -148,8 +148,13 @@ export default function Contact() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {contactMethods.map((method, index) => {
-              const Icon = method.icon;
+            {(pageContent?.contactMethods || contactMethods).map((method: any, index: number) => {
+              const iconName = typeof method.icon === 'string' ? method.icon : 'Building';
+              let Icon = Building;
+              if (iconName === 'Building') Icon = Building;
+              if (iconName === 'Phone') Icon = Phone;
+              if (iconName === 'Mail') Icon = Mail;
+              if (iconName === 'Globe') Icon = Globe;
               return (
                 <Card 
                   key={method.title}
@@ -246,7 +251,7 @@ export default function Contact() {
                   Key Contacts
                 </h3>
                 <div className="space-y-4">
-                  {teamMembers.map((member, index) => (
+                  {(pageContent?.teamMembers || teamMembers).map((member: any, index: number) => (
                     <Card 
                       key={member.name}
                       className="hover:shadow-medium transition-all duration-300 border-0 shadow-soft"
@@ -287,15 +292,15 @@ export default function Contact() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span>Monday - Friday</span>
-                      <span className="font-medium">9:00 AM - 5:00 PM WAT</span>
+                      <span className="font-medium">{pageContent?.officeHours?.weekdays || "9:00 AM - 5:00 PM WAT"}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Saturday</span>
-                      <span className="font-medium">10:00 AM - 2:00 PM WAT</span>
+                      <span className="font-medium">{pageContent?.officeHours?.saturday || "10:00 AM - 2:00 PM WAT"}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Sunday</span>
-                      <span className="text-muted-foreground">Closed</span>
+                      <span className="text-muted-foreground">{pageContent?.officeHours?.sunday || "Closed"}</span>
                     </div>
                   </div>
                 </CardContent>

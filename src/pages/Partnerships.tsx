@@ -136,19 +136,22 @@ const currentPartners = [
 export default function Partnerships() {
   const [heroData, setHeroData] = useState<any>(null);
   const [partners, setPartners] = useState<any[]>([]);
+  const [pageContent, setPageContent] = useState<any>(null);
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = async () => {
-    const [heroResult, partnersResult] = await Promise.all([
-      supabase.from('cms_hero_sections').select('*').eq('page', 'partnerships').eq('is_active', true).single(),
-      supabase.from('cms_partners').select('*').eq('is_active', true).order('display_order')
+    const [heroResult, partnersResult, contentResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'partnerships').eq('is_active', true).maybeSingle(),
+      supabase.from('cms_partners').select('*').eq('is_active', true).order('display_order'),
+      supabase.from('cms_page_content').select('*').eq('page_slug', 'partnerships').eq('is_published', true).maybeSingle()
     ]);
     
     if (heroResult.data) setHeroData(heroResult.data);
     if (partnersResult.data) setPartners(partnersResult.data);
+    if (contentResult.data) setPageContent(contentResult.data.content);
   };
 
   return (
@@ -164,7 +167,7 @@ export default function Partnerships() {
             {heroData?.title || "Strategic Partnerships"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            {heroData?.subtitle || "Building collaborative networks that amplify our impact across Africa's energy and sustainability landscape."}
+            {heroData?.subtitle || pageContent?.subtitle || "Building collaborative networks that amplify our impact across Africa's energy and sustainability landscape."}
           </p>
         </div>
       </section>
@@ -183,8 +186,13 @@ export default function Partnerships() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {partnershipTypes.map((type, index) => {
-              const Icon = type.icon;
+            {(pageContent?.partnershipTypes || partnershipTypes).map((type: any, index: number) => {
+              const iconName = typeof type.icon === 'string' ? type.icon : 'Building2';
+              let Icon = Building2;
+              if (iconName === 'Building2') Icon = Building2;
+              if (iconName === 'GraduationCap') Icon = GraduationCap;
+              if (iconName === 'Globe') Icon = Globe;
+              if (iconName === 'Users') Icon = Users;
               return (
                 <Card 
                   key={type.title}
@@ -247,8 +255,12 @@ export default function Partnerships() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {partnershipLevels.map((level, index) => {
-              const Icon = level.icon;
+            {(pageContent?.partnershipLevels || partnershipLevels).map((level: any, index: number) => {
+              const iconName = typeof level.icon === 'string' ? level.icon : 'Star';
+              let Icon = Star;
+              if (iconName === 'Star') Icon = Star;
+              if (iconName === 'Target') Icon = Target;
+              if (iconName === 'Handshake') Icon = Handshake;
               return (
                 <Card 
                   key={level.level}
@@ -400,10 +412,10 @@ export default function Partnerships() {
       <section className="py-20 bg-gradient-primary african-pattern">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <h2 className="text-4xl font-heading font-bold mb-6">
-            Let's Transform Africa Together
+            {pageContent?.cta?.title || "Let's Transform Africa Together"}
           </h2>
           <p className="text-xl leading-relaxed mb-8 text-white/90">
-            Partner with us to create lasting impact across Africa's energy and sustainability landscape.
+            {pageContent?.cta?.description || "Partner with us to create lasting impact across Africa's energy and sustainability landscape."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="cta" size="lg" asChild>

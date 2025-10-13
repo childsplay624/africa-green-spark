@@ -102,19 +102,22 @@ const focusAreas = [
 export default function Initiatives() {
   const [heroData, setHeroData] = useState<any>(null);
   const [initiatives, setInitiatives] = useState<any[]>([]);
+  const [pageContent, setPageContent] = useState<any>(null);
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = async () => {
-    const [heroResult, initiativesResult] = await Promise.all([
-      supabase.from('cms_hero_sections').select('*').eq('page', 'initiatives').eq('is_active', true).single(),
-      supabase.from('cms_initiatives').select('*').eq('is_active', true).order('display_order')
+    const [heroResult, initiativesResult, contentResult] = await Promise.all([
+      supabase.from('cms_hero_sections').select('*').eq('page', 'initiatives').eq('is_active', true).maybeSingle(),
+      supabase.from('cms_initiatives').select('*').eq('is_active', true).order('display_order'),
+      supabase.from('cms_page_content').select('*').eq('page_slug', 'initiatives').eq('is_published', true).maybeSingle()
     ]);
     
     if (heroResult.data) setHeroData(heroResult.data);
     if (initiativesResult.data) setInitiatives(initiativesResult.data);
+    if (contentResult.data) setPageContent(contentResult.data.content);
   };
 
   return (
@@ -126,7 +129,7 @@ export default function Initiatives() {
             {heroData?.title || "Our Key Initiatives"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            {heroData?.subtitle || "Strategic programs driving Africa's energy transition through innovation, collaboration, and sustainable development."}
+            {heroData?.subtitle || pageContent?.subtitle || "Strategic programs driving Africa's energy transition through innovation, collaboration, and sustainable development."}
           </p>
         </div>
       </section>
@@ -144,8 +147,14 @@ export default function Initiatives() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {keyInitiatives.map((initiative, index) => {
-              const Icon = initiative.icon;
+            {(pageContent?.keyInitiatives || keyInitiatives).map((initiative: any, index: number) => {
+              const iconName = typeof initiative.icon === 'string' ? initiative.icon : 'Lightbulb';
+              let Icon = Lightbulb;
+              if (iconName === 'Lightbulb') Icon = Lightbulb;
+              if (iconName === 'Zap') Icon = Zap;
+              if (iconName === 'Briefcase') Icon = Briefcase;
+              if (iconName === 'Globe') Icon = Globe;
+              
               return (
                 <Card 
                   key={initiative.title}
@@ -194,7 +203,7 @@ export default function Initiatives() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {focusAreas.map((area, index) => (
+            {(pageContent?.focusAreas || focusAreas).map((area: any, index: number) => (
               <Card 
                 key={area.title}
                 className="text-center hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft"
@@ -230,30 +239,20 @@ export default function Initiatives() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="text-center">
-              <div className="text-4xl font-heading font-bold text-primary mb-2">
-                850MW
+            {(pageContent?.impact?.stats || [
+              {value: "850MW", label: "Clean energy capacity facilitated"},
+              {value: "2.1M", label: "People with improved energy access"},
+              {value: "$750M", label: "Investment mobilized for projects"}
+            ]).map((stat: any, idx: number) => (
+              <div key={idx} className="text-center">
+                <div className={`text-4xl font-heading font-bold mb-2 ${idx === 0 ? 'text-primary' : idx === 1 ? 'text-secondary' : 'text-accent'}`}>
+                  {stat.value}
+                </div>
+                <p className="text-muted-foreground">
+                  {stat.label}
+                </p>
               </div>
-              <p className="text-muted-foreground">
-                Clean energy capacity facilitated
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-heading font-bold text-secondary mb-2">
-                2.1M
-              </div>
-              <p className="text-muted-foreground">
-                People with improved energy access
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-heading font-bold text-accent mb-2">
-                $750M
-              </div>
-              <p className="text-muted-foreground">
-                Investment mobilized for projects
-              </p>
-            </div>
+            ))}
           </div>
 
           <div className="bg-gradient-primary rounded-2xl p-8 text-white">
