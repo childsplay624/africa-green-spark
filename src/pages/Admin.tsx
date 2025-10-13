@@ -10,6 +10,8 @@ import { AdminDashboard } from "@/components/admin/admin-dashboard";
 import { CmsHeroSections } from "@/components/admin/cms-hero-sections";
 import { CmsNewsArticles } from "@/components/admin/cms-news-articles";
 import { CmsImpactStats } from "@/components/admin/cms-impact-stats";
+import { CmsInitiatives } from "@/components/admin/cms-initiatives";
+import { CmsPartners } from "@/components/admin/cms-partners";
 import { AdminApiKeys } from "@/components/admin/admin-api-keys";
 
 export default function Admin() {
@@ -101,6 +103,8 @@ export default function Admin() {
           <TabsContent value="cms" className="space-y-6">
             <CmsHeroSections />
             <CmsImpactStats />
+            <CmsInitiatives />
+            <CmsPartners />
             <CmsNewsArticles />
           </TabsContent>
 

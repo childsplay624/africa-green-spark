@@ -1,11 +1,28 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Play, Lightbulb, Users, Zap } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Counter } from "./ui/counter";
+import { supabase } from "@/integrations/supabase/client";
 
 export function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [heroData, setHeroData] = useState<any>(null);
+
+  useEffect(() => {
+    loadHeroData();
+  }, []);
+
+  const loadHeroData = async () => {
+    const { data } = await supabase
+      .from("cms_hero_sections")
+      .select("*")
+      .eq("page", "home")
+      .eq("is_active", true)
+      .single();
+    
+    if (data) setHeroData(data);
+  };
 
   useEffect(() => {
     const video = videoRef.current;
@@ -91,37 +108,39 @@ export function HeroSection() {
 
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl font-heading font-bold leading-tight mb-6 animate-fade-in delay-200">
-            Let's Build a{" "}
-            <span className="bg-gradient-to-r from-accent to-earth-light bg-clip-text text-transparent">
-              Sustainable Future
-            </span>{" "}
-            Together!
+            {heroData?.title || "Let's Build a Sustainable Future Together!"}
           </h1>
 
-          {/* Vision Statement */}
-          <p className="text-xl md:text-2xl font-light mb-4 text-white/90 animate-fade-in delay-400">
-            To accelerate Africa's Energy transition and Sustainability Journey.
-          </p>
+          {/* Subtitle */}
+          {heroData?.subtitle && (
+            <p className="text-xl md:text-2xl font-light mb-4 text-white/90 animate-fade-in delay-400">
+              {heroData.subtitle}
+            </p>
+          )}
 
-          {/* Description */}
-          <p className="text-lg text-white/80 max-w-3xl mx-auto mb-12 leading-relaxed animate-fade-in delay-600">
-            The African Energy and Sustainability Consortium drives innovation, partnerships, 
-            and strategic initiatives to build a cleaner, more sustainable energy future for Africa.
-          </p>
+          {/* Description - fallback only */}
+          {!heroData?.subtitle && (
+            <p className="text-lg text-white/80 max-w-3xl mx-auto mb-12 leading-relaxed animate-fade-in delay-600">
+              The African Energy and Sustainability Consortium drives innovation, partnerships, 
+              and strategic initiatives to build a cleaner, more sustainable energy future for Africa.
+            </p>
+          )}
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in delay-800">
-            <Button 
-              variant="cta" 
-              size="lg" 
-              className="text-lg px-8 py-4 min-w-[200px]" 
-              asChild
-            >
-              <Link to="/auth">
-                Join Us Today
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            {heroData?.cta_text && heroData?.cta_link && (
+              <Button 
+                variant="cta" 
+                size="lg" 
+                className="text-lg px-8 py-4 min-w-[200px]" 
+                asChild
+              >
+                <Link to={heroData.cta_link}>
+                  {heroData.cta_text}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            )}
             
             <Button 
               variant="outline" 

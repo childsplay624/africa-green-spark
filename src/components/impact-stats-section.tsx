@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { TrendingUp, Zap, Users, Globe, Target, ArrowRight } from "lucide-react";
 import { Counter } from "./ui/counter";
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const stats = [
   {
@@ -85,6 +86,31 @@ const AnimatedProgress = ({ value, className = "" }: { value: number; className?
 };
 
 export function ImpactStatsSection() {
+  const [stats, setStats] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const loadStats = async () => {
+    const { data } = await supabase
+      .from("cms_impact_stats")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+    
+    if (data) setStats(data);
+  };
+
+  const getIconComponent = (iconName?: string) => {
+    const iconMap: Record<string, any> = {
+      Zap, Users, Globe, Target, TrendingUp
+    };
+    return iconMap[iconName || "Target"] || Target;
+  };
+
+  if (stats.length === 0) return null;
+
   return (
     <section className="relative py-20 overflow-hidden">
       {/* Background Image with Parallax */}
@@ -129,10 +155,10 @@ export function ImpactStatsSection() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {stats.map((stat, index) => {
-            const Icon = stat.icon;
+            const Icon = getIconComponent(stat.icon);
             return (
               <Card 
-                key={stat.label}
+                key={stat.id}
                 className="group hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft text-center bg-white/80 backdrop-blur-sm"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
@@ -140,15 +166,12 @@ export function ImpactStatsSection() {
                   <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                     <Icon className="h-8 w-8 text-white" />
                   </div>
-                  <div className={`text-3xl md:text-4xl font-heading font-bold ${stat.color} mb-2`}>
-                    <Counter value={stat.value} suffix={stat.suffix} />
+                  <div className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2">
+                    {stat.value}
                   </div>
                   <h3 className="font-heading font-semibold text-lg mb-2">
                     {stat.label}
                   </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {stat.description}
-                  </p>
                 </CardContent>
               </Card>
             );

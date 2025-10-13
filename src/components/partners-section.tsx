@@ -2,64 +2,36 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Building2, GraduationCap, Globe, Users, ArrowRight } from "lucide-react";
-
-const partnerCategories = [
-  {
-    icon: Building2,
-    title: "Government & Public Sector",
-    description: "Collaborating with national governments and international bodies",
-    count: "25+ Partners",
-    color: "text-primary",
-    bgColor: "bg-primary/10",
-  },
-  {
-    icon: GraduationCap,
-    title: "Academic Institutions",
-    description: "Research partnerships with leading African universities",
-    count: "18+ Universities",
-    color: "text-secondary",
-    bgColor: "bg-secondary/10",
-  },
-  {
-    icon: Globe,
-    title: "International Organizations",
-    description: "Strategic alliances with global development agencies",
-    count: "12+ Organizations",
-    color: "text-accent",
-    bgColor: "bg-accent/10",
-  },
-  {
-    icon: Users,
-    title: "Private Sector & NGOs",
-    description: "Innovation partnerships with industry leaders and civil society",
-    count: "30+ Partners",
-    color: "text-earth",
-    bgColor: "bg-earth/10",
-  },
-];
-
-const testimonials = [
-  {
-    quote: "AE&SC's strategic approach to energy transition has been instrumental in shaping our national renewable energy policy.",
-    author: "Dr. Amina Hassan",
-    title: "Minister of Energy, Ghana",
-    organization: "Government of Ghana",
-  },
-  {
-    quote: "The consortium's research on circular economy models has provided actionable insights for our sustainability initiatives.",
-    author: "Prof. James Okello",
-    title: "Director of Sustainability",
-    organization: "University of Nairobi",
-  },
-  {
-    quote: "Our partnership with AE&SC has accelerated our clean energy investments across the continent.",
-    author: "Sarah Ndombe",
-    title: "Regional Director",
-    organization: "African Development Bank",
-  },
-];
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import React from "react";
 
 export function PartnersSection() {
+  const [partners, setPartners] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadPartners();
+  }, []);
+
+  const loadPartners = async () => {
+    const { data } = await supabase
+      .from("cms_partners")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+    
+    if (data) setPartners(data);
+  };
+
+  const getIconComponent = (iconName?: string) => {
+    const iconMap: Record<string, any> = {
+      Building2, GraduationCap, Globe, Users
+    };
+    return iconMap[iconName || "Users"] || Users;
+  };
+
+  if (partners.length === 0) return null;
+
   return (
     <section className="py-20 bg-muted/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,67 +49,44 @@ export function PartnersSection() {
           </p>
         </div>
 
-        {/* Partner Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {partnerCategories.map((category, index) => {
-            const Icon = category.icon;
-            return (
-              <Card 
-                key={category.title}
-                className="group hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft text-center"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <CardContent className="p-6">
-                  <div className={`w-16 h-16 ${category.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                    <Icon className={`h-8 w-8 ${category.color}`} />
+        {/* Partners Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-16">
+          {partners.map((partner, index) => (
+            <Card 
+              key={partner.id}
+              className="group hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft text-center"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <CardContent className="p-6">
+                {partner.logo_url ? (
+                  <div className="w-24 h-24 mx-auto mb-4 flex items-center justify-center">
+                    <img 
+                      src={partner.logo_url} 
+                      alt={partner.name}
+                      className="max-w-full max-h-full object-contain"
+                    />
                   </div>
-                  <h3 className="font-heading font-semibold text-lg mb-2">
-                    {category.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm mb-3 leading-relaxed">
-                    {category.description}
+                ) : (
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    {React.createElement(getIconComponent(partner.category), { className: "h-8 w-8 text-primary" })}
+                  </div>
+                )}
+                <h3 className="font-heading font-semibold text-lg mb-2">
+                  {partner.name}
+                </h3>
+                {partner.description && (
+                  <p className="text-muted-foreground text-sm mb-3 leading-relaxed line-clamp-2">
+                    {partner.description}
                   </p>
-                  <div className={`text-sm font-medium ${category.color}`}>
-                    {category.count}
+                )}
+                {partner.category && (
+                  <div className="text-xs text-primary font-medium">
+                    {partner.category}
                   </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        {/* Testimonials */}
-        <div className="mb-16">
-          <h3 className="text-3xl font-heading font-bold text-center text-foreground mb-12">
-            What Our Partners Say
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card 
-                key={testimonial.author}
-                className="border-0 shadow-medium bg-white hover:shadow-strong transition-shadow"
-                style={{ animationDelay: `${index * 200}ms` }}
-              >
-                <CardContent className="p-6">
-                  <blockquote className="text-muted-foreground leading-relaxed mb-6 italic">
-                    "{testimonial.quote}"
-                  </blockquote>
-                  <div>
-                    <div className="font-heading font-semibold text-foreground">
-                      {testimonial.author}
-                    </div>
-                    <div className="text-sm text-primary font-medium">
-                      {testimonial.title}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {testimonial.organization}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* CTA */}
