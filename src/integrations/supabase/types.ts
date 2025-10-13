@@ -678,6 +678,39 @@ export type Database = {
           },
         ]
       }
+      payment_audit_log: {
+        Row: {
+          changed_by: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          new_status: string
+          old_status: string | null
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          changed_by: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_status: string
+          old_status?: string | null
+          reason: string
+          user_id: string
+        }
+        Update: {
+          changed_by?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_status?: string
+          old_status?: string | null
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       payment_records: {
         Row: {
           amount: number

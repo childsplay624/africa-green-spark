@@ -26,29 +26,24 @@ export function usePayment() {
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Record payment in database
+      // Verify the user is authenticated
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) throw new Error("User not authenticated");
 
-      const { error } = await supabase
-        .from("payment_records")
-        .insert({
-          user_id: session.user.id,
+      // Call secure edge function to verify and record payment
+      // This prevents users from forging payment records in the browser console
+      const { data, error } = await supabase.functions.invoke('verify-payment', {
+        body: {
+          paymentMethod: 'flutterwave',
+          transactionReference: paymentReference,
+          planId: config.planId,
           amount: config.amount,
-          currency: config.currency,
-          payment_method: "flutterwave",
-          transaction_reference: paymentReference,
-          status: "completed",
-          metadata: { plan_id: config.planId }
-        });
+          currency: config.currency
+        }
+      });
 
       if (error) throw error;
-
-      // Update user profile payment status
-      await supabase
-        .from("aesc_profiles")
-        .update({ payment_status: "active" })
-        .eq("id", session.user.id);
+      if (!data.success) throw new Error(data.error || 'Payment verification failed');
 
       toast({
         title: "Payment Successful",
@@ -79,29 +74,24 @@ export function usePayment() {
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Record payment in database
+      // Verify the user is authenticated
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) throw new Error("User not authenticated");
 
-      const { error } = await supabase
-        .from("payment_records")
-        .insert({
-          user_id: session.user.id,
+      // Call secure edge function to verify and record payment
+      // This prevents users from forging payment records in the browser console
+      const { data, error } = await supabase.functions.invoke('verify-payment', {
+        body: {
+          paymentMethod: 'paystack',
+          transactionReference: paymentReference,
+          planId: config.planId,
           amount: config.amount,
-          currency: config.currency,
-          payment_method: "paystack",
-          transaction_reference: paymentReference,
-          status: "completed",
-          metadata: { plan_id: config.planId }
-        });
+          currency: config.currency
+        }
+      });
 
       if (error) throw error;
-
-      // Update user profile payment status
-      await supabase
-        .from("aesc_profiles")
-        .update({ payment_status: "active" })
-        .eq("id", session.user.id);
+      if (!data.success) throw new Error(data.error || 'Payment verification failed');
 
       toast({
         title: "Payment Successful",
