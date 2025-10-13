@@ -1,12 +1,15 @@
 import { useAdminCheck } from "@/hooks/use-admin-check";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, MessageSquare, CreditCard, Shield, Bell, LayoutDashboard } from "lucide-react";
+import { Users, MessageSquare, CreditCard, Shield, Bell, LayoutDashboard, FileText } from "lucide-react";
 import { AdminUsers } from "@/components/admin/admin-users";
 import { AdminForums } from "@/components/admin/admin-forums";
 import { AdminPosts } from "@/components/admin/admin-posts";
 import { AdminMemberships } from "@/components/admin/admin-memberships";
 import { AdminNotifications } from "@/components/admin/admin-notifications";
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
+import { CmsHeroSections } from "@/components/admin/cms-hero-sections";
+import { CmsNewsArticles } from "@/components/admin/cms-news-articles";
+import { CmsImpactStats } from "@/components/admin/cms-impact-stats";
 
 export default function Admin() {
   const { loading } = useAdminCheck();
@@ -60,6 +63,10 @@ export default function Admin() {
               <Bell className="w-4 h-4 mr-2" />
               Notifications
             </TabsTrigger>
+            <TabsTrigger value="cms" className="data-[state=active]:bg-background">
+              <FileText className="w-4 h-4 mr-2" />
+              CMS
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard">
@@ -84,6 +91,12 @@ export default function Admin() {
 
           <TabsContent value="notifications">
             <AdminNotifications />
+          </TabsContent>
+
+          <TabsContent value="cms" className="space-y-6">
+            <CmsHeroSections />
+            <CmsImpactStats />
+            <CmsNewsArticles />
           </TabsContent>
         </Tabs>
       </div>
