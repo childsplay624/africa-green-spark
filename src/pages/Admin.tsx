@@ -13,6 +13,7 @@ import { CmsImpactStats } from "@/components/admin/cms-impact-stats";
 import { CmsInitiatives } from "@/components/admin/cms-initiatives";
 import { CmsPartners } from "@/components/admin/cms-partners";
 import { CmsSiteSettings } from "@/components/admin/cms-site-settings";
+import { CmsPageContent } from "@/components/admin/cms-page-content";
 import { AdminApiKeys } from "@/components/admin/admin-api-keys";
 
 export default function Admin() {
@@ -67,6 +68,10 @@ export default function Admin() {
               <Bell className="w-4 h-4 mr-2" />
               Notifications
             </TabsTrigger>
+            <TabsTrigger value="pages" className="data-[state=active]:bg-background">
+              <FileText className="w-4 h-4 mr-2" />
+              Pages
+            </TabsTrigger>
             <TabsTrigger value="cms" className="data-[state=active]:bg-background">
               <FileText className="w-4 h-4 mr-2" />
               CMS
@@ -103,6 +108,10 @@ export default function Admin() {
 
           <TabsContent value="notifications">
             <AdminNotifications />
+          </TabsContent>
+
+          <TabsContent value="pages">
+            <CmsPageContent />
           </TabsContent>
 
           <TabsContent value="cms" className="space-y-6">
