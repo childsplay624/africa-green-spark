@@ -117,7 +117,7 @@ export function HeroSection() {
               className="text-lg px-8 py-4 min-w-[200px]" 
               asChild
             >
-              <Link to="/contact">
+              <Link to="/auth">
                 Join Us Today
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>

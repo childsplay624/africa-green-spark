@@ -74,7 +74,7 @@ export function Navigation() {
           {/* Right-aligned Buttons */}
           <div className="hidden md:flex items-center space-x-4 ml-auto">
             <Button variant="ghost" asChild>
-              <Link to="/contact">Join Us</Link>
+              <Link to="/auth">Join Us</Link>
             </Button>
             <Button asChild>
               <Link to="/partnerships">Partner With Us</Link>
@@ -116,7 +116,7 @@ export function Navigation() {
                   </Link>
                 </Button>
                 <Button variant="hero" className="w-full" asChild>
-                  <Link to="/contact" onClick={() => setIsOpen(false)}>
+                  <Link to="/auth" onClick={() => setIsOpen(false)}>
                     Join Us
                   </Link>
                 </Button>
