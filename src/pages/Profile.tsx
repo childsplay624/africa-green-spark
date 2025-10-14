@@ -811,7 +811,7 @@ export default function Profile() {
           {/* Right Column - Sidebar */}
           <div className="lg:col-span-1 space-y-6 mt-24 lg:mt-0">
             {/* Profile Strength Card */}
-            <Card className="shadow-sm border-2 mt-12">
+            <Card className="shadow-sm border-2 mt-20">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Eye className="w-5 h-5" />
