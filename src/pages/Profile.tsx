@@ -168,14 +168,42 @@ export default function Profile() {
 
   const loadActivities = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // Fetch user activities
+      const { data: userActivities, error: activitiesError } = await supabase
         .from("user_activities")
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      setActivities(data || []);
+      if (activitiesError) throw activitiesError;
+
+      // Fetch forum posts
+      const { data: forumPosts, error: postsError } = await supabase
+        .from("forum_posts")
+        .select("id, title, content, created_at, forum_id")
+        .eq("author_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (postsError) throw postsError;
+
+      // Transform forum posts to activity format
+      const forumActivities: UserActivity[] = (forumPosts || []).map(post => ({
+        id: post.id,
+        user_id: userId,
+        type: "forum_post",
+        title: post.title,
+        description: post.content.substring(0, 150) + (post.content.length > 150 ? "..." : ""),
+        link: `/forum/${post.forum_id}/${post.id}`,
+        created_at: post.created_at,
+        metadata: {}
+      }));
+
+      // Combine and sort all activities
+      const allActivities = [...(userActivities || []), ...forumActivities].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+
+      setActivities(allActivities);
     } catch (error: any) {
       console.error("Error loading activities:", error);
     }
