@@ -21,7 +21,12 @@ import {
   Bell,
   Settings,
   Camera,
-  Upload
+  Upload,
+  Briefcase,
+  Award,
+  TrendingUp,
+  Edit2,
+  Eye
 } from "lucide-react";
 
 interface UserProfile {
@@ -199,10 +204,24 @@ export default function Profile() {
   const trialDaysRemaining = calculateTrialDaysRemaining();
   const isTrialActive = profile.payment_status === "trial" && trialDaysRemaining > 0;
 
+  // Calculate profile completeness
+  const calculateProfileCompletion = () => {
+    let score = 0;
+    if (profile.full_name) score += 20;
+    if (profile.bio) score += 20;
+    if (profile.location) score += 15;
+    if (profile.organization) score += 15;
+    if (profile.website) score += 15;
+    if (profile.avatar_url) score += 15;
+    return score;
+  };
+
+  const profileCompletion = calculateProfileCompletion();
+
   return (
     <div className="min-h-screen bg-muted/30">
-      {/* Hero Banner Section */}
-      <div className="relative h-[30rem] bg-gradient-primary group">
+      {/* Hero Banner Section - LinkedIn Style */}
+      <div className="relative h-48 md:h-64 bg-gradient-primary group">
         {profile?.header_image_url ? (
           <img 
             src={profile.header_image_url} 
@@ -215,7 +234,7 @@ export default function Profile() {
         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
           <Label htmlFor="header-upload" className="cursor-pointer">
             <div className="bg-background/90 backdrop-blur-sm p-2 rounded-lg shadow-lg hover:bg-background transition-colors">
-              <Upload className="h-5 w-5" />
+              <Camera className="h-4 w-4" />
             </div>
             <Input
               id="header-upload"
@@ -232,137 +251,165 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-120 pb-12">
-        {/* Profile Card */}
-        <Card className="mb-6 shadow-elegant overflow-hidden">
-          <CardContent className="p-6 md:p-8">
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              {/* Avatar */}
-              <div className="relative group">
-                <Avatar className="w-32 h-32 border-4 border-background shadow-lg">
-                  <AvatarImage src={profile.avatar_url || undefined} />
-                  <AvatarFallback className="text-4xl bg-gradient-primary text-primary-foreground font-bold">
-                    {profile.full_name?.split(' ').map(n => n[0]).join('') || profile.email[0].toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <Label htmlFor="avatar-upload" className="absolute bottom-0 right-0 cursor-pointer">
-                  <div className="p-2 bg-primary text-primary-foreground rounded-full shadow-lg hover:bg-primary/90 transition-colors">
-                    <Camera className="h-4 w-4" />
+      {/* Main Container with Two Column Layout */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Main Profile */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Profile Header Card */}
+            <Card className="shadow-lg overflow-visible">
+              <CardContent className="p-6 md:p-8 pb-6">
+                <div className="flex flex-col sm:flex-row gap-6 items-start relative">
+                  {/* Avatar - Overlapping Header */}
+                  <div className="relative -mt-20 group">
+                    <Avatar className="w-40 h-40 border-4 border-background shadow-xl">
+                      <AvatarImage src={profile.avatar_url || undefined} />
+                      <AvatarFallback className="text-5xl bg-gradient-primary text-primary-foreground font-bold">
+                        {profile.full_name?.split(' ').map(n => n[0]).join('') || profile.email[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <Label htmlFor="avatar-upload" className="absolute bottom-2 right-2 cursor-pointer">
+                      <div className="p-2.5 bg-primary text-primary-foreground rounded-full shadow-lg hover:bg-primary/90 transition-colors">
+                        <Camera className="h-5 w-5" />
+                      </div>
+                      <Input
+                        id="avatar-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleImageUpload(file, 'avatar');
+                        }}
+                        disabled={uploading}
+                      />
+                    </Label>
                   </div>
-                  <Input
-                    id="avatar-upload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleImageUpload(file, 'avatar');
-                    }}
-                    disabled={uploading}
-                  />
-                </Label>
-              </div>
 
-              {/* Profile Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-display font-bold mb-2">
-                      {profile.full_name || "User Profile"}
-                    </h1>
-                    {profile.bio && (
-                      <p className="text-muted-foreground text-lg mb-3">{profile.bio}</p>
-                    )}
-                    <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1.5">
-                        <Mail className="w-4 h-4" />
-                        {profile.email}
-                      </span>
-                      {profile.location && (
-                        <span className="flex items-center gap-1.5">
-                          <MapPin className="w-4 h-4" />
-                          {profile.location}
-                        </span>
+                  {/* Profile Info */}
+                  <div className="flex-1 min-w-0 sm:mt-12">
+                    <div className="mb-4">
+                      <h1 className="text-3xl md:text-4xl font-display font-bold mb-2">
+                        {profile.full_name || "User Profile"}
+                      </h1>
+                      {profile.bio && (
+                        <p className="text-lg text-foreground/80 mb-2 font-medium">{profile.bio}</p>
                       )}
-                      {profile.organization && (
-                        <span className="flex items-center gap-1.5">
-                          <Building className="w-4 h-4" />
-                          {profile.organization}
-                        </span>
+                      <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                        {profile.organization && (
+                          <span className="flex items-center gap-1.5">
+                            <Building className="w-4 h-4" />
+                            {profile.organization}
+                          </span>
+                        )}
+                        {profile.location && (
+                          <span className="flex items-center gap-1.5">
+                            <MapPin className="w-4 h-4" />
+                            {profile.location}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {profile.payment_status === "active" && (
+                        <Badge variant="secondary">
+                          <Award className="w-3 h-3 mr-1" />
+                          Premium Member
+                        </Badge>
                       )}
-                      {profile.website && (
-                        <a 
-                          href={profile.website} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 hover:text-primary transition-smooth"
-                        >
-                          <Globe className="w-4 h-4" />
-                          Website
-                        </a>
+                      {isTrialActive && (
+                        <Badge variant="outline" className="border-accent text-accent">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {trialDaysRemaining} days trial
+                        </Badge>
                       )}
                     </div>
-                  </div>
-
-                  {/* Membership Badge */}
-                  <div className="flex flex-col gap-2">
-                    {profile.payment_status === "active" && (
-                      <Badge variant="secondary" className="w-fit">
-                        <CreditCard className="w-3 h-3 mr-1" />
-                        Premium Member
-                      </Badge>
-                    )}
-                    {isTrialActive && (
-                      <Badge variant="outline" className="w-fit border-accent text-accent">
-                        <Calendar className="w-3 h-3 mr-1" />
-                        Trial: {trialDaysRemaining}d left
-                      </Badge>
-                    )}
                   </div>
                 </div>
+              </CardContent>
+            </Card>
 
-                {/* Trial Alert */}
-                {isTrialActive && trialDaysRemaining < 7 && (
-                  <div className="flex items-center gap-3 p-4 bg-accent/10 border border-accent/20 rounded-lg">
-                    <Calendar className="w-5 h-5 text-accent flex-shrink-0" />
-                    <div className="flex-1">
-                      <p className="font-semibold text-sm">Your trial expires soon!</p>
-                      <p className="text-xs text-muted-foreground">
-                        Upgrade to continue accessing premium features
-                      </p>
-                    </div>
-                    <Button variant="secondary" size="sm" onClick={() => navigate("/membership")}>
-                      Upgrade
-                    </Button>
-                  </div>
+            {/* About Section */}
+            <Card className="shadow-sm">
+              <CardHeader className="border-b flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl">About</CardTitle>
+                  <CardDescription>Professional summary and background</CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                {profile.bio ? (
+                  <p className="text-foreground/80 leading-relaxed whitespace-pre-wrap">{profile.bio}</p>
+                ) : (
+                  <p className="text-muted-foreground italic">Add a professional headline to help others understand your expertise.</p>
                 )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
 
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="w-full justify-start bg-card border border-border mb-6 h-auto p-1">
-            <TabsTrigger value="profile" className="data-[state=active]:bg-background">
-              <User className="w-4 h-4 mr-2" />
-              Profile
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="data-[state=active]:bg-background">
-              <Bell className="w-4 h-4 mr-2" />
-              Notifications
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:bg-background">
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Edit Profile Tab */}
-          <TabsContent value="profile" className="space-y-6">
+            {/* Experience Section */}
             <Card className="shadow-sm">
               <CardHeader className="border-b">
-                <CardTitle className="text-xl">Edit Profile</CardTitle>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl flex items-center gap-2">
+                      <Briefcase className="w-5 h-5" />
+                      Experience
+                    </CardTitle>
+                    <CardDescription>Your professional journey</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                {profile.organization ? (
+                  <div className="space-y-6">
+                    <div className="flex gap-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Building className="w-6 h-6 text-primary" />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg">{profile.organization}</h3>
+                        <p className="text-sm text-muted-foreground">{profile.bio || "Professional"}</p>
+                        {profile.location && (
+                          <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                            <MapPin className="w-3 h-3" />
+                            {profile.location}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground italic">Add your organization to showcase your professional experience.</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Activity Section */}
+            <Card className="shadow-sm">
+              <CardHeader className="border-b">
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  Activity
+                </CardTitle>
+                <CardDescription>Your recent engagement and contributions</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <p className="text-muted-foreground italic text-center py-8">
+                  Your forum posts and contributions will appear here
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Edit Profile Section */}
+            <Card className="shadow-sm">
+              <CardHeader className="border-b">
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <Edit2 className="w-5 h-5" />
+                  Edit Profile
+                </CardTitle>
                 <CardDescription>
                   Update your profile information to help others connect with you
                 </CardDescription>
@@ -452,71 +499,116 @@ export default function Profile() {
                 </form>
               </CardContent>
             </Card>
-          </TabsContent>
+          </div>
 
-          {/* Notifications Tab */}
-          <TabsContent value="notifications">
-            <Card className="shadow-sm">
-              <CardHeader className="border-b">
-                <CardTitle className="text-xl">Notification Preferences</CardTitle>
-                <CardDescription>
-                  Manage how you receive updates from forums and discussions
-                </CardDescription>
+          {/* Right Column - Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Profile Strength Card */}
+            <Card className="shadow-sm border-2">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Eye className="w-5 h-5" />
+                  Profile Strength
+                </CardTitle>
               </CardHeader>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4 p-6 bg-muted/50 rounded-lg border border-border">
-                  <Bell className="w-8 h-8 text-muted-foreground" />
+              <CardContent>
+                <div className="space-y-3">
                   <div>
-                    <p className="font-medium mb-1">Forum Notifications</p>
-                    <p className="text-sm text-muted-foreground">
-                      Subscribe to specific forums to receive notifications about new posts and replies.
-                      Visit the forum page to manage your subscriptions.
-                    </p>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">
+                        {profileCompletion < 50 ? "Beginner" : profileCompletion < 80 ? "Intermediate" : "All-Star"}
+                      </span>
+                      <span className="text-sm font-bold text-primary">{profileCompletion}%</span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                      <div 
+                        className="bg-primary h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${profileCompletion}%` }}
+                      />
+                    </div>
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    Complete your profile to increase visibility and networking opportunities.
+                  </p>
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
 
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            {/* Account Status Card */}
+            {/* Contact Info Card */}
             <Card className="shadow-sm">
-              <CardHeader className="border-b">
-                <CardTitle className="text-xl">Account Status</CardTitle>
-                <CardDescription>
-                  View your membership details and trial information
-                </CardDescription>
+              <CardHeader className="pb-3 border-b">
+                <CardTitle className="text-lg">Contact Information</CardTitle>
               </CardHeader>
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Status</p>
-                      <Badge variant={isTrialActive ? "outline" : "secondary"} className="text-sm">
-                        {profile.payment_status === "active" ? "Premium Member" : "Trial Period"}
-                      </Badge>
+              <CardContent className="pt-4">
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <Mail className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Email</p>
+                      <p className="text-sm break-all">{profile.email}</p>
                     </div>
-                    
-                    {profile.trial_started_at && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Trial Started</p>
-                        <p className="text-base">
-                          {new Date(profile.trial_started_at).toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
-                          })}
-                        </p>
-                      </div>
-                    )}
                   </div>
 
-                  <div className="space-y-3">
-                    {isTrialActive && profile.trial_expires_at && (
+                  {profile.location && (
+                    <div className="flex items-start gap-3">
+                      <MapPin className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Location</p>
+                        <p className="text-sm">{profile.location}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {profile.organization && (
+                    <div className="flex items-start gap-3">
+                      <Building className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Organization</p>
+                        <p className="text-sm">{profile.organization}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {profile.website && (
+                    <div className="flex items-start gap-3">
+                      <Globe className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Website</p>
+                        <a 
+                          href={profile.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-sm text-primary hover:underline break-all"
+                        >
+                          {profile.website.replace(/^https?:\/\//, '')}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Membership Status Card */}
+            {isTrialActive && (
+              <Card className="shadow-sm border-accent/50">
+                <CardHeader className="pb-3 border-b border-accent/20">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-accent" />
+                    Trial Status
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-2xl font-bold text-accent">{trialDaysRemaining}</p>
+                      <p className="text-sm text-muted-foreground">Days Remaining</p>
+                    </div>
+                    
+                    {profile.trial_expires_at && (
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Trial Expires</p>
-                        <p className="text-base">
+                        <p className="text-xs text-muted-foreground mb-1">Expires on</p>
+                        <p className="text-sm font-medium">
                           {new Date(profile.trial_expires_at).toLocaleDateString('en-US', { 
                             year: 'numeric', 
                             month: 'long', 
@@ -525,63 +617,72 @@ export default function Profile() {
                         </p>
                       </div>
                     )}
-                  </div>
-                </div>
 
-                {isTrialActive && (
-                  <div className="mt-6 p-5 bg-gradient-subtle border border-primary/20 rounded-lg">
-                    <div className="flex items-start gap-4">
-                      <CreditCard className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg mb-2">Unlock Premium Features</h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Get unlimited access to all forums, exclusive content, and priority support
-                        </p>
-                        <Button 
-                          onClick={() => navigate("/membership")}
-                          className="w-full md:w-auto"
-                        >
-                          View Membership Plans
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Account Actions Card */}
-            <Card className="shadow-sm">
-              <CardHeader className="border-b">
-                <CardTitle className="text-xl">Account Actions</CardTitle>
-                <CardDescription>
-                  Manage your account security and preferences
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-smooth">
-                    <div>
-                      <p className="font-medium">Sign Out</p>
-                      <p className="text-sm text-muted-foreground">
-                        End your current session
-                      </p>
-                    </div>
                     <Button 
-                      variant="outline" 
-                      onClick={async () => {
-                        await supabase.auth.signOut();
-                        navigate("/");
-                      }}
+                      className="w-full" 
+                      variant="default"
+                      onClick={() => navigate("/membership")}
                     >
-                      Sign Out
+                      Upgrade Now
                     </Button>
                   </div>
-                </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Notifications Settings */}
+            <Card className="shadow-sm">
+              <CardHeader className="pb-3 border-b">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Bell className="w-5 h-5" />
+                  Notifications
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <p className="text-sm text-muted-foreground mb-3">
+                  Subscribe to forums to receive updates about new posts and replies.
+                </p>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="w-full"
+                  onClick={() => navigate("/forum")}
+                >
+                  Manage Subscriptions
+                </Button>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+
+            {/* Account Settings */}
+            <Card className="shadow-sm">
+              <CardHeader className="pb-3 border-b">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Settings className="w-5 h-5" />
+                  Account
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-3">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Account Status</p>
+                  <Badge variant={isTrialActive ? "outline" : "secondary"} className="text-sm">
+                    {profile.payment_status === "active" ? "Premium Member" : "Trial Period"}
+                  </Badge>
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    navigate("/");
+                  }}
+                >
+                  Sign Out
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
