@@ -26,8 +26,13 @@ import {
   Award,
   TrendingUp,
   Edit2,
-  Eye
+  Eye,
+  Plus,
+  Trash2,
+  Link as LinkIcon
 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface UserProfile {
   id: string;
@@ -44,6 +49,17 @@ interface UserProfile {
   payment_status: string;
 }
 
+interface UserActivity {
+  id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  description: string | null;
+  link: string | null;
+  created_at: string;
+  metadata: any;
+}
+
 export default function Profile() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -57,6 +73,15 @@ export default function Profile() {
     location: "",
     organization: "",
     website: "",
+  });
+  const [activities, setActivities] = useState<UserActivity[]>([]);
+  const [isActivityDialogOpen, setIsActivityDialogOpen] = useState(false);
+  const [editingActivity, setEditingActivity] = useState<UserActivity | null>(null);
+  const [activityForm, setActivityForm] = useState({
+    type: "achievement",
+    title: "",
+    description: "",
+    link: "",
   });
 
   useEffect(() => {
@@ -92,6 +117,8 @@ export default function Profile() {
         organization: data.organization || "",
         website: data.website || "",
       });
+      
+      await loadActivities(userId);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -136,6 +163,118 @@ export default function Profile() {
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const loadActivities = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("user_activities")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setActivities(data || []);
+    } catch (error: any) {
+      console.error("Error loading activities:", error);
+    }
+  };
+
+  const handleSaveActivity = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!profile) return;
+
+    setSaving(true);
+    try {
+      if (editingActivity) {
+        // Update existing activity
+        const { error } = await supabase
+          .from("user_activities")
+          .update({
+            type: activityForm.type,
+            title: activityForm.title,
+            description: activityForm.description || null,
+            link: activityForm.link || null,
+          })
+          .eq("id", editingActivity.id);
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Activity updated successfully",
+        });
+      } else {
+        // Create new activity
+        const { error } = await supabase
+          .from("user_activities")
+          .insert({
+            user_id: profile.id,
+            type: activityForm.type,
+            title: activityForm.title,
+            description: activityForm.description || null,
+            link: activityForm.link || null,
+          });
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Activity added successfully",
+        });
+      }
+
+      await loadActivities(profile.id);
+      setIsActivityDialogOpen(false);
+      setActivityForm({ type: "achievement", title: "", description: "", link: "" });
+      setEditingActivity(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditActivity = (activity: UserActivity) => {
+    setEditingActivity(activity);
+    setActivityForm({
+      type: activity.type,
+      title: activity.title,
+      description: activity.description || "",
+      link: activity.link || "",
+    });
+    setIsActivityDialogOpen(true);
+  };
+
+  const handleDeleteActivity = async (activityId: string) => {
+    if (!profile) return;
+    if (!confirm("Are you sure you want to delete this activity?")) return;
+
+    try {
+      const { error } = await supabase
+        .from("user_activities")
+        .delete()
+        .eq("id", activityId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Activity deleted successfully",
+      });
+
+      await loadActivities(profile.id);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -390,16 +529,156 @@ export default function Profile() {
             {/* Activity Section */}
             <Card className="shadow-sm">
               <CardHeader className="border-b">
-                <CardTitle className="text-xl flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  Activity
-                </CardTitle>
-                <CardDescription>Your recent engagement and contributions</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5" />
+                      Activity
+                    </CardTitle>
+                    <CardDescription>Your recent engagement and contributions</CardDescription>
+                  </div>
+                  <Dialog open={isActivityDialogOpen} onOpenChange={setIsActivityDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" onClick={() => {
+                        setEditingActivity(null);
+                        setActivityForm({ type: "achievement", title: "", description: "", link: "" });
+                      }}>
+                        <Plus className="w-4 h-4 mr-1.5" />
+                        Add Activity
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>{editingActivity ? "Edit Activity" : "Add Activity"}</DialogTitle>
+                        <DialogDescription>
+                          Share your professional achievements and contributions
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={handleSaveActivity} className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="type">Activity Type</Label>
+                          <Select
+                            value={activityForm.type}
+                            onValueChange={(value) => setActivityForm({ ...activityForm, type: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="achievement">Achievement</SelectItem>
+                              <SelectItem value="post">Post</SelectItem>
+                              <SelectItem value="forum_post">Forum Post</SelectItem>
+                              <SelectItem value="comment">Comment</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="title">Title *</Label>
+                          <Input
+                            id="title"
+                            value={activityForm.title}
+                            onChange={(e) => setActivityForm({ ...activityForm, title: e.target.value })}
+                            placeholder="e.g., Published research paper on renewable energy"
+                            required
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="description">Description</Label>
+                          <Textarea
+                            id="description"
+                            value={activityForm.description}
+                            onChange={(e) => setActivityForm({ ...activityForm, description: e.target.value })}
+                            placeholder="Add more details about this activity..."
+                            rows={3}
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="link">Link (optional)</Label>
+                          <Input
+                            id="link"
+                            type="url"
+                            value={activityForm.link}
+                            onChange={(e) => setActivityForm({ ...activityForm, link: e.target.value })}
+                            placeholder="https://..."
+                          />
+                        </div>
+                        
+                        <div className="flex justify-end gap-2">
+                          <Button type="button" variant="outline" onClick={() => setIsActivityDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button type="submit" disabled={saving}>
+                            {saving ? "Saving..." : editingActivity ? "Update" : "Add Activity"}
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </CardHeader>
               <CardContent className="pt-6">
-                <p className="text-muted-foreground italic text-center py-8">
-                  Your forum posts and contributions will appear here
-                </p>
+                {activities.length > 0 ? (
+                  <div className="space-y-4">
+                    {activities.map((activity) => (
+                      <div key={activity.id} className="flex gap-4 p-4 rounded-lg border hover:border-primary/50 transition-colors">
+                        <div className="flex-shrink-0">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            {activity.type === "achievement" && <Award className="w-5 h-5 text-primary" />}
+                            {activity.type === "post" && <TrendingUp className="w-5 h-5 text-primary" />}
+                            {activity.type === "forum_post" && <Briefcase className="w-5 h-5 text-primary" />}
+                            {activity.type === "comment" && <Eye className="w-5 h-5 text-primary" />}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-base mb-1">{activity.title}</h4>
+                          {activity.description && (
+                            <p className="text-sm text-muted-foreground mb-2">{activity.description}</p>
+                          )}
+                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(activity.created_at).toLocaleDateString()}
+                            </span>
+                            {activity.link && (
+                              <a 
+                                href={activity.link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 hover:text-primary transition-colors"
+                              >
+                                <LinkIcon className="w-3 h-3" />
+                                View Link
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleEditActivity(activity)}
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDeleteActivity(activity.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground italic text-center py-8">
+                    No activities yet. Add your first achievement or contribution!
+                  </p>
+                )}
               </CardContent>
             </Card>
 
