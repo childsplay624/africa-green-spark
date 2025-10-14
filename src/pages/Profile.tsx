@@ -809,9 +809,9 @@ export default function Profile() {
           </div>
 
           {/* Right Column - Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-6 relative z-10">
             {/* Profile Strength Card */}
-            <Card className="shadow-sm border-2">
+            <Card className="shadow-sm border-2 bg-background">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Eye className="w-5 h-5" />
