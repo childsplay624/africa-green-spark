@@ -69,18 +69,12 @@ export function Navigation() {
         <div className="flex items-center h-16">
           {/* Logo - Extreme left */}
           <div className="flex-shrink-0 mr-auto">
-            <Link to="/" className="flex items-center space-x-3 group">
+            <Link to="/" className="group">
               <img 
                 src={logoUrl} 
-                alt="AE&SC Logo" 
-                className="h-12 w-12 object-contain transition-transform group-hover:scale-105"
+                alt="Site Logo" 
+                className="h-12 object-contain transition-transform group-hover:scale-105"
               />
-              <div>
-                <span className="font-heading font-bold text-lg text-primary">AE&SC</span>
-                <p className="text-xs text-muted-foreground leading-none">
-                  African Energy & Sustainability
-                </p>
-              </div>
             </Link>
           </div>
 

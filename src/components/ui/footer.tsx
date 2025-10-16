@@ -20,13 +20,6 @@ const Footer = () => {
       <div className="border-b border-primary-light/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="flex justify-center mb-4">
-              <img 
-                src={logo} 
-                alt="AE&SC Logo" 
-                className="h-16 w-16 object-contain"
-              />
-            </div>
             <h3 className="text-2xl font-heading font-bold mb-4">
               Stay Updated on Africa's Energy Transition
             </h3>
@@ -52,13 +45,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Organization Info */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="mb-4">
               <img 
                 src={logo} 
-                alt="AE&SC Logo" 
-                className="h-10 w-10 object-contain"
+                alt="Site Logo" 
+                className="h-12 object-contain"
               />
-              <span className="font-heading font-bold text-lg">AE&SC</span>
             </div>
             <p className="text-primary-foreground/80 mb-6 leading-relaxed">
               Accelerating Africa's energy transition and sustainability journey through 

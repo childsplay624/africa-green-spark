@@ -9,6 +9,8 @@ import { ImagePlus } from "lucide-react";
 
 export function CmsSiteSettings() {
   const [logoUrl, setLogoUrl] = useState("");
+  const [primaryColor, setPrimaryColor] = useState("");
+  const [secondaryColor, setSecondaryColor] = useState("");
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -21,11 +23,15 @@ export function CmsSiteSettings() {
       const { data, error } = await supabase
         .from("cms_site_settings")
         .select("*")
-        .eq("setting_key", "site_logo")
-        .single();
+        .in("setting_key", ["site_logo", "primary_color", "secondary_color"]);
 
       if (error) throw error;
-      setLogoUrl(data?.setting_value || "");
+      
+      data?.forEach((setting) => {
+        if (setting.setting_key === "site_logo") setLogoUrl(setting.setting_value || "");
+        if (setting.setting_key === "primary_color") setPrimaryColor(setting.setting_value || "");
+        if (setting.setting_key === "secondary_color") setSecondaryColor(setting.setting_value || "");
+      });
     } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } finally {
@@ -36,12 +42,18 @@ export function CmsSiteSettings() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const updates = [
+        { setting_key: "site_logo", setting_value: logoUrl },
+        { setting_key: "primary_color", setting_value: primaryColor },
+        { setting_key: "secondary_color", setting_value: secondaryColor },
+      ];
+
       const { error } = await supabase
         .from("cms_site_settings")
-        .upsert({ setting_key: "site_logo", setting_value: logoUrl });
+        .upsert(updates);
 
       if (error) throw error;
-      toast({ title: "Success", description: "Logo updated successfully" });
+      toast({ title: "Success", description: "Brand settings updated successfully" });
     } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     }
@@ -52,7 +64,7 @@ export function CmsSiteSettings() {
   return (
     <Card className="shadow-sm">
       <CardHeader>
-        <CardTitle>Site Settings</CardTitle>
+        <CardTitle>Brand Settings</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -86,11 +98,65 @@ export function CmsSiteSettings() {
                 </div>
               </div>
             )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+              <div className="space-y-2">
+                <Label htmlFor="primaryColor">Primary Brand Color (HSL)</Label>
+                <Input
+                  id="primaryColor"
+                  value={primaryColor}
+                  onChange={(e) => setPrimaryColor(e.target.value)}
+                  placeholder="e.g., 142 76% 36%"
+                />
+                <p className="text-sm text-muted-foreground">
+                  HSL format without hsl() wrapper
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="secondaryColor">Secondary Brand Color (HSL)</Label>
+                <Input
+                  id="secondaryColor"
+                  value={secondaryColor}
+                  onChange={(e) => setSecondaryColor(e.target.value)}
+                  placeholder="e.g., 45 93% 47%"
+                />
+                <p className="text-sm text-muted-foreground">
+                  HSL format without hsl() wrapper
+                </p>
+              </div>
+            </div>
+
+            {(primaryColor || secondaryColor) && (
+              <div className="space-y-2 pt-2">
+                <Label>Color Preview</Label>
+                <div className="flex gap-4">
+                  {primaryColor && (
+                    <div className="flex-1 space-y-1">
+                      <div 
+                        className="h-16 rounded-lg border"
+                        style={{ backgroundColor: `hsl(${primaryColor})` }}
+                      />
+                      <p className="text-xs text-center text-muted-foreground">Primary</p>
+                    </div>
+                  )}
+                  {secondaryColor && (
+                    <div className="flex-1 space-y-1">
+                      <div 
+                        className="h-16 rounded-lg border"
+                        style={{ backgroundColor: `hsl(${secondaryColor})` }}
+                      />
+                      <p className="text-xs text-center text-muted-foreground">Secondary</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           <Button type="submit" className="w-full">
             <ImagePlus className="w-4 h-4 mr-2" />
-            Update Logo
+            Update Brand Settings
           </Button>
         </form>
       </CardContent>
