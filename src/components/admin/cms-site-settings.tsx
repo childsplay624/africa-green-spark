@@ -109,6 +109,9 @@ export function CmsSiteSettings() {
       setLogoUrl(finalLogoUrl);
       setLogoFile(null);
       toast({ title: "Success", description: "Brand settings updated successfully" });
+      
+      // Reload page to refresh navigation logo
+      setTimeout(() => window.location.reload(), 1000);
     } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } finally {
