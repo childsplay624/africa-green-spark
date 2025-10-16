@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,9 +12,31 @@ import {
   Phone,
   MapPin
 } from "lucide-react";
-import logo from "@/assets/logo.png";
+import { supabase } from "@/integrations/supabase/client";
 
 const Footer = () => {
+  const [logoUrl, setLogoUrl] = useState("/logo.png");
+
+  useEffect(() => {
+    loadLogo();
+  }, []);
+
+  const loadLogo = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("cms_site_settings")
+        .select("setting_value")
+        .eq("setting_key", "site_logo")
+        .maybeSingle();
+      
+      if (data?.setting_value) {
+        setLogoUrl(data.setting_value);
+      }
+    } catch (error) {
+      console.error("Error loading logo:", error);
+    }
+  };
+
   return (
     <footer className="bg-primary text-primary-foreground">
       {/* Newsletter Section */}
@@ -47,7 +70,7 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <div className="mb-4">
               <img 
-                src={logo} 
+                src={logoUrl} 
                 alt="Site Logo" 
                 className="h-12 object-contain"
               />
