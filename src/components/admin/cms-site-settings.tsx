@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, Upload } from "lucide-react";
 
 export function CmsSiteSettings() {
   const [logoUrl, setLogoUrl] = useState("");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [primaryColor, setPrimaryColor] = useState("");
   const [secondaryColor, setSecondaryColor] = useState("");
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -39,11 +41,61 @@ export function CmsSiteSettings() {
     }
   };
 
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({ title: "Error", description: "Please upload an image file", variant: "destructive" });
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "Error", description: "File size must be less than 2MB", variant: "destructive" });
+      return;
+    }
+
+    setLogoFile(file);
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setLogoUrl(previewUrl);
+  };
+
+  const uploadLogoToStorage = async (file: File): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `logo-${Date.now()}.${fileExt}`;
+    const filePath = fileName;
+
+    const { error: uploadError } = await supabase.storage
+      .from('header-images')
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('header-images')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploading(true);
+    
     try {
+      let finalLogoUrl = logoUrl;
+
+      // Upload logo if a new file was selected
+      if (logoFile) {
+        finalLogoUrl = await uploadLogoToStorage(logoFile);
+      }
+
       const updates = [
-        { setting_key: "site_logo", setting_value: logoUrl },
+        { setting_key: "site_logo", setting_value: finalLogoUrl },
         { setting_key: "primary_color", setting_value: primaryColor },
         { setting_key: "secondary_color", setting_value: secondaryColor },
       ];
@@ -53,9 +105,14 @@ export function CmsSiteSettings() {
         .upsert(updates);
 
       if (error) throw error;
+      
+      setLogoUrl(finalLogoUrl);
+      setLogoFile(null);
       toast({ title: "Success", description: "Brand settings updated successfully" });
     } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -70,16 +127,19 @@ export function CmsSiteSettings() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="logo">Site Logo URL</Label>
-              <Input
-                id="logo"
-                value={logoUrl}
-                onChange={(e) => setLogoUrl(e.target.value)}
-                placeholder="/logo.png or https://..."
-                required
-              />
+              <Label htmlFor="logoUpload">Site Logo</Label>
+              <div className="flex items-center gap-3">
+                <Input
+                  id="logoUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                  className="flex-1"
+                />
+                <Upload className="w-5 h-5 text-muted-foreground" />
+              </div>
               <p className="text-sm text-muted-foreground">
-                Enter the path to your logo file (e.g., /logo.png) or a full URL
+                Upload your logo image (max 2MB, PNG, JPG, or SVG recommended)
               </p>
             </div>
 
@@ -154,9 +214,9 @@ export function CmsSiteSettings() {
             )}
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={uploading}>
             <ImagePlus className="w-4 h-4 mr-2" />
-            Update Brand Settings
+            {uploading ? "Uploading..." : "Update Brand Settings"}
           </Button>
         </form>
       </CardContent>
