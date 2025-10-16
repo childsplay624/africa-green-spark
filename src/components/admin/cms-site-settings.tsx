@@ -102,7 +102,7 @@ export function CmsSiteSettings() {
 
       const { error } = await supabase
         .from("cms_site_settings")
-        .upsert(updates);
+        .upsert(updates, { onConflict: 'setting_key' });
 
       if (error) throw error;
       
