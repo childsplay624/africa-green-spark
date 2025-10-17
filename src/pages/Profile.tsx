@@ -569,10 +569,10 @@ export default function Profile() {
                     <DialogTrigger asChild>
                       <Button size="sm" onClick={() => {
                         setEditingActivity(null);
-                        setActivityForm({ type: "achievement", title: "", description: "", link: "" });
+                        setActivityForm({ type: "new_discussion", title: "", description: "", link: "" });
                       }}>
                         <Plus className="w-4 h-4 mr-1.5" />
-                        Add Activity
+                        Start New Discussion
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[500px]">
