@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { useForum } from "@/hooks/use-forum";
+import { NewPostDialog } from "@/components/forum/new-post-dialog";
 import { 
   User, 
   Mail, 
@@ -83,6 +85,8 @@ export default function Profile() {
     description: "",
     link: "",
   });
+  const [showNewPostDialog, setShowNewPostDialog] = useState(false);
+  const { categories, createPost } = useForum();
 
   useEffect(() => {
     checkUser();
@@ -304,6 +308,15 @@ export default function Profile() {
         variant: "destructive",
       });
     }
+  };
+
+  const handleCreateDiscussion = async (category: string, title: string, content: string, tags: string[]) => {
+    const success = await createPost(category, title, content, tags);
+    if (success && profile) {
+      await loadActivities(profile.id);
+      setShowNewPostDialog(false);
+    }
+    return success;
   };
 
   const handleImageUpload = async (file: File, type: 'avatar' | 'header') => {
@@ -565,10 +578,89 @@ export default function Profile() {
                     </CardTitle>
                     <CardDescription>Your recent engagement and contributions</CardDescription>
                   </div>
-                  <Button size="sm" onClick={() => navigate('/forum')}>
+                  <Button size="sm" onClick={() => setShowNewPostDialog(true)}>
                     <Plus className="w-4 h-4 mr-1.5" />
                     Start New Discussion
                   </Button>
+                  <Dialog open={isActivityDialogOpen} onOpenChange={setIsActivityDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" variant="outline" onClick={() => {
+                        setEditingActivity(null);
+                        setActivityForm({ type: "achievement", title: "", description: "", link: "" });
+                      }}>
+                        <Plus className="w-4 h-4 mr-1.5" />
+                        Add Activity
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>{editingActivity ? "Edit Activity" : "Add Activity"}</DialogTitle>
+                        <DialogDescription>
+                          Share your professional achievements and contributions
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={handleSaveActivity} className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="type">Activity Type</Label>
+                          <Select
+                            value={activityForm.type}
+                            onValueChange={(value) => setActivityForm({ ...activityForm, type: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="achievement">Achievement</SelectItem>
+                              <SelectItem value="post">Post</SelectItem>
+                              <SelectItem value="comment">Comment</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="title">Title *</Label>
+                          <Input
+                            id="title"
+                            value={activityForm.title}
+                            onChange={(e) => setActivityForm({ ...activityForm, title: e.target.value })}
+                            placeholder="e.g., Published research paper on renewable energy"
+                            required
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="description">Description</Label>
+                          <Textarea
+                            id="description"
+                            value={activityForm.description}
+                            onChange={(e) => setActivityForm({ ...activityForm, description: e.target.value })}
+                            placeholder="Add more details about this activity..."
+                            rows={3}
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="link">Link (optional)</Label>
+                          <Input
+                            id="link"
+                            type="url"
+                            value={activityForm.link}
+                            onChange={(e) => setActivityForm({ ...activityForm, link: e.target.value })}
+                            placeholder="https://..."
+                          />
+                        </div>
+                        
+                        <div className="flex justify-end gap-2">
+                          <Button type="button" variant="outline" onClick={() => setIsActivityDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button type="submit" disabled={saving}>
+                            {saving ? "Saving..." : editingActivity ? "Update" : "Add Activity"}
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardHeader>
               <CardContent className="pt-6">
@@ -612,6 +704,7 @@ export default function Profile() {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleEditActivity(activity)}
+                            disabled={activity.type === 'forum_post' || activity.type === 'new_discussion'}
                           >
                             <Edit2 className="w-4 h-4" />
                           </Button>
@@ -619,6 +712,7 @@ export default function Profile() {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleDeleteActivity(activity.id)}
+                            disabled={activity.type === 'forum_post' || activity.type === 'new_discussion'}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -915,6 +1009,14 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
+      {/* New Post Dialog */}
+      <NewPostDialog
+        open={showNewPostDialog}
+        onOpenChange={setShowNewPostDialog}
+        onSubmit={handleCreateDiscussion}
+        categories={categories}
+      />
     </div>
   );
 }
