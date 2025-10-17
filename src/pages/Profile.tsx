@@ -565,87 +565,10 @@ export default function Profile() {
                     </CardTitle>
                     <CardDescription>Your recent engagement and contributions</CardDescription>
                   </div>
-                  <Dialog open={isActivityDialogOpen} onOpenChange={setIsActivityDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button size="sm" onClick={() => {
-                        setEditingActivity(null);
-                        setActivityForm({ type: "new_discussion", title: "", description: "", link: "" });
-                      }}>
-                        <Plus className="w-4 h-4 mr-1.5" />
-                        Start New Discussion
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>{editingActivity ? "Edit Activity" : "Add Activity"}</DialogTitle>
-                        <DialogDescription>
-                          Share your professional achievements and contributions
-                        </DialogDescription>
-                      </DialogHeader>
-                      <form onSubmit={handleSaveActivity} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="type">Activity Type</Label>
-                          <Select
-                            value={activityForm.type}
-                            onValueChange={(value) => setActivityForm({ ...activityForm, type: value })}
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="achievement">Achievement</SelectItem>
-                              <SelectItem value="post">Post</SelectItem>
-                              <SelectItem value="forum_post">Forum Discussion</SelectItem>
-                              <SelectItem value="new_discussion">Start New Discussion</SelectItem>
-                              <SelectItem value="comment">Comment</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="title">Title *</Label>
-                          <Input
-                            id="title"
-                            value={activityForm.title}
-                            onChange={(e) => setActivityForm({ ...activityForm, title: e.target.value })}
-                            placeholder="e.g., Published research paper on renewable energy"
-                            required
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="description">Description</Label>
-                          <Textarea
-                            id="description"
-                            value={activityForm.description}
-                            onChange={(e) => setActivityForm({ ...activityForm, description: e.target.value })}
-                            placeholder="Add more details about this activity..."
-                            rows={3}
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="link">Link (optional)</Label>
-                          <Input
-                            id="link"
-                            type="url"
-                            value={activityForm.link}
-                            onChange={(e) => setActivityForm({ ...activityForm, link: e.target.value })}
-                            placeholder="https://..."
-                          />
-                        </div>
-                        
-                        <div className="flex justify-end gap-2">
-                          <Button type="button" variant="outline" onClick={() => setIsActivityDialogOpen(false)}>
-                            Cancel
-                          </Button>
-                          <Button type="submit" disabled={saving}>
-                            {saving ? "Saving..." : editingActivity ? "Update" : "Add Activity"}
-                          </Button>
-                        </div>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
+                  <Button size="sm" onClick={() => navigate('/forum')}>
+                    <Plus className="w-4 h-4 mr-1.5" />
+                    Start New Discussion
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="pt-6">
