@@ -595,7 +595,8 @@ export default function Profile() {
                             <SelectContent>
                               <SelectItem value="achievement">Achievement</SelectItem>
                               <SelectItem value="post">Post</SelectItem>
-                              <SelectItem value="forum_post">Forum Post</SelectItem>
+                              <SelectItem value="forum_post">Forum Discussion</SelectItem>
+                              <SelectItem value="new_discussion">Start New Discussion</SelectItem>
                               <SelectItem value="comment">Comment</SelectItem>
                             </SelectContent>
                           </Select>
@@ -656,7 +657,7 @@ export default function Profile() {
                           <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                             {activity.type === "achievement" && <Award className="w-5 h-5 text-primary" />}
                             {activity.type === "post" && <TrendingUp className="w-5 h-5 text-primary" />}
-                            {activity.type === "forum_post" && <Briefcase className="w-5 h-5 text-primary" />}
+                            {(activity.type === "forum_post" || activity.type === "new_discussion") && <Briefcase className="w-5 h-5 text-primary" />}
                             {activity.type === "comment" && <Eye className="w-5 h-5 text-primary" />}
                           </div>
                         </div>

@@ -152,15 +152,26 @@ export function useForum() {
         return false;
       }
 
-      const { error } = await supabase.from("forum_posts").insert({
+      const { data: postData, error } = await supabase.from("forum_posts").insert({
         forum_id: forum.id,
         author_id: session.user.id,
         title: validated.title,
         content: validated.content,
         tags: validated.tags,
-      });
+      }).select('id').single();
 
       if (error) throw error;
+
+      // Create a "Start New Discussion" activity
+      if (postData) {
+        await supabase.from("user_activities").insert({
+          user_id: session.user.id,
+          type: "new_discussion",
+          title: `Started discussion: ${validated.title}`,
+          description: validated.content.substring(0, 150) + (validated.content.length > 150 ? "..." : ""),
+          link: `/forum/${postData.id}`,
+        });
+      }
 
       toast({
         title: "Success",
