@@ -12,13 +12,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useForum } from "@/hooks/use-forum";
 import { NewPostDialog } from "@/components/forum/new-post-dialog";
-import { 
-  User, 
-  Mail, 
-  MapPin, 
-  Building, 
-  Globe, 
-  Calendar, 
+import {
+  User,
+  Mail,
+  MapPin,
+  Building,
+  Globe,
+  Calendar,
   CreditCard,
   Bell,
   Settings,
@@ -31,9 +31,16 @@ import {
   Eye,
   Plus,
   Trash2,
-  Link as LinkIcon
+  Link as LinkIcon,
 } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface UserProfile {
@@ -93,8 +100,10 @@ export default function Profile() {
   }, []);
 
   const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       navigate("/auth");
       return;
@@ -105,11 +114,7 @@ export default function Profile() {
 
   const loadProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from("aesc_profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+      const { data, error } = await supabase.from("aesc_profiles").select("*").eq("id", userId).single();
 
       if (error) throw error;
 
@@ -121,7 +126,7 @@ export default function Profile() {
         organization: data.organization || "",
         website: data.website || "",
       });
-      
+
       await loadActivities(userId);
     } catch (error: any) {
       toast({
@@ -191,7 +196,7 @@ export default function Profile() {
       if (postsError) throw postsError;
 
       // Transform forum posts to activity format
-      const forumActivities: UserActivity[] = (forumPosts || []).map(post => ({
+      const forumActivities: UserActivity[] = (forumPosts || []).map((post) => ({
         id: post.id,
         user_id: userId,
         type: "forum_post",
@@ -199,12 +204,12 @@ export default function Profile() {
         description: post.content.substring(0, 150) + (post.content.length > 150 ? "..." : ""),
         link: `/forum/${post.forum_id}/${post.id}`,
         created_at: post.created_at,
-        metadata: {}
+        metadata: {},
       }));
 
       // Combine and sort all activities
       const allActivities = [...(userActivities || []), ...forumActivities].sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
       );
 
       setActivities(allActivities);
@@ -239,15 +244,13 @@ export default function Profile() {
         });
       } else {
         // Create new activity
-        const { error } = await supabase
-          .from("user_activities")
-          .insert({
-            user_id: profile.id,
-            type: activityForm.type,
-            title: activityForm.title,
-            description: activityForm.description || null,
-            link: activityForm.link || null,
-          });
+        const { error } = await supabase.from("user_activities").insert({
+          user_id: profile.id,
+          type: activityForm.type,
+          title: activityForm.title,
+          description: activityForm.description || null,
+          link: activityForm.link || null,
+        });
 
         if (error) throw error;
 
@@ -288,10 +291,7 @@ export default function Profile() {
     if (!confirm("Are you sure you want to delete this activity?")) return;
 
     try {
-      const { error } = await supabase
-        .from("user_activities")
-        .delete()
-        .eq("id", activityId);
+      const { error } = await supabase.from("user_activities").delete().eq("id", activityId);
 
       if (error) throw error;
 
@@ -319,37 +319,35 @@ export default function Profile() {
     return success;
   };
 
-  const handleImageUpload = async (file: File, type: 'avatar' | 'header') => {
+  const handleImageUpload = async (file: File, type: "avatar" | "header") => {
     if (!profile) return;
 
     setUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const fileName = `${profile.id}/${Math.random()}.${fileExt}`;
-      const bucket = type === 'avatar' ? 'avatars' : 'header-images';
+      const bucket = type === "avatar" ? "avatars" : "header-images";
 
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(fileName, file, { upsert: true });
+      const { error: uploadError } = await supabase.storage.from(bucket).upload(fileName, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(fileName);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from(bucket).getPublicUrl(fileName);
 
-      const updateField = type === 'avatar' ? 'avatar_url' : 'header_image_url';
+      const updateField = type === "avatar" ? "avatar_url" : "header_image_url";
       const { error: updateError } = await supabase
-        .from('aesc_profiles')
+        .from("aesc_profiles")
         .update({ [updateField]: publicUrl })
-        .eq('id', profile.id);
+        .eq("id", profile.id);
 
       if (updateError) throw updateError;
 
       setProfile({ ...profile, [updateField]: publicUrl });
       toast({
         title: "Success",
-        description: `${type === 'avatar' ? 'Profile picture' : 'Header image'} updated successfully`,
+        description: `${type === "avatar" ? "Profile picture" : "Header image"} updated successfully`,
       });
     } catch (error: any) {
       toast({
@@ -403,11 +401,7 @@ export default function Profile() {
       {/* Hero Banner Section - LinkedIn Style */}
       <div className="relative h-48 md:h-64 bg-gradient-primary group">
         {profile?.header_image_url ? (
-          <img 
-            src={profile.header_image_url} 
-            alt="Header" 
-            className="w-full h-full object-cover"
-          />
+          <img src={profile.header_image_url} alt="Header" className="w-full h-full object-cover" />
         ) : (
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLW9wYWNpdHk9Ii4wNSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
         )}
@@ -423,7 +417,7 @@ export default function Profile() {
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) handleImageUpload(file, 'header');
+                if (file) handleImageUpload(file, "header");
               }}
               disabled={uploading}
             />
@@ -445,7 +439,10 @@ export default function Profile() {
                     <Avatar className="w-40 h-40 border-4 border-background shadow-xl">
                       <AvatarImage src={profile.avatar_url || undefined} />
                       <AvatarFallback className="text-5xl bg-gradient-primary text-primary-foreground font-bold">
-                        {profile.full_name?.split(' ').map(n => n[0]).join('') || profile.email[0].toUpperCase()}
+                        {profile.full_name
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("") || profile.email[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <Label htmlFor="avatar-upload" className="absolute bottom-2 right-2 cursor-pointer">
@@ -459,7 +456,7 @@ export default function Profile() {
                         className="hidden"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
-                          if (file) handleImageUpload(file, 'avatar');
+                          if (file) handleImageUpload(file, "avatar");
                         }}
                         disabled={uploading}
                       />
@@ -472,9 +469,7 @@ export default function Profile() {
                       <h1 className="text-3xl md:text-4xl font-display font-bold mb-2">
                         {profile.full_name || "User Profile"}
                       </h1>
-                      {profile.bio && (
-                        <p className="text-lg text-foreground/80 mb-2 font-medium">{profile.bio}</p>
-                      )}
+                      {profile.bio && <p className="text-lg text-foreground/80 mb-2 font-medium">{profile.bio}</p>}
                       <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
                         {profile.organization && (
                           <span className="flex items-center gap-1.5">
@@ -522,7 +517,9 @@ export default function Profile() {
                 {profile.bio ? (
                   <p className="text-foreground/80 leading-relaxed whitespace-pre-wrap">{profile.bio}</p>
                 ) : (
-                  <p className="text-muted-foreground italic">Add a professional headline to help others understand your expertise.</p>
+                  <p className="text-muted-foreground italic">
+                    Add a professional headline to help others understand your expertise.
+                  </p>
                 )}
               </CardContent>
             </Card>
@@ -562,7 +559,9 @@ export default function Profile() {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-muted-foreground italic">Add your organization to showcase your professional experience.</p>
+                  <p className="text-muted-foreground italic">
+                    Add your organization to showcase your professional experience.
+                  </p>
                 )}
               </CardContent>
             </Card>
@@ -583,21 +582,10 @@ export default function Profile() {
                     Start New Discussion
                   </Button>
                   <Dialog open={isActivityDialogOpen} onOpenChange={setIsActivityDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button size="sm" variant="outline" onClick={() => {
-                        setEditingActivity(null);
-                        setActivityForm({ type: "achievement", title: "", description: "", link: "" });
-                      }}>
-                        <Plus className="w-4 h-4 mr-1.5" />
-                        Add Activity
-                      </Button>
-                    </DialogTrigger>
                     <DialogContent className="sm:max-w-[500px]">
                       <DialogHeader>
                         <DialogTitle>{editingActivity ? "Edit Activity" : "Add Activity"}</DialogTitle>
-                        <DialogDescription>
-                          Share your professional achievements and contributions
-                        </DialogDescription>
+                        <DialogDescription>Share your professional achievements and contributions</DialogDescription>
                       </DialogHeader>
                       <form onSubmit={handleSaveActivity} className="space-y-4">
                         <div className="space-y-2">
@@ -616,7 +604,7 @@ export default function Profile() {
                             </SelectContent>
                           </Select>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="title">Title *</Label>
                           <Input
@@ -627,7 +615,7 @@ export default function Profile() {
                             required
                           />
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="description">Description</Label>
                           <Textarea
@@ -638,7 +626,7 @@ export default function Profile() {
                             rows={3}
                           />
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="link">Link (optional)</Label>
                           <Input
@@ -649,7 +637,7 @@ export default function Profile() {
                             placeholder="https://..."
                           />
                         </div>
-                        
+
                         <div className="flex justify-end gap-2">
                           <Button type="button" variant="outline" onClick={() => setIsActivityDialogOpen(false)}>
                             Cancel
@@ -667,12 +655,17 @@ export default function Profile() {
                 {activities.length > 0 ? (
                   <div className="space-y-4">
                     {activities.map((activity) => (
-                      <div key={activity.id} className="flex gap-4 p-4 rounded-lg border hover:border-primary/50 transition-colors">
+                      <div
+                        key={activity.id}
+                        className="flex gap-4 p-4 rounded-lg border hover:border-primary/50 transition-colors"
+                      >
                         <div className="flex-shrink-0">
                           <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                             {activity.type === "achievement" && <Award className="w-5 h-5 text-primary" />}
                             {activity.type === "post" && <TrendingUp className="w-5 h-5 text-primary" />}
-                            {(activity.type === "forum_post" || activity.type === "new_discussion") && <Briefcase className="w-5 h-5 text-primary" />}
+                            {(activity.type === "forum_post" || activity.type === "new_discussion") && (
+                              <Briefcase className="w-5 h-5 text-primary" />
+                            )}
                             {activity.type === "comment" && <Eye className="w-5 h-5 text-primary" />}
                           </div>
                         </div>
@@ -687,9 +680,9 @@ export default function Profile() {
                               {new Date(activity.created_at).toLocaleDateString()}
                             </span>
                             {activity.link && (
-                              <a 
-                                href={activity.link} 
-                                target="_blank" 
+                              <a
+                                href={activity.link}
+                                target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-1 hover:text-primary transition-colors"
                               >
@@ -704,7 +697,7 @@ export default function Profile() {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleEditActivity(activity)}
-                            disabled={activity.type === 'forum_post' || activity.type === 'new_discussion'}
+                            disabled={activity.type === "forum_post" || activity.type === "new_discussion"}
                           >
                             <Edit2 className="w-4 h-4" />
                           </Button>
@@ -712,7 +705,7 @@ export default function Profile() {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleDeleteActivity(activity.id)}
-                            disabled={activity.type === 'forum_post' || activity.type === 'new_discussion'}
+                            disabled={activity.type === "forum_post" || activity.type === "new_discussion"}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -735,9 +728,7 @@ export default function Profile() {
                   <Edit2 className="w-5 h-5" />
                   Edit Profile
                 </CardTitle>
-                <CardDescription>
-                  Update your profile information to help others connect with you
-                </CardDescription>
+                <CardDescription>Update your profile information to help others connect with you</CardDescription>
               </CardHeader>
               <CardContent className="pt-6">
                 <form onSubmit={handleUpdateProfile} className="space-y-6">
@@ -846,7 +837,7 @@ export default function Profile() {
                       <span className="text-sm font-bold text-primary">{profileCompletion}%</span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-primary h-2 rounded-full transition-all duration-500"
                         style={{ width: `${profileCompletion}%` }}
                       />
@@ -899,13 +890,13 @@ export default function Profile() {
                       <Globe className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-muted-foreground mb-1">Website</p>
-                        <a 
-                          href={profile.website} 
-                          target="_blank" 
+                        <a
+                          href={profile.website}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-sm text-primary hover:underline break-all"
                         >
-                          {profile.website.replace(/^https?:\/\//, '')}
+                          {profile.website.replace(/^https?:\/\//, "")}
                         </a>
                       </div>
                     </div>
@@ -929,25 +920,21 @@ export default function Profile() {
                       <p className="text-2xl font-bold text-accent">{trialDaysRemaining}</p>
                       <p className="text-sm text-muted-foreground">Days Remaining</p>
                     </div>
-                    
+
                     {profile.trial_expires_at && (
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">Expires on</p>
                         <p className="text-sm font-medium">
-                          {new Date(profile.trial_expires_at).toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
+                          {new Date(profile.trial_expires_at).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
                           })}
                         </p>
                       </div>
                     )}
 
-                    <Button 
-                      className="w-full" 
-                      variant="default"
-                      onClick={() => navigate("/membership")}
-                    >
+                    <Button className="w-full" variant="default" onClick={() => navigate("/membership")}>
                       Upgrade Now
                     </Button>
                   </div>
@@ -967,12 +954,7 @@ export default function Profile() {
                 <p className="text-sm text-muted-foreground mb-3">
                   Subscribe to forums to receive updates about new posts and replies.
                 </p>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="w-full"
-                  onClick={() => navigate("/forum")}
-                >
+                <Button variant="outline" size="sm" className="w-full" onClick={() => navigate("/forum")}>
                   Manage Subscriptions
                 </Button>
               </CardContent>
@@ -993,9 +975,9 @@ export default function Profile() {
                     {profile.payment_status === "active" ? "Premium Member" : "Trial Period"}
                   </Badge>
                 </div>
-                
-                <Button 
-                  variant="outline" 
+
+                <Button
+                  variant="outline"
                   className="w-full"
                   onClick={async () => {
                     await supabase.auth.signOut();
