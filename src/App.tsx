@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navigation } from "@/components/ui/navigation";
 import { useForumEmailNotifications } from "@/hooks/use-forum-email-notifications";
+import { useSiteTracking } from "@/hooks/use-site-tracking";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Initiatives from "./pages/Initiatives";
@@ -26,6 +27,8 @@ const queryClient = new QueryClient();
 function AppContent() {
   // Initialize email notifications hook
   useForumEmailNotifications();
+  // Track site visits
+  useSiteTracking();
 
   return (
     <div className="min-h-screen bg-background">

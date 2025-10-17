@@ -12,6 +12,7 @@ export function AdminDashboard() {
     activeMemberships: 0,
     totalRevenue: 0,
     recentActivity: 0,
+    totalVisits: 0,
   });
   const [userGrowth, setUserGrowth] = useState<any[]>([]);
   const [revenueData, setRevenueData] = useState<any[]>([]);
@@ -23,14 +24,15 @@ export function AdminDashboard() {
   }, []);
 
   const loadStats = async () => {
-    const [users, forums, posts, memberships, revenue, activity] = await Promise.all([
+    const [users, forums, posts, memberships, revenue, activity, visits] = await Promise.all([
       supabase.from("aesc_profiles").select("id", { count: "exact", head: true }),
       supabase.from("forums").select("id", { count: "exact", head: true }),
       supabase.from("forum_posts").select("id", { count: "exact", head: true }),
       supabase.from("aesc_user_memberships").select("id", { count: "exact", head: true }).eq("status", "active"),
       supabase.from("payment_records").select("amount").eq("status", "completed"),
       supabase.from("user_activities").select("id", { count: "exact", head: true })
-        .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+      supabase.from("site_visits").select("id", { count: "exact", head: true })
     ]);
 
     const totalRevenue = revenue.data?.reduce((sum, record) => sum + Number(record.amount), 0) || 0;
@@ -42,6 +44,7 @@ export function AdminDashboard() {
       activeMemberships: memberships.count || 0,
       totalRevenue,
       recentActivity: activity.count || 0,
+      totalVisits: visits.count || 0,
     });
   };
 
@@ -99,6 +102,7 @@ export function AdminDashboard() {
     { title: "Active Memberships", value: stats.activeMemberships, icon: CreditCard, color: "text-orange-500" },
     { title: "Total Revenue", value: `$${stats.totalRevenue.toFixed(2)}`, icon: DollarSign, color: "text-emerald-500" },
     { title: "Recent Activity (7d)", value: stats.recentActivity, icon: Activity, color: "text-pink-500" },
+    { title: "Total Site Visits", value: stats.totalVisits, icon: TrendingUp, color: "text-cyan-500" },
   ];
 
   return (
