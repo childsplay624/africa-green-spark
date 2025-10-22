@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navigation } from "@/components/ui/navigation";
 import { useForumEmailNotifications } from "@/hooks/use-forum-email-notifications";
 import { useSiteTracking } from "@/hooks/use-site-tracking";
+import { ScrollToTop } from "@/components/scroll-to-top";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Initiatives from "./pages/Initiatives";
@@ -32,6 +33,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-background">
+      <ScrollToTop />
       <Navigation />
       <Routes>
         <Route path="/" element={<Index />} />
