@@ -66,14 +66,14 @@ export function Navigation() {
   return (
     <nav className="bg-background/95 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-soft">
       <div className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-16">
+        <div className="flex items-center h-20">
           {/* Logo - Extreme left */}
           <div className="flex-shrink-0 mr-auto">
             <Link to="/" className="group">
               <img 
                 src={logoUrl} 
                 alt="Site Logo" 
-                className="h-12 object-contain transition-transform group-hover:scale-105"
+                className="h-20 object-contain transition-transform group-hover:scale-105"
               />
             </Link>
           </div>
