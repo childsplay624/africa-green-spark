@@ -20,7 +20,12 @@ import {
   Sprout,
   MapPin,
   Trees,
-  Handshake
+  Handshake,
+  Mountain,
+  Shield,
+  Waves,
+  Wind,
+  Bird
 } from "lucide-react";
 import strategicHero from "@/assets/strategic-hero.jpg";
 
@@ -83,48 +88,62 @@ const focusAreas = [
   },
 ];
 
-const agenda2063Aspirations = [
+const agenda2063Deliverables = [
   {
     number: "1",
-    title: "Prosperous Africa",
-    description: "Economic transformation and inclusive growth",
-    status: "In Progress",
+    icon: Mountain,
+    title: "Sustainable Natural Resource Management",
+    description: "Africa's vast natural resources are managed responsibly, equitably, and transparently to support long-term development while preventing exploitation and promoting inclusive growth.",
+    color: "text-primary",
   },
   {
-    number: "2", 
-    title: "Integrated Continent",
-    description: "Political unity and regional integration",
-    status: "Active",
+    number: "2",
+    icon: Shield,
+    title: "Climate Resilience",
+    description: "Building adaptive capacity through climate-smart agriculture, resilient infrastructure, and early-warning systems that strengthen Africa's ability to withstand climate shocks.",
+    color: "text-secondary",
   },
   {
     number: "3",
-    title: "Good Governance",
-    description: "Democratic values and institutions",
-    status: "Supporting",
+    icon: Factory,
+    title: "Green Industrialization",
+    description: "Sustainable, low-carbon industries creating jobs without degrading the environment through clean manufacturing and renewable-powered production systems.",
+    color: "text-accent",
   },
   {
     number: "4",
-    title: "Peaceful & Secure",
-    description: "Conflict prevention and peace building",
-    status: "Contributing",
+    icon: Trees,
+    title: "Afforestation & Land Restoration",
+    description: "Large-scale reforestation and land restoration programs combating deforestation and desertification while creating green jobs and restoring biodiversity.",
+    color: "text-earth",
   },
   {
     number: "5",
-    title: "Strong Cultural Identity",
-    description: "African values and heritage",
-    status: "Promoting",
+    icon: Recycle,
+    title: "Circular and Cross Economy",
+    description: "Replacing linear models with circular approaches focused on reuse, recycling, and regeneration while fostering cross-sector resource efficiency.",
+    color: "text-primary",
   },
   {
     number: "6",
-    title: "People-Driven",
-    description: "Youth and women empowerment",
-    status: "Advancing",
+    icon: Waves,
+    title: "Blue Economy Development",
+    description: "Responsible use of marine and freshwater resources for fisheries, shipping, renewable ocean energy, and coastal tourism while protecting ocean ecosystems.",
+    color: "text-secondary",
   },
   {
     number: "7",
-    title: "Global Powerhouse",
-    description: "Influential global partner",
-    status: "Building",
+    icon: Bird,
+    title: "Biodiversity Conservation",
+    description: "Protection, restoration, and sustainable use of Africa's rich biodiversity through expanded protected areas and community-based conservation models.",
+    color: "text-accent",
+  },
+  {
+    number: "8",
+    icon: Wind,
+    title: "Reduction of Carbon Emissions",
+    description: "Decisive shift toward low-carbon development through renewable energy, clean transport, and sustainable agriculture while participating in global carbon markets.",
+    color: "text-earth",
   },
 ];
 
@@ -217,43 +236,48 @@ export default function StrategicFocus() {
         </div>
       </section>
 
-      {/* Agenda 2063 Aspirations */}
+      {/* Agenda 2063 Sustainability & Environmental Deliverables */}
       <section className="py-20 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
+            <Badge className="mb-4 bg-gradient-primary text-white border-0">African Union Agenda 2063</Badge>
             <h2 className="text-4xl font-heading font-bold text-foreground mb-4">
-              Agenda 2063 Aspirations
+              Sustainability & Environmental Deliverables
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Aligning our strategic focus with Africa's long-term development goals
+              Eight critical deliverables driving Africa's environmental sustainability and climate action agenda
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {(pageContent?.agenda2063 || agenda2063Aspirations).map((aspiration: any, index: number) => (
-              <Card 
-                key={aspiration.number}
-                className="text-center hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <span className="text-white font-heading font-bold text-lg">
-                      {aspiration.number}
-                    </span>
-                  </div>
-                  <h3 className="font-heading font-semibold text-lg mb-2">
-                    {aspiration.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm mb-3 leading-relaxed">
-                    {aspiration.description}
-                  </p>
-                  <Badge variant="outline" className="text-xs">
-                    {aspiration.status}
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {(pageContent?.agenda2063 || agenda2063Deliverables).map((deliverable: any, index: number) => {
+              const Icon = deliverable.icon || Mountain;
+              
+              return (
+                <Card 
+                  key={deliverable.number}
+                  className="group hover:shadow-strong transition-all duration-300 border-0 shadow-medium animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <CardContent className="p-6">
+                    <div className={`w-14 h-14 ${deliverable.color === 'text-primary' ? 'bg-primary/10' : deliverable.color === 'text-secondary' ? 'bg-secondary/10' : deliverable.color === 'text-accent' ? 'bg-accent/10' : 'bg-earth/10'} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
+                      <Icon className={`h-7 w-7 ${deliverable.color}`} />
+                    </div>
+                    <div className="text-center mb-3">
+                      <Badge variant="outline" className="text-xs font-semibold">
+                        Deliverable {deliverable.number}
+                      </Badge>
+                    </div>
+                    <h3 className="font-heading font-bold text-lg mb-3 text-center leading-tight">
+                      {deliverable.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed text-center">
+                      {deliverable.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
