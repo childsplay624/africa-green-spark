@@ -20,6 +20,7 @@ import {
   DollarSign,
   GraduationCap
 } from "lucide-react";
+import initiativesHero from "@/assets/initiatives-hero.jpg";
 
 const keyInitiatives = [
   {
@@ -124,9 +125,12 @@ export default function Initiatives() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-primary african-pattern">
+      <section 
+        className="py-20 relative bg-cover bg-center bg-no-repeat african-pattern"
+        style={{ backgroundImage: `linear-gradient(rgba(19, 50, 44, 0.8), rgba(19, 50, 44, 0.8)), url(${initiativesHero})` }}
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6 animate-fade-in">
+          <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6 animate-fade-in text-white">
             {heroData?.title || "Our Key Initiatives"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">

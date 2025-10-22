@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { Check, Users } from "lucide-react";
 import { toast } from "sonner";
 import { usePayment } from "@/hooks/use-payment";
 import {
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import type { User } from '@supabase/supabase-js';
 import type { Tables } from "@/integrations/supabase/types";
+import membershipHero from "@/assets/membership-hero.jpg";
 
 type MembershipPlanRow = Tables<"aesc_membership_plans">;
 
@@ -172,12 +173,28 @@ const Membership = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-      <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Choose Your Membership Plan</h1>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section 
+        className="py-20 relative bg-cover bg-center bg-no-repeat african-pattern"
+        style={{ backgroundImage: `linear-gradient(rgba(19, 50, 44, 0.8), rgba(19, 50, 44, 0.8)), url(${membershipHero})` }}
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <Users className="h-16 w-16 mx-auto mb-6 text-accent animate-float" />
+          <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 animate-fade-in text-white">
+            Membership Plans
+          </h1>
+          <p className="text-xl leading-relaxed animate-fade-in delay-200">
+            Join AE&SC and be part of Africa's sustainable energy transformation. Select the perfect plan for your needs.
+          </p>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto py-12 px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-heading font-bold text-foreground mb-4">Choose Your Plan</h2>
           <p className="text-muted-foreground text-lg mb-6">
-            Select the perfect plan for your needs
+            Flexible membership options to match your goals
           </p>
           
           <div className="max-w-xs mx-auto">
