@@ -148,7 +148,7 @@ export default function Initiatives() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {(pageContent?.keyInitiatives || keyInitiatives).map((initiative: any, index: number) => {
+            {keyInitiatives.map((initiative: any, index: number) => {
               const iconName = typeof initiative.icon === 'string' ? initiative.icon : 'Lightbulb';
               let Icon = Lightbulb;
               if (iconName === 'Lightbulb') Icon = Lightbulb;
