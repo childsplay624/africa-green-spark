@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Target, Eye, Award, Users, ArrowRight, Lightbulb, Globe, Leaf, BarChart2, HeartHandshake } from "lucide-react";
+import { Target, Eye, Award, Users, ArrowRight, Lightbulb, Globe, Leaf, BarChart2, HeartHandshake, Building2, DollarSign, Scale, UserCheck, Zap, Cpu } from "lucide-react";
 import aboutHero from "@/assets/about-hero.jpg";
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
@@ -222,6 +222,111 @@ export default function About() {
                 </CardDescription>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* 6 Pillars Section */}
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                Our Framework
+              </div>
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
+                The 6 Pillars of <span className="text-primary">AE&SC</span>
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                Moving Africa/Nigeria to Sustainability through a comprehensive foundational framework
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {[
+              {
+                icon: Building2,
+                number: "1",
+                title: "Readiness: Institutional and Governance Stability",
+                description: "At the foundation of Africa's sustainability transition lies institutional readiness and governance stability. AE&SC promotes the strengthening of governance systems, transparent leadership, and efficient institutional coordination to ensure policies are implemented effectively and sustainably. This pillar emphasizes building stable frameworks, clear mandates, and inter-agency collaboration mechanisms that can drive long-term sustainability initiatives beyond political cycles. By fostering institutional maturity and accountability, AE&SC ensures that sustainability efforts are strategically anchored, well-coordinated, and resilient to change.",
+                color: "text-primary",
+                bgColor: "bg-primary/10",
+              },
+              {
+                icon: DollarSign,
+                number: "2",
+                title: "Investment and Capital Availability",
+                description: "The sustainability transition requires massive capital inflows and innovative financing mechanisms. AE&SC focuses on bridging the gap between investors, financiers, and sustainable project developers, ensuring that credible, bankable projects attract the funding they need. This pillar promotes green finance instruments, public–private partnerships (PPPs), climate funds, and carbon markets that mobilize both domestic and international investment. AE&SC works to de-risk projects, improve financial transparency, and create investment-ready frameworks that make Africa's clean energy and sustainability sectors attractive and scalable.",
+                color: "text-secondary",
+                bgColor: "bg-secondary/10",
+              },
+              {
+                icon: Scale,
+                number: "3",
+                title: "Regulation and Political Commitments",
+                description: "A successful energy transition depends on strong regulatory foundations and political will. Under this pillar, AE&SC engages with policymakers and regulators to design and advocate for progressive sustainability policies, energy transition frameworks, and compliance mechanisms. The consortium also supports governments in translating political commitments such as net-zero targets and energy access goals into actionable, enforceable regulations. By aligning national policy with regional and global climate ambitions, AE&SC helps ensure that Africa's sustainability journey is policy-driven, transparent, and credible to investors and international partners.",
+                color: "text-accent",
+                bgColor: "bg-accent/10",
+              },
+              {
+                icon: UserCheck,
+                number: "4",
+                title: "Human Capital and Consumer Participation",
+                description: "People are central to Africa's sustainable transformation. This pillar focuses on empowering individuals, communities, and institutions with the knowledge, skills, and motivation to drive change. AE&SC invests in capacity-building programs, technical training, and leadership development to create a skilled sustainability workforce. Additionally, it promotes public awareness and consumer engagement encouraging energy efficiency, responsible consumption, and local ownership of sustainability initiatives. The goal is to cultivate a culture where citizens, professionals, and industries actively participate in shaping a cleaner and more inclusive future.",
+                color: "text-earth",
+                bgColor: "bg-earth/10",
+              },
+              {
+                icon: Zap,
+                number: "5",
+                title: "Integrated Energy Systems Structure",
+                description: "AE&SC advocates for a holistic, integrated approach to energy development combining renewables, natural gas, and emerging technologies into cohesive, resilient systems. This pillar emphasizes the interconnection of generation, transmission, distribution, and consumption systems, leveraging data, digitalization, and cross-sector integration to enhance efficiency and reliability. Through system planning and interregional cooperation, AE&SC supports the creation of flexible, inclusive energy ecosystems capable of delivering sustainable power to both urban and rural communities.",
+                color: "text-primary",
+                bgColor: "bg-primary/10",
+              },
+              {
+                icon: Cpu,
+                number: "6",
+                title: "Technology Infrastructure and Innovative Business Environment",
+                description: "Sustainability in Africa depends on technological advancement and an enabling business ecosystem that supports innovation. This pillar promotes digital transformation, smart infrastructure, and research-driven innovation, creating pathways for emerging technologies such as green hydrogen, AI-driven energy management, and circular economy models to thrive. AE&SC also works to streamline business regulations, support startups and innovators, and encourage local manufacturing and technology transfer. By cultivating a tech-enabled business environment, AE&SC accelerates Africa's ability to compete globally, localize solutions, and sustain growth through innovation.",
+                color: "text-secondary",
+                bgColor: "bg-secondary/10",
+              },
+            ].map((pillar, index) => {
+              const Icon = pillar.icon;
+              return (
+                <AnimatedCard key={pillar.number} delay={index * 0.1}>
+                  <Card className="h-full group hover:shadow-strong transition-all duration-300 border-0 shadow-medium">
+                    <CardHeader>
+                      <div className="flex items-start gap-4">
+                        <div className={`w-16 h-16 ${pillar.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform relative`}>
+                          <Icon className={`h-8 w-8 ${pillar.color}`} />
+                          <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center shadow-md">
+                            <span className="text-white font-heading font-bold text-sm">
+                              {pillar.number}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-xl font-heading font-bold mb-3">
+                            {pillar.title}
+                          </CardTitle>
+                          <CardDescription className="text-base leading-relaxed">
+                            {pillar.description}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                </AnimatedCard>
+              );
+            })}
           </div>
         </div>
       </section>
