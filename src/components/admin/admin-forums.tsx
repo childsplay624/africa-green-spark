@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Eye, EyeOff, Plus, Pencil } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -20,7 +21,14 @@ interface Forum {
   category: string;
   is_public: boolean;
   created_at: string;
+  icon?: string;
 }
+
+const lucideIcons = [
+  "Users", "Zap", "Leaf", "DollarSign", "Globe", "Lightbulb", "TrendingUp",
+  "Battery", "Sun", "Wind", "Droplet", "Recycle", "Shield", "Target",
+  "Rocket", "Award", "Book", "Briefcase", "Building", "Heart"
+];
 
 export function AdminForums() {
   const [forums, setForums] = useState<Forum[]>([]);
@@ -33,6 +41,7 @@ export function AdminForums() {
     description: "",
     category: "",
     is_public: true,
+    icon: "Users",
   });
   const { toast } = useToast();
 
@@ -115,6 +124,7 @@ export function AdminForums() {
         description: formData.description,
         category: formData.category,
         is_public: formData.is_public,
+        icon: formData.icon,
         creator_id: user.id,
       });
 
@@ -126,7 +136,7 @@ export function AdminForums() {
       });
 
       setShowCreateDialog(false);
-      setFormData({ title: "", description: "", category: "", is_public: true });
+      setFormData({ title: "", description: "", category: "", is_public: true, icon: "Users" });
       loadForums();
     } catch (error: any) {
       toast({
@@ -148,6 +158,7 @@ export function AdminForums() {
           description: formData.description,
           category: formData.category,
           is_public: formData.is_public,
+          icon: formData.icon,
         })
         .eq("id", editingForum.id);
 
@@ -160,7 +171,7 @@ export function AdminForums() {
 
       setShowEditDialog(false);
       setEditingForum(null);
-      setFormData({ title: "", description: "", category: "", is_public: true });
+      setFormData({ title: "", description: "", category: "", is_public: true, icon: "Users" });
       loadForums();
     } catch (error: any) {
       toast({
@@ -178,6 +189,7 @@ export function AdminForums() {
       description: forum.description,
       category: forum.category,
       is_public: forum.is_public,
+      icon: forum.icon || "Users",
     });
     setShowEditDialog(true);
   };
@@ -228,6 +240,24 @@ export function AdminForums() {
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   placeholder="e.g., General, Technical, etc."
                 />
+              </div>
+              <div>
+                <Label htmlFor="icon">Icon</Label>
+                <Select
+                  value={formData.icon}
+                  onValueChange={(value) => setFormData({ ...formData, icon: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an icon" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {lucideIcons.map((icon) => (
+                      <SelectItem key={icon} value={icon}>
+                        {icon}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex items-center space-x-2">
                 <Switch
@@ -350,6 +380,24 @@ export function AdminForums() {
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   placeholder="e.g., General, Technical, etc."
                 />
+              </div>
+              <div>
+                <Label htmlFor="edit-icon">Icon</Label>
+                <Select
+                  value={formData.icon}
+                  onValueChange={(value) => setFormData({ ...formData, icon: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an icon" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {lucideIcons.map((icon) => (
+                      <SelectItem key={icon} value={icon}>
+                        {icon}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex items-center space-x-2">
                 <Switch

@@ -9,6 +9,7 @@ export interface ForumCategory {
   description: string;
   category: string;
   posts_count: number;
+  icon?: string;
 }
 
 export interface ForumPost {
@@ -41,7 +42,7 @@ export function useForum() {
     try {
       const { data, error } = await supabase
         .from("forums")
-        .select("id, title, description, category")
+        .select("id, title, description, category, icon")
         .eq("is_public", true);
 
       if (error) throw error;

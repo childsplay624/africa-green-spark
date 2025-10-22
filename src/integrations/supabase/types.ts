@@ -626,6 +626,7 @@ export type Database = {
           created_at: string | null
           creator_id: string
           description: string | null
+          icon: string | null
           id: string
           is_public: boolean | null
           title: string
@@ -636,6 +637,7 @@ export type Database = {
           created_at?: string | null
           creator_id: string
           description?: string | null
+          icon?: string | null
           id?: string
           is_public?: boolean | null
           title: string
@@ -646,6 +648,7 @@ export type Database = {
           created_at?: string | null
           creator_id?: string
           description?: string | null
+          icon?: string | null
           id?: string
           is_public?: boolean | null
           title?: string

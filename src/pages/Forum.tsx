@@ -26,6 +26,8 @@ import {
   Eye,
   Reply
 } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import * as LucideIcons from "lucide-react";
 import forumHero from "@/assets/forum-hero.jpg";
 
 const categoryColors: Record<string, string> = {
@@ -151,26 +153,38 @@ export default function Forum() {
         <section className="py-16 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-heading font-bold text-center mb-12">Discussion Categories</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {categories.map((category, index) => (
-                <AnimatedSection key={category.id} animation="scale-in" delay={index * 100}>
-                  <Card 
-                    className={`cursor-pointer transition-all duration-300 hover:shadow-medium ${
-                      selectedCategory === category.category ? 'ring-2 ring-primary' : ''
-                    }`}
-                    onClick={() => setSelectedCategory(category.category)}
-                  >
-                    <CardContent className="p-4 text-center">
-                      <div className={`w-12 h-12 ${categoryColors[category.category] || 'bg-primary'} rounded-full flex items-center justify-center mx-auto mb-3`}>
-                        <Users className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="font-heading font-semibold text-sm mb-2">{category.title}</h3>
-                      <p className="text-xs text-muted-foreground">{category.posts_count} discussions</p>
-                    </CardContent>
-                  </Card>
-                </AnimatedSection>
-              ))}
-            </div>
+            <Carousel className="w-full max-w-6xl mx-auto">
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {categories.map((category, index) => {
+                  const IconComponent = category.icon && (LucideIcons as any)[category.icon] 
+                    ? (LucideIcons as any)[category.icon] 
+                    : Users;
+                  
+                  return (
+                    <CarouselItem key={category.id} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/5">
+                      <AnimatedSection animation="scale-in" delay={index * 100}>
+                        <Card 
+                          className={`cursor-pointer transition-all duration-300 hover:shadow-medium ${
+                            selectedCategory === category.category ? 'ring-2 ring-primary' : ''
+                          }`}
+                          onClick={() => setSelectedCategory(category.category)}
+                        >
+                          <CardContent className="p-4 text-center">
+                            <div className={`w-12 h-12 ${categoryColors[category.category] || 'bg-primary'} rounded-full flex items-center justify-center mx-auto mb-3`}>
+                              <IconComponent className="h-6 w-6 text-white" />
+                            </div>
+                            <h3 className="font-heading font-semibold text-sm mb-2">{category.title}</h3>
+                            <p className="text-xs text-muted-foreground">{category.posts_count} discussions</p>
+                          </CardContent>
+                        </Card>
+                      </AnimatedSection>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+              <CarouselPrevious className="-left-12" />
+              <CarouselNext className="-right-12" />
+            </Carousel>
           </div>
         </section>
       </AnimatedSection>
