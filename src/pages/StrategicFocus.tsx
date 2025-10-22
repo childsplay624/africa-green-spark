@@ -15,112 +15,71 @@ import {
   ArrowRight,
   TrendingUp,
   Globe,
-  Factory
+  Factory,
+  Droplet,
+  Sprout,
+  MapPin,
+  Trees,
+  Handshake
 } from "lucide-react";
 import strategicHero from "@/assets/strategic-hero.jpg";
 
 const focusAreas = [
   {
-    icon: Leaf,
-    title: "Sustainable Energy",
-    subtitle: "Renewable Power Generation",
-    description: "Advancing solar, wind, hydro, and biomass energy solutions across Africa with focus on grid integration and energy storage.",
-    initiatives: [
-      "Large-scale solar installations",
-      "Wind energy development",
-      "Hydroelectric projects",
-      "Biomass and biogas systems"
-    ],
-    progress: 75,
-    investment: "$2.3B",
-    projects: "85+ Projects",
+    icon: Droplet,
+    title: "Sustainable Energy and Petroleum Resources",
+    description: "AE&SC seeks to advance a balanced and sustainable approach to Africa's energy mix integrating renewable energy expansion with the responsible management of petroleum resources. This focus area promotes cleaner extraction practices, energy efficiency, and the gradual decarbonization of fossil-based operations through technology adoption, emissions monitoring, and policy reform. The goal is to ensure that Africa's oil and gas wealth is leveraged to fund and facilitate the transition toward renewable energy systems that deliver inclusive, long-term energy security.",
     color: "text-primary",
     bgColor: "bg-primary/10",
   },
   {
-    icon: Zap,
-    title: "Oil & Gas Transition",
-    subtitle: "Clean Energy Integration", 
-    description: "Supporting traditional energy sectors in adopting cleaner technologies and transitioning to sustainable operations.",
-    initiatives: [
-      "Carbon capture technologies",
-      "Natural gas optimization",
-      "Renewable energy integration",
-      "Green hydrogen production"
-    ],
-    progress: 60,
-    investment: "$1.8B",
-    projects: "42+ Projects",
+    icon: Sprout,
+    title: "Sustainable Agriculture",
+    description: "Recognizing agriculture's central role in Africa's economy and emissions profile, AE&SC promotes climate-smart and energy-efficient agricultural systems. This involves advancing renewable-powered irrigation, bioenergy from agricultural waste, and low-carbon food production techniques that enhance resilience and food security. By connecting farmers to sustainable technologies and green finance, AE&SC supports a transformation that makes agriculture both profitable and environmentally responsible, reducing rural poverty while protecting natural ecosystems.",
     color: "text-secondary",
     bgColor: "bg-secondary/10",
   },
   {
     icon: Building,
-    title: "Agriculture & Infrastructure",
-    subtitle: "Smart Agricultural Systems",
-    description: "Developing climate-smart agriculture and sustainable infrastructure that supports food security and economic growth.",
-    initiatives: [
-      "Solar-powered irrigation",
-      "Smart farming technologies",
-      "Cold storage solutions",
-      "Rural electrification"
-    ],
-    progress: 68,
-    investment: "$950M",
-    projects: "120+ Projects",
+    title: "Sustainable Infrastructure",
+    description: "AE&SC drives the development of green, resilient, and inclusive infrastructure that underpins Africa's sustainability agenda. This includes promoting energy-efficient buildings, low-emission transport systems, climate-resilient urban planning, and smart infrastructure networks. Through partnerships with governments, investors, and technology providers, the consortium facilitates infrastructure projects that support sustainable cities and communities, reduce environmental impact, and enable economic growth in line with Africa's industrialization goals.",
     color: "text-accent",
     bgColor: "bg-accent/10",
   },
   {
-    icon: Recycle,
-    title: "Carbon Offsetting",
-    subtitle: "Climate Action Programs",
-    description: "Implementing large-scale carbon sequestration and offset programs to support Africa's climate commitments.",
-    initiatives: [
-      "Reforestation projects",
-      "Carbon credit development",
-      "Wetland restoration",
-      "Sustainable land management"
-    ],
-    progress: 55,
-    investment: "$680M",
-    projects: "65+ Projects",
+    icon: Target,
+    title: "Decarbonization Pathways",
+    description: "AE&SC supports governments and industries in defining clear, data-driven decarbonization pathways aligned with net-zero commitments and the Paris Agreement. This entails mapping out practical steps to reduce greenhouse gas emissions from energy system reforms and industrial process optimization to carbon capture and storage (CCS) and renewable energy integration. The focus is on designing context-specific transition frameworks that protect livelihoods while advancing Africa's role in the global low-carbon economy.",
     color: "text-earth",
     bgColor: "bg-earth/10",
   },
   {
-    icon: Factory,
-    title: "Circular Economy",
-    subtitle: "Waste-to-Value Systems",
-    description: "Creating circular economy models that transform waste into valuable resources while reducing environmental impact.",
-    initiatives: [
-      "Waste-to-energy plants",
-      "Recycling technologies",
-      "Industrial symbiosis",
-      "Sustainable manufacturing"
-    ],
-    progress: 45,
-    investment: "$420M",
-    projects: "35+ Projects",
+    icon: Trees,
+    title: "Carbon Offsetting Projects",
+    description: "AE&SC promotes the development of high-integrity carbon offset projects that generate measurable environmental and socio-economic value. These include reforestation, clean cookstove distribution, renewable electrification, and waste-to-energy initiatives that reduce emissions and create community benefits. The consortium ensures projects meet international standards (such as Verra and Gold Standard) while facilitating carbon credit trading mechanisms that attract climate finance into Africa.",
     color: "text-primary",
     bgColor: "bg-primary/10",
   },
   {
-    icon: Lightbulb,
-    title: "Energy Innovation",
-    subtitle: "Technology Development",
-    description: "Fostering innovation in energy technologies through research, development, and deployment of cutting-edge solutions.",
-    initiatives: [
-      "Energy storage systems",
-      "Smart grid technologies",
-      "IoT energy management",
-      "AI-powered optimization"
-    ],
-    progress: 70,
-    investment: "$340M",
-    projects: "28+ Projects",
+    icon: Recycle,
+    title: "Circular Economy Integration",
+    description: "AE&SC works to embed circular economy principles across industries encouraging waste reduction, resource recovery, and product lifecycle innovation. This focus promotes initiatives such as recycling and upcycling programs, industrial symbiosis, and sustainable materials management. By shifting from a linear \"take–make–dispose\" model to a circular one, AE&SC helps industries unlock efficiency gains, reduce pollution, and create green jobs across the value chain.",
     color: "text-secondary",
     bgColor: "bg-secondary/10",
+  },
+  {
+    icon: Lightbulb,
+    title: "Energy Innovations",
+    description: "AE&SC serves as a catalyst for technological advancement and innovation in the energy sector. The consortium facilitates the introduction and localization of emerging technologies such as green hydrogen, smart grids, energy storage, digital twins, and AI-driven energy management systems. By providing a platform for pilots, partnerships, and knowledge sharing, AE&SC accelerates the adoption of cutting-edge solutions that enhance reliability, affordability, and sustainability in Africa's energy landscape.",
+    color: "text-accent",
+    bgColor: "bg-accent/10",
+  },
+  {
+    icon: Handshake,
+    title: "Collaborative Partnership",
+    description: "At the heart of AE&SC's mission is collaboration. The consortium acts as a strategic convening hub, uniting governments, private sector leaders, financial institutions, academia, and development partners. AE&SC drives joint initiatives, harmonizes policy efforts, and pools resources to maximize collective impact. This collaborative model ensures that Africa's sustainability transition is not fragmented but coordinated, inclusive, and anchored on shared responsibility.",
+    color: "text-earth",
+    bgColor: "bg-earth/10",
   },
 ];
 
@@ -199,7 +158,7 @@ export default function StrategicFocus() {
             {heroData?.title || "Strategic Focus Areas"}
           </h1>
           <p className="text-xl leading-relaxed animate-fade-in delay-200">
-            {heroData?.subtitle || pageContent?.subtitle || "Six pillars driving Africa's comprehensive approach to sustainable development and energy transformation."}
+            {heroData?.subtitle || pageContent?.subtitle || "Eight strategic pillars driving Africa's comprehensive approach to sustainable development and energy transformation."}
           </p>
         </div>
       </section>
@@ -209,7 +168,7 @@ export default function StrategicFocus() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-heading font-bold text-foreground mb-4">
-              Six Pillars of Transformation
+              Eight Strategic Pillars
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Comprehensive strategies addressing every aspect of Africa's sustainable future
@@ -217,20 +176,24 @@ export default function StrategicFocus() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {(pageContent?.focusAreas || focusAreas).map((area: any, index: number) => {
+            {focusAreas.map((area: any, index: number) => {
               const iconName = typeof area.icon === 'string' ? area.icon : 'Leaf';
               let Icon = Leaf;
               if (iconName === 'Leaf') Icon = Leaf;
-              if (iconName === 'Zap') Icon = Zap;
+              if (iconName === 'Droplet') Icon = Droplet;
+              if (iconName === 'Sprout') Icon = Sprout;
               if (iconName === 'Building') Icon = Building;
+              if (iconName === 'Target') Icon = Target;
+              if (iconName === 'Trees') Icon = Trees;
               if (iconName === 'Recycle') Icon = Recycle;
-              if (iconName === 'Factory') Icon = Factory;
               if (iconName === 'Lightbulb') Icon = Lightbulb;
+              if (iconName === 'Handshake') Icon = Handshake;
+              
               return (
                 <Card 
                   key={area.title}
-                  className="group hover:shadow-strong transition-all duration-300 border-0 shadow-medium"
-                  style={{ animationDelay: `${index * 150}ms` }}
+                  className="group hover:shadow-strong transition-all duration-300 border-0 shadow-medium animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <CardHeader>
                     <div className="flex items-start gap-4">
@@ -238,58 +201,15 @@ export default function StrategicFocus() {
                         <Icon className={`h-8 w-8 ${area.color}`} />
                       </div>
                       <div className="flex-1">
-                        <CardTitle className="text-2xl font-heading font-bold mb-1">
+                        <CardTitle className="text-2xl font-heading font-bold mb-3">
                           {area.title}
                         </CardTitle>
-                        <div className="text-sm font-medium text-primary mb-3">
-                          {area.subtitle}
-                        </div>
                         <CardDescription className="text-base leading-relaxed">
                           {area.description}
                         </CardDescription>
                       </div>
                     </div>
                   </CardHeader>
-                  
-                  <CardContent className="space-y-6">
-                    {/* Initiatives */}
-                    <div>
-                      <h4 className="font-semibold mb-3">Key Initiatives:</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {area.initiatives.map((initiative) => (
-                          <div key={initiative} className="text-sm text-muted-foreground">
-                            • {initiative}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Progress and Stats */}
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Implementation Progress</span>
-                          <span className="font-medium text-primary">{area.progress}%</span>
-                        </div>
-                        <Progress value={area.progress} className="h-2" />
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-primary">{area.investment}</div>
-                          <div className="text-xs text-muted-foreground">Investment</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-secondary">{area.projects}</div>
-                          <div className="text-xs text-muted-foreground">Active</div>
-                        </div>
-                        <Badge variant="secondary" className="text-xs">
-                          <TrendingUp className="h-3 w-3 mr-1" />
-                          Growing
-                        </Badge>
-                      </div>
-                    </div>
-                  </CardContent>
                 </Card>
               );
             })}
