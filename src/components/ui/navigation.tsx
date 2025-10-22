@@ -13,7 +13,7 @@ const navItems = [
   { name: "Strategic Focus", href: "/strategic-focus" },
   { name: "Partnerships", href: "/partnerships" },
   { name: "Resources", href: "/resources" },
-  { name: "Community", href: "/forum" },
+  { name: "Forum", href: "/forum" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -29,7 +29,7 @@ export function Navigation() {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
     });
-    
+
     return () => {
       authListener.subscription.unsubscribe();
     };
@@ -42,7 +42,7 @@ export function Navigation() {
         .select("setting_value")
         .eq("setting_key", "site_logo")
         .single();
-      
+
       if (data?.setting_value) {
         setLogoUrl(data.setting_value);
       }
@@ -52,7 +52,9 @@ export function Navigation() {
   };
 
   const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     setIsAuthenticated(!!session);
   };
 
@@ -70,9 +72,9 @@ export function Navigation() {
           {/* Logo - Extreme left */}
           <div className="flex-shrink-0 mr-auto">
             <Link to="/" className="group">
-              <img 
-                src={logoUrl} 
-                alt="Site Logo" 
+              <img
+                src={logoUrl}
+                alt="Site Logo"
                 className="h-20 object-contain transition-transform group-hover:scale-105"
               />
             </Link>
@@ -87,9 +89,7 @@ export function Navigation() {
                   to={item.href}
                   className={cn(
                     "text-sm font-medium transition-colors hover:text-primary relative",
-                    isActive(item.href)
-                      ? "text-primary"
-                      : "text-muted-foreground"
+                    isActive(item.href) ? "text-primary" : "text-muted-foreground",
                   )}
                 >
                   {item.name}
@@ -146,7 +146,7 @@ export function Navigation() {
                     "block px-3 py-2 rounded-md text-base font-medium transition-colors",
                     isActive(item.href)
                       ? "text-primary bg-accent"
-                      : "text-muted-foreground hover:text-primary hover:bg-accent"
+                      : "text-muted-foreground hover:text-primary hover:bg-accent",
                   )}
                 >
                   {item.name}
