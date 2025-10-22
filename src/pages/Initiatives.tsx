@@ -14,61 +14,62 @@ import {
   Leaf,
   Zap,
   Globe,
-  Handshake
+  Handshake,
+  FileText,
+  Rocket,
+  DollarSign,
+  GraduationCap
 } from "lucide-react";
 
 const keyInitiatives = [
   {
     icon: Lightbulb,
-    title: "Co-creation of Strategies",
-    description: "Collaborative development of sustainable energy strategies with stakeholders across the continent.",
-    features: [
-      "Multi-stakeholder workshops",
-      "Policy framework development", 
-      "Strategic roadmap creation",
-      "Implementation planning"
-    ],
+    title: "Co-create Future-Fit Strategies",
+    description: "The AE&SC works collaboratively with governments, private sector players, research institutions, and civil society to design forward-looking energy and sustainability strategies. By co-creating these frameworks, the consortium ensures that energy transition plans are locally relevant yet globally competitive, integrating innovation, data-driven insights, and inclusive policy design to secure Africa's sustainable energy future.",
     color: "text-primary",
     bgColor: "bg-primary/10",
   },
   {
-    icon: Zap,
-    title: "Technology & Innovation Support",
-    description: "Advancing clean energy technologies through research, development, and deployment initiatives.",
-    features: [
-      "Technology assessment",
-      "Innovation labs",
-      "Pilot project support",
-      "Knowledge transfer"
-    ],
+    icon: Target,
+    title: "Support Effective Implementation",
+    description: "Beyond strategy development, AE&SC provides hands-on technical, policy, and operational support to ensure that sustainability initiatives move from planning to measurable results. This involves developing implementation roadmaps, monitoring frameworks, and capacity-building programs that strengthen institutions and project teams. AE&SC acts as an implementation partner bridging the gap between vision and execution to accelerate energy transition outcomes.",
     color: "text-secondary",
     bgColor: "bg-secondary/10",
   },
   {
-    icon: Briefcase,
-    title: "Investor Engagement",
-    description: "Connecting sustainable energy projects with funding sources and investment opportunities.",
-    features: [
-      "Investment facilitation",
-      "Project packaging",
-      "Due diligence support",
-      "Risk assessment"
-    ],
+    icon: FileText,
+    title: "Provide Strategic Advice on Key Issues",
+    description: "AE&SC serves as a trusted advisor to governments, corporations, and development agencies on pressing issues such as energy transition policy, carbon management, renewable integration, and ESG compliance. The consortium leverages deep sector expertise and data insights to shape evidence-based recommendations, enabling stakeholders to make informed decisions that balance energy security, sustainability, and economic growth.",
     color: "text-accent",
     bgColor: "bg-accent/10",
   },
   {
-    icon: Globe,
-    title: "Climate Advocacy & Policy Alignment",
-    description: "Promoting policy frameworks that support Africa's climate goals and energy transition.",
-    features: [
-      "Policy advocacy",
-      "Regulatory support",
-      "Climate alignment",
-      "International cooperation"
-    ],
+    icon: Handshake,
+    title: "Convene Multi-Stakeholder Collaborations",
+    description: "Recognizing that sustainability challenges are interconnected, AE&SC functions as a neutral convening platform that brings together stakeholders from government, academia, industry, finance, and civil society. Through forums, roundtables, and collaborative projects, AE&SC fosters dialogue, aligns priorities, and facilitates joint initiatives that unlock innovation and shared value across the energy ecosystem.",
     color: "text-earth",
     bgColor: "bg-earth/10",
+  },
+  {
+    icon: Rocket,
+    title: "Provide Platform for Emerging Technologies to Enter Nigeria",
+    description: "AE&SC offers a landing platform for clean and emerging energy technologies such as green hydrogen, smart grids, carbon capture, and digital energy management tools to gain access to the Nigerian and wider African market. The consortium creates pathways for technology validation, regulatory alignment, and pilot deployment, serving as a bridge between innovators and local stakeholders to ensure successful adoption and scale-up.",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+  },
+  {
+    icon: DollarSign,
+    title: "Bring Investors and Financiers to Accelerate Sustainable Energy Transition in Africa",
+    description: "To unlock Africa's vast energy potential, AE&SC actively engages investors, financiers, and development partners to mobilize capital for sustainable energy projects. By curating bankable projects, facilitating public–private partnerships, and providing investment readiness support, the consortium helps attract both domestic and international funding that drives renewable energy expansion and decarbonization initiatives.",
+    color: "text-secondary",
+    bgColor: "bg-secondary/10",
+  },
+  {
+    icon: GraduationCap,
+    title: "Equipping People to Drive the Change",
+    description: "AE&SC believes people are the engine of Africa's sustainability transition. The consortium invests in capacity building, leadership development, and technical training to empower energy professionals, policymakers, and community leaders. Through targeted programs, AE&SC nurtures a generation of skilled, sustainability-minded changemakers capable of leading the continent's transition toward cleaner, inclusive, and resilient energy systems.",
+    color: "text-accent",
+    bgColor: "bg-accent/10",
   },
 ];
 
@@ -139,10 +140,10 @@ export default function Initiatives() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-heading font-bold text-foreground mb-4">
-              Strategic Focus Areas
+              Our Seven Key Initiatives
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Four core initiatives that form the foundation of our work across the continent
+              Comprehensive programs that drive Africa's energy transition through collaboration, innovation, and sustainable development
             </p>
           </div>
 
@@ -151,6 +152,12 @@ export default function Initiatives() {
               const iconName = typeof initiative.icon === 'string' ? initiative.icon : 'Lightbulb';
               let Icon = Lightbulb;
               if (iconName === 'Lightbulb') Icon = Lightbulb;
+              if (iconName === 'Target') Icon = Target;
+              if (iconName === 'FileText') Icon = FileText;
+              if (iconName === 'Handshake') Icon = Handshake;
+              if (iconName === 'Rocket') Icon = Rocket;
+              if (iconName === 'DollarSign') Icon = DollarSign;
+              if (iconName === 'GraduationCap') Icon = GraduationCap;
               if (iconName === 'Zap') Icon = Zap;
               if (iconName === 'Briefcase') Icon = Briefcase;
               if (iconName === 'Globe') Icon = Globe;
@@ -158,8 +165,8 @@ export default function Initiatives() {
               return (
                 <Card 
                   key={initiative.title}
-                  className="group hover:shadow-strong transition-all duration-300 border-0 shadow-medium"
-                  style={{ animationDelay: `${index * 200}ms` }}
+                  className="group hover:shadow-strong transition-all duration-300 border-0 shadow-medium animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <CardHeader>
                     <div className={`w-16 h-16 ${initiative.bgColor} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
@@ -172,17 +179,6 @@ export default function Initiatives() {
                       {initiative.description}
                     </CardDescription>
                   </CardHeader>
-                  
-                  <CardContent>
-                    <div className="space-y-3">
-                      {initiative.features.map((feature) => (
-                        <div key={feature} className="flex items-center gap-3">
-                          <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
-                          <span className="text-muted-foreground">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
                 </Card>
               );
             })}
