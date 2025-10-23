@@ -49,7 +49,7 @@ export function InitiativesSection() {
         </div>
 
         {/* Initiatives Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
           {initiatives.map((initiative, index) => {
             const Icon = getIconComponent(initiative.icon);
             return (
@@ -62,7 +62,7 @@ export function InitiativesSection() {
                   <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                     <Icon className="h-8 w-8 text-primary" />
                   </div>
-                  <CardTitle className="font-heading font-semibold text-xl">
+                  <CardTitle className="font-heading font-semibold text-lg sm:text-xl">
                     {initiative.title}
                   </CardTitle>
                 </CardHeader>

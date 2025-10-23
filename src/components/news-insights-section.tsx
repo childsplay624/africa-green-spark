@@ -56,7 +56,7 @@ export function NewsInsightsSection() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {news.map((article, index) => (
               <Card 
                 key={article.id}
@@ -81,8 +81,8 @@ export function NewsInsightsSection() {
                   </div>
                 )}
                 
-                <CardHeader>
-                  <CardTitle className="font-heading font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="font-heading font-semibold text-base sm:text-lg line-clamp-2 group-hover:text-primary transition-colors">
                     {article.title}
                   </CardTitle>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">

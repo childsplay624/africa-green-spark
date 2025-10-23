@@ -254,7 +254,7 @@ export default function Partnerships() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {(pageContent?.partnershipLevels || partnershipLevels).map((level: any, index: number) => {
               const iconName = typeof level.icon === 'string' ? level.icon : 'Star';
               let Icon = Star;
@@ -314,7 +314,7 @@ export default function Partnerships() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {(partners.length > 0 ? partners : currentPartners).map((partner, index) => (
               <Card 
                 key={partner.name}

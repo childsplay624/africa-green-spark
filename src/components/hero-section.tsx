@@ -107,32 +107,32 @@ export function HeroSection() {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-5xl md:text-7xl font-heading font-bold leading-tight mb-6 animate-fade-in delay-200">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-bold leading-tight mb-4 sm:mb-6 px-4 animate-fade-in delay-200">
             {heroData?.title || "Let's Build a Sustainable Future Together!"}
           </h1>
 
           {/* Subtitle */}
           {heroData?.subtitle && (
-            <p className="text-xl md:text-2xl font-light mb-4 text-white/90 animate-fade-in delay-400">
+            <p className="text-lg sm:text-xl md:text-2xl font-light mb-3 sm:mb-4 text-white/90 px-4 animate-fade-in delay-400">
               {heroData.subtitle}
             </p>
           )}
 
           {/* Description - fallback only */}
           {!heroData?.subtitle && (
-            <p className="text-lg text-white/80 max-w-3xl mx-auto mb-12 leading-relaxed animate-fade-in delay-600">
+            <p className="text-base sm:text-lg text-white/80 max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4 animate-fade-in delay-600">
               The African Energy and Sustainability Consortium drives innovation, partnerships, 
               and strategic initiatives to build a cleaner, more sustainable energy future for Africa.
             </p>
           )}
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in delay-800">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 sm:mb-16 px-4 animate-fade-in delay-800">
             {heroData?.cta_text && heroData?.cta_link && (
               <Button 
                 variant="cta" 
                 size="lg" 
-                className="text-lg px-8 py-4 min-w-[200px]" 
+                className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto sm:min-w-[200px]" 
                 asChild
               >
                 <Link to={heroData.cta_link}>
@@ -145,7 +145,7 @@ export function HeroSection() {
             <Button 
               variant="outline" 
               size="lg" 
-              className="text-lg px-8 py-4 min-w-[200px] bg-white/10 border-white/30 text-white hover:bg-white/20"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto sm:min-w-[200px] bg-white/10 border-white/30 text-white hover:bg-white/20"
               asChild
             >
               <Link to="/partnerships">
@@ -157,7 +157,7 @@ export function HeroSection() {
             <Button 
               variant="ghost" 
               size="lg" 
-              className="text-lg px-8 py-4 min-w-[200px] text-white/90 hover:bg-white/10"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto sm:min-w-[200px] text-white/90 hover:bg-white/10"
               asChild
             >
               <Link to="/about">
@@ -168,33 +168,33 @@ export function HeroSection() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto animate-fade-in delay-1000">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto px-4 animate-fade-in delay-1000">
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-accent mb-2">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-accent mb-1 sm:mb-2">
                 <Counter value={2063} />
               </div>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/80 text-xs sm:text-sm">
                 Agenda 2063 Aligned
               </p>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-accent mb-2">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-accent mb-1 sm:mb-2">
                 <Counter value={54} />
               </div>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/80 text-xs sm:text-sm">
                 African Countries
               </p>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-accent mb-2">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-accent mb-1 sm:mb-2">
                 <Counter value={100} suffix="+" />
               </div>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/80 text-xs sm:text-sm">
                 Partners & Stakeholders
               </p>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-accent mb-2">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-accent mb-1 sm:mb-2">
                 <Counter value={6} suffix="+" />
               </div>
               <p className="text-white/80 text-sm">

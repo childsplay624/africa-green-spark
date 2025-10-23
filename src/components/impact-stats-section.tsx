@@ -153,7 +153,7 @@ export function ImpactStatsSection() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12 sm:mb-16">
           {stats.map((stat, index) => {
             const Icon = getIconComponent(stat.icon);
             return (
@@ -162,14 +162,14 @@ export function ImpactStatsSection() {
                 className="group hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft text-center bg-white/80 backdrop-blur-sm"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <CardContent className="p-6">
-                  <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <Icon className="h-8 w-8 text-white" />
+                <CardContent className="p-4 sm:p-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                    <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                   </div>
-                  <div className="text-3xl md:text-4xl font-heading font-bold text-primary mb-2">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-primary mb-2">
                     {stat.value}
                   </div>
-                  <h3 className="font-heading font-semibold text-lg mb-2">
+                  <h3 className="font-heading font-semibold text-base sm:text-lg mb-2">
                     {stat.label}
                   </h3>
                 </CardContent>
@@ -180,11 +180,11 @@ export function ImpactStatsSection() {
 
         {/* Milestones */}
         <div className="max-w-4xl mx-auto">
-          <h3 className="text-3xl font-heading font-bold text-center text-foreground mb-12">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-center text-foreground mb-8 sm:mb-12">
             Key Milestones
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {milestones.map((milestone, index) => (
               <Card 
                 key={`${milestone.year}-${milestone.title}`}

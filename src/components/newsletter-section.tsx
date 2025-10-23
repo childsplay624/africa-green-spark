@@ -24,19 +24,19 @@ export function NewsletterSection() {
   };
 
   return (
-    <section className="py-16 bg-gradient-primary african-pattern">
+    <section className="py-12 sm:py-16 bg-gradient-primary african-pattern">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="mb-8">
-          <Mail className="h-12 w-12 text-white mx-auto mb-4 animate-float" />
-          <h3 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
+        <div className="mb-6 sm:mb-8">
+          <Mail className="h-10 w-10 sm:h-12 sm:w-12 text-white mx-auto mb-3 sm:mb-4 animate-float" />
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-white mb-3 sm:mb-4">
             Stay Connected
           </h3>
-          <p className="text-xl text-white/90 leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-white/90 leading-relaxed px-4">
             Get the latest insights on Africa's energy transition and sustainability initiatives
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto">
           <Input
             type="email"
             placeholder="Enter your email address"
@@ -62,7 +62,7 @@ export function NewsletterSection() {
           </Button>
         </form>
 
-        <p className="text-sm text-white/70 mt-4">
+        <p className="text-xs sm:text-sm text-white/70 mt-3 sm:mt-4 px-4">
           No spam, unsubscribe at any time. We respect your privacy.
         </p>
       </div>

@@ -42,11 +42,11 @@ const Footer = () => {
       {/* Newsletter Section */}
       <div className="border-b border-primary-light/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-2xl font-heading font-bold mb-4">
+        <div className="max-w-2xl mx-auto text-center">
+            <h3 className="text-xl sm:text-2xl font-heading font-bold mb-3 sm:mb-4">
               Stay Updated on Africa's Energy Transition
             </h3>
-            <p className="text-primary-foreground/80 mb-6">
+            <p className="text-sm sm:text-base text-primary-foreground/80 mb-4 sm:mb-6">
               Get the latest insights, reports, and updates on sustainable energy initiatives across Africa.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
@@ -64,8 +64,8 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Organization Info */}
           <div className="lg:col-span-1">
             <div className="mb-4">
@@ -100,7 +100,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-heading font-semibold text-lg mb-4">Quick Links</h4>
+            <h4 className="font-heading font-semibold text-base sm:text-lg mb-3 sm:mb-4">Quick Links</h4>
             <ul className="space-y-3">
               <li><Link to="/about" className="text-primary-foreground/80 hover:text-secondary transition-colors">About Us</Link></li>
               <li><Link to="/initiatives" className="text-primary-foreground/80 hover:text-secondary transition-colors">Our Initiatives</Link></li>
@@ -113,7 +113,7 @@ const Footer = () => {
 
           {/* Programs */}
           <div>
-            <h4 className="font-heading font-semibold text-lg mb-4">Focus Areas</h4>
+            <h4 className="font-heading font-semibold text-base sm:text-lg mb-3 sm:mb-4">Focus Areas</h4>
             <ul className="space-y-3">
               <li className="text-primary-foreground/80">Clean Energy Deployment</li>
               <li className="text-primary-foreground/80">Energy Access Programs</li>
@@ -126,7 +126,7 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-heading font-semibold text-lg mb-4">Contact</h4>
+            <h4 className="font-heading font-semibold text-base sm:text-lg mb-3 sm:mb-4">Contact</h4>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-secondary mt-0.5 flex-shrink-0" />

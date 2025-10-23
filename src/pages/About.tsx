@@ -98,15 +98,15 @@ export default function About() {
       {/* Stats Section */}
       <section className="py-12 bg-gradient-to-b from-background to-muted/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {stats.map((stat, index) => (
               <AnimatedCard key={stat.label} delay={index * 0.1}>
                 <Card className="border-0 shadow-md hover:shadow-lg transition-shadow h-full">
-                  <CardContent className="p-6 text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">
                       {stat.value}{stat.suffix}
                     </div>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
                   </CardContent>
                 </Card>
               </AnimatedCard>
@@ -248,7 +248,7 @@ export default function About() {
             </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {[
               {
                 icon: Building2,
@@ -353,7 +353,7 @@ export default function About() {
             </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {[
               {
                 icon: Zap,
@@ -440,7 +440,7 @@ export default function About() {
             </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {(pageContent?.values || [
               {
                 icon: "Lightbulb",

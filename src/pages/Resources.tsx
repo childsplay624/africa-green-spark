@@ -188,7 +188,7 @@ export default function Resources() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
             {(pageContent?.resourceCategories || resourceCategories).map((category: any, index: number) => {
               const iconName = typeof category.icon === 'string' ? category.icon : 'FileText';
               let Icon = FileText;
@@ -202,11 +202,11 @@ export default function Resources() {
                   className="group hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft text-center"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <CardContent className="p-6">
-                    <div className={`w-16 h-16 ${category.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                      <Icon className={`h-8 w-8 ${category.color}`} />
+                  <CardContent className="p-4 sm:p-6">
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 ${category.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform`}>
+                      <Icon className={`h-6 w-6 sm:h-8 sm:w-8 ${category.color}`} />
                     </div>
-                    <h3 className="font-heading font-semibold text-lg mb-2">
+                    <h3 className="font-heading font-semibold text-base sm:text-lg mb-2">
                       {category.title}
                     </h3>
                     <div className={`text-sm font-medium ${category.color} mb-2`}>
@@ -247,7 +247,7 @@ export default function Resources() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {(pageContent?.featuredResources || featuredResources).map((resource: any, index: number) => (
               <Card 
                 key={resource.title}

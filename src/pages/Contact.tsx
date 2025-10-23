@@ -147,7 +147,7 @@ export default function Contact() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {(pageContent?.contactMethods || contactMethods).map((method: any, index: number) => {
               const iconName = typeof method.icon === 'string' ? method.icon : 'Building';
               let Icon = Building;
@@ -161,11 +161,11 @@ export default function Contact() {
                   className="text-center hover:shadow-medium transition-all duration-300 transform hover:scale-105 border-0 shadow-soft"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <CardContent className="p-6">
-                    <div className={`w-16 h-16 ${method.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
-                      <Icon className={`h-8 w-8 ${method.color}`} />
+                  <CardContent className="p-4 sm:p-6">
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 ${method.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4`}>
+                      <Icon className={`h-6 w-6 sm:h-8 sm:w-8 ${method.color}`} />
                     </div>
-                    <h3 className="font-heading font-semibold text-lg mb-4">
+                    <h3 className="font-heading font-semibold text-base sm:text-lg mb-3 sm:mb-4">
                       {method.title}
                     </h3>
                     <div className="space-y-2">

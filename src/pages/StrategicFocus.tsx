@@ -194,7 +194,7 @@ export default function StrategicFocus() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {focusAreas.map((area: any, index: number) => {
               const iconName = typeof area.icon === 'string' ? area.icon : 'Leaf';
               let Icon = Leaf;
@@ -249,7 +249,7 @@ export default function StrategicFocus() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {(pageContent?.agenda2063 || agenda2063Deliverables).map((deliverable: any, index: number) => {
               const Icon = deliverable.icon || Mountain;
               

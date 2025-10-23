@@ -202,7 +202,7 @@ export default function Initiatives() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {(pageContent?.focusAreas || focusAreas).map((area: any, index: number) => (
               <Card 
                 key={area.title}
@@ -238,7 +238,7 @@ export default function Initiatives() {
             Measurable Impact
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12">
             {(pageContent?.impact?.stats || [
               {value: "850MW", label: "Clean energy capacity facilitated"},
               {value: "2.1M", label: "People with improved energy access"},

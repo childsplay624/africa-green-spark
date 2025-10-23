@@ -50,7 +50,7 @@ export function PartnersSection() {
         </div>
 
         {/* Partners Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
           {partners.map((partner, index) => (
             <Card 
               key={partner.id}
@@ -71,7 +71,7 @@ export function PartnersSection() {
                     {React.createElement(getIconComponent(partner.category), { className: "h-8 w-8 text-primary" })}
                   </div>
                 )}
-                <h3 className="font-heading font-semibold text-lg mb-2">
+                <h3 className="font-heading font-semibold text-sm sm:text-base lg:text-lg mb-2">
                   {partner.name}
                 </h3>
                 {partner.description && (
@@ -90,11 +90,11 @@ export function PartnersSection() {
         </div>
 
         {/* CTA */}
-        <div className="text-center bg-gradient-primary rounded-2xl p-12 text-white african-pattern">
-          <h3 className="text-3xl font-heading font-bold mb-4">
+        <div className="text-center bg-gradient-primary rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12 text-white african-pattern">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold mb-3 sm:mb-4">
             Become Our Partner
           </h3>
-          <p className="text-xl leading-relaxed mb-8 text-white/90 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl leading-relaxed mb-6 sm:mb-8 text-white/90 max-w-2xl mx-auto">
             Join leading organizations across Africa in building a sustainable 
             energy future. Together, we can achieve more.
           </p>
