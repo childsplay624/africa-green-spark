@@ -173,18 +173,7 @@ export default function About() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 </div>
               </div>
-              <div className="absolute inset-0 flex items-end p-8">
-                <div className="bg-gradient-to-r from-primary to-accent p-6 rounded-2xl w-full max-w-md">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-2 bg-white/10 rounded-lg">
-                      <Target className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white">{pageContent?.vision?.title || "Our Vision"}</h3>
-                  </div>
-                  <p className="text-white/90">
-                    {pageContent?.vision?.description || "A prosperous Africa powered by clean, sustainable energy that drives economic growth, improves lives, and preserves our environment for future generations."}
-                  </p>
-                </div>
+              
               </div>
             </motion.div>
           </div>
