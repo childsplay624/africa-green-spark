@@ -158,24 +158,22 @@ export default function About() {
                 </Link>
               </Button>
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 50, rotate: 2 }}
-              whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-accent/5 -z-10" />
-              <div className="absolute inset-4 border-2 border-primary/20 rounded-2xl group-hover:border-primary/40 transition-all duration-500" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-full h-full">
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80')] bg-cover bg-center scale-110 group-hover:scale-100 transition-transform duration-1000" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                </div>
+          <motion.div
+            initial={{ opacity: 0, x: 50, rotate: 2 }}
+            whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-accent/5 -z-10" />
+            <div className="absolute inset-4 border-2 border-primary/20 rounded-2xl group-hover:border-primary/40 transition-all duration-500" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-full h-full">
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80')] bg-cover bg-center scale-110 group-hover:scale-100 transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               </div>
-              
-              </div>
-            </motion.div>
+            </div>
+          </motion.div>
           </div>
         </div>
       </section>

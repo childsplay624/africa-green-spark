@@ -166,6 +166,42 @@ export type Database = {
         }
         Relationships: []
       }
+      cms_core_values: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description: string
+          display_order: number | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description: string
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description?: string
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       cms_hero_sections: {
         Row: {
           created_at: string | null
@@ -411,6 +447,81 @@ export type Database = {
           id?: string
           setting_key?: string
           setting_value?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      cms_strategic_pillars: {
+        Row: {
+          bg_color: string | null
+          color: string | null
+          created_at: string | null
+          description: string
+          display_order: number | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          number: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          bg_color?: string | null
+          color?: string | null
+          created_at?: string | null
+          description: string
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          number: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          bg_color?: string | null
+          color?: string | null
+          created_at?: string | null
+          description?: string
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          number?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      cms_vision_mission: {
+        Row: {
+          created_at: string | null
+          description: string
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          type?: string
           updated_at?: string | null
         }
         Relationships: []

@@ -15,6 +15,9 @@ import { CmsPartners } from "@/components/admin/cms-partners";
 import { CmsSiteSettings } from "@/components/admin/cms-site-settings";
 import { CmsPageContent } from "@/components/admin/cms-page-content";
 import { AdminApiKeys } from "@/components/admin/admin-api-keys";
+import { CmsVisionMission } from "@/components/admin/cms-vision-mission";
+import { CmsCoreValues } from "@/components/admin/cms-core-values";
+import { CmsStrategicPillars } from "@/components/admin/cms-strategic-pillars";
 
 export default function Admin() {
   const { loading } = useAdminCheck();
@@ -116,6 +119,9 @@ export default function Admin() {
 
           <TabsContent value="cms" className="space-y-6">
             <CmsHeroSections />
+            <CmsVisionMission />
+            <CmsCoreValues />
+            <CmsStrategicPillars />
             <CmsImpactStats />
             <CmsInitiatives />
             <CmsPartners />
