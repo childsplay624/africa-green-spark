@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,6 +34,7 @@ const focusAreas = [
   {
     icon: Droplet,
     title: "Sustainable Energy and Petroleum Resources",
+    summary: "Balanced approach integrating renewable energy expansion with responsible petroleum management.",
     description: "AE&SC seeks to advance a balanced and sustainable approach to Africa's energy mix integrating renewable energy expansion with the responsible management of petroleum resources. This focus area promotes cleaner extraction practices, energy efficiency, and the gradual decarbonization of fossil-based operations through technology adoption, emissions monitoring, and policy reform. The goal is to ensure that Africa's oil and gas wealth is leveraged to fund and facilitate the transition toward renewable energy systems that deliver inclusive, long-term energy security.",
     color: "text-primary",
     bgColor: "bg-primary/10",
@@ -40,6 +42,7 @@ const focusAreas = [
   {
     icon: Sprout,
     title: "Sustainable Agriculture",
+    summary: "Climate-smart agricultural systems enhancing resilience and food security.",
     description: "Recognizing agriculture's central role in Africa's economy and emissions profile, AE&SC promotes climate-smart and energy-efficient agricultural systems. This involves advancing renewable-powered irrigation, bioenergy from agricultural waste, and low-carbon food production techniques that enhance resilience and food security. By connecting farmers to sustainable technologies and green finance, AE&SC supports a transformation that makes agriculture both profitable and environmentally responsible, reducing rural poverty while protecting natural ecosystems.",
     color: "text-secondary",
     bgColor: "bg-secondary/10",
@@ -47,6 +50,7 @@ const focusAreas = [
   {
     icon: Building,
     title: "Sustainable Infrastructure",
+    summary: "Green, resilient, and inclusive infrastructure supporting Africa's sustainability agenda.",
     description: "AE&SC drives the development of green, resilient, and inclusive infrastructure that underpins Africa's sustainability agenda. This includes promoting energy-efficient buildings, low-emission transport systems, climate-resilient urban planning, and smart infrastructure networks. Through partnerships with governments, investors, and technology providers, the consortium facilitates infrastructure projects that support sustainable cities and communities, reduce environmental impact, and enable economic growth in line with Africa's industrialization goals.",
     color: "text-accent",
     bgColor: "bg-accent/10",
@@ -54,6 +58,7 @@ const focusAreas = [
   {
     icon: Target,
     title: "Decarbonization Pathways",
+    summary: "Data-driven strategies for achieving net-zero commitments across industries.",
     description: "AE&SC supports governments and industries in defining clear, data-driven decarbonization pathways aligned with net-zero commitments and the Paris Agreement. This entails mapping out practical steps to reduce greenhouse gas emissions from energy system reforms and industrial process optimization to carbon capture and storage (CCS) and renewable energy integration. The focus is on designing context-specific transition frameworks that protect livelihoods while advancing Africa's role in the global low-carbon economy.",
     color: "text-earth",
     bgColor: "bg-earth/10",
@@ -61,6 +66,7 @@ const focusAreas = [
   {
     icon: Trees,
     title: "Carbon Offsetting Projects",
+    summary: "High-integrity carbon projects generating environmental and socio-economic value.",
     description: "AE&SC promotes the development of high-integrity carbon offset projects that generate measurable environmental and socio-economic value. These include reforestation, clean cookstove distribution, renewable electrification, and waste-to-energy initiatives that reduce emissions and create community benefits. The consortium ensures projects meet international standards (such as Verra and Gold Standard) while facilitating carbon credit trading mechanisms that attract climate finance into Africa.",
     color: "text-primary",
     bgColor: "bg-primary/10",
@@ -68,6 +74,7 @@ const focusAreas = [
   {
     icon: Recycle,
     title: "Circular Economy Integration",
+    summary: "Embedding circular principles for waste reduction and resource recovery.",
     description: "AE&SC works to embed circular economy principles across industries encouraging waste reduction, resource recovery, and product lifecycle innovation. This focus promotes initiatives such as recycling and upcycling programs, industrial symbiosis, and sustainable materials management. By shifting from a linear \"take–make–dispose\" model to a circular one, AE&SC helps industries unlock efficiency gains, reduce pollution, and create green jobs across the value chain.",
     color: "text-secondary",
     bgColor: "bg-secondary/10",
@@ -75,6 +82,7 @@ const focusAreas = [
   {
     icon: Lightbulb,
     title: "Energy Innovations",
+    summary: "Catalyzing technological advancement in renewable and smart energy systems.",
     description: "AE&SC serves as a catalyst for technological advancement and innovation in the energy sector. The consortium facilitates the introduction and localization of emerging technologies such as green hydrogen, smart grids, energy storage, digital twins, and AI-driven energy management systems. By providing a platform for pilots, partnerships, and knowledge sharing, AE&SC accelerates the adoption of cutting-edge solutions that enhance reliability, affordability, and sustainability in Africa's energy landscape.",
     color: "text-accent",
     bgColor: "bg-accent/10",
@@ -82,6 +90,7 @@ const focusAreas = [
   {
     icon: Handshake,
     title: "Collaborative Partnership",
+    summary: "Strategic hub uniting stakeholders for coordinated sustainability transformation.",
     description: "At the heart of AE&SC's mission is collaboration. The consortium acts as a strategic convening hub, uniting governments, private sector leaders, financial institutions, academia, and development partners. AE&SC drives joint initiatives, harmonizes policy efforts, and pools resources to maximize collective impact. This collaborative model ensures that Africa's sustainability transition is not fragmented but coordinated, inclusive, and anchored on shared responsibility.",
     color: "text-earth",
     bgColor: "bg-earth/10",
@@ -220,15 +229,26 @@ export default function StrategicFocus() {
                         <Icon className={`h-8 w-8 ${area.color}`} />
                       </div>
                       <div className="flex-1">
-                        <CardTitle className="text-2xl font-heading font-bold mb-3">
+                        <CardTitle className="text-xl sm:text-2xl font-heading font-bold mb-2">
                           {area.title}
                         </CardTitle>
-                        <CardDescription className="text-base leading-relaxed">
-                          {area.description}
-                        </CardDescription>
                       </div>
                     </div>
                   </CardHeader>
+                  <CardContent>
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="details" className="border-0">
+                        <AccordionTrigger className="text-muted-foreground hover:text-foreground py-2 hover:no-underline">
+                          <span className="text-sm text-left">{area.summary}</span>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <CardDescription className="text-base leading-relaxed pt-2">
+                            {area.description}
+                          </CardDescription>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </CardContent>
                 </Card>
               );
             })}
