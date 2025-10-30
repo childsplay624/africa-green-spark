@@ -9,6 +9,8 @@ import { useSiteTracking } from "@/hooks/use-site-tracking";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import Index from "./pages/Index";
 import About from "./pages/About";
+import Pillars from "./pages/Pillars";
+import Deliverables from "./pages/Deliverables";
 import Initiatives from "./pages/Initiatives";
 import StrategicFocus from "./pages/StrategicFocus";
 import Partnerships from "./pages/Partnerships";
@@ -38,6 +40,8 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/about" element={<About />} />
+        <Route path="/about/pillars" element={<Pillars />} />
+        <Route path="/about/deliverables" element={<Deliverables />} />
         <Route path="/initiatives" element={<Initiatives />} />
         <Route path="/strategic-focus" element={<StrategicFocus />} />
         <Route path="/partnerships" element={<Partnerships />} />

@@ -1,14 +1,28 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationCenter } from "@/components/notification-center";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
   { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
+  { 
+    name: "About", 
+    href: "/about",
+    subItems: [
+      { name: "About Us", href: "/about" },
+      { name: "6 Pillars", href: "/about/pillars" },
+      { name: "Key Deliverables", href: "/about/deliverables" },
+    ]
+  },
   { name: "Initiatives", href: "/initiatives" },
   { name: "Strategic Focus", href: "/strategic-focus" },
   { name: "Partnerships", href: "/partnerships" },
@@ -84,19 +98,46 @@ export function Navigation() {
           <div className="hidden md:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex space-x-6">
               {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-primary relative",
-                    isActive(item.href) ? "text-primary" : "text-muted-foreground",
-                  )}
-                >
-                  {item.name}
-                  {isActive(item.href) && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-primary rounded-full" />
-                  )}
-                </Link>
+                item.subItems ? (
+                  <DropdownMenu key={item.name}>
+                    <DropdownMenuTrigger className={cn(
+                      "text-sm font-medium transition-colors hover:text-primary relative flex items-center gap-1 bg-transparent border-0 cursor-pointer",
+                      isActive(item.href) ? "text-primary" : "text-muted-foreground",
+                    )}>
+                      {item.name}
+                      <ChevronDown className="h-3 w-3" />
+                      {isActive(item.href) && (
+                        <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-primary rounded-full" />
+                      )}
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-background border-border">
+                      {item.subItems.map((subItem) => (
+                        <DropdownMenuItem key={subItem.name} asChild>
+                          <Link 
+                            to={subItem.href}
+                            className="w-full cursor-pointer"
+                          >
+                            {subItem.name}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-primary relative",
+                      isActive(item.href) ? "text-primary" : "text-muted-foreground",
+                    )}
+                  >
+                    {item.name}
+                    {isActive(item.href) && (
+                      <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-primary rounded-full" />
+                    )}
+                  </Link>
+                )
               ))}
             </div>
           </div>
@@ -138,19 +179,44 @@ export function Navigation() {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-background border-t border-border">
               {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "block px-3 py-2 rounded-md text-base font-medium transition-colors",
-                    isActive(item.href)
-                      ? "text-primary bg-accent"
-                      : "text-muted-foreground hover:text-primary hover:bg-accent",
-                  )}
-                >
-                  {item.name}
-                </Link>
+                item.subItems ? (
+                  <div key={item.name} className="space-y-1">
+                    <div className="px-3 py-2 text-base font-medium text-muted-foreground">
+                      {item.name}
+                    </div>
+                    <div className="pl-4 space-y-1">
+                      {item.subItems.map((subItem) => (
+                        <Link
+                          key={subItem.name}
+                          to={subItem.href}
+                          onClick={() => setIsOpen(false)}
+                          className={cn(
+                            "block px-3 py-2 rounded-md text-sm transition-colors",
+                            isActive(subItem.href)
+                              ? "text-primary bg-accent"
+                              : "text-muted-foreground hover:text-primary hover:bg-accent",
+                          )}
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "block px-3 py-2 rounded-md text-base font-medium transition-colors",
+                      isActive(item.href)
+                        ? "text-primary bg-accent"
+                        : "text-muted-foreground hover:text-primary hover:bg-accent",
+                    )}
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
               <div className="pt-4 space-y-2">
                 {isAuthenticated ? (
