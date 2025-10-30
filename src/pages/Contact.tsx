@@ -243,43 +243,8 @@ export default function Contact() {
               </Card>
             </div>
 
-            {/* Team and Additional Info */}
+            {/* Additional Info */}
             <div className="space-y-8">
-              {/* Team Contacts */}
-              <div>
-                <h3 className="text-2xl font-heading font-bold text-foreground mb-6">
-                  Key Contacts
-                </h3>
-                <div className="space-y-4">
-                  {(pageContent?.teamMembers || teamMembers).map((member: any, index: number) => (
-                    <Card 
-                      key={member.name}
-                      className="hover:shadow-medium transition-all duration-300 border-0 shadow-soft"
-                      style={{ animationDelay: `${index * 100}ms` }}
-                    >
-                      <CardContent className="p-6">
-                        <h4 className="font-heading font-semibold text-lg mb-1">
-                          {member.name}
-                        </h4>
-                        <p className="text-primary font-medium text-sm mb-2">
-                          {member.title}
-                        </p>
-                        <p className="text-muted-foreground text-sm mb-3">
-                          {member.focus}
-                        </p>
-                        <a 
-                          href={`mailto:${member.email}`} 
-                          className="text-sm text-secondary hover:underline flex items-center gap-1"
-                        >
-                          <Mail className="h-4 w-4" />
-                          {member.email}
-                        </a>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
               {/* Office Hours */}
               <Card className="border-0 shadow-medium">
                 <CardHeader>

@@ -19,6 +19,7 @@ const navItems = [
     href: "/about",
     subItems: [
       { name: "About Us", href: "/about" },
+      { name: "Our Teams", href: "/about/teams" },
       { name: "6 Pillars", href: "/about/pillars" },
       { name: "Key Deliverables", href: "/about/deliverables" },
     ]
