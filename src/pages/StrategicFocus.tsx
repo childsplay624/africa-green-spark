@@ -194,14 +194,7 @@ export default function StrategicFocus() {
       {/* Focus Areas Grid */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-heading font-bold text-foreground mb-4">
-              Eight Strategic Pillars
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Comprehensive strategies addressing every aspect of Africa's sustainable future
-            </p>
-          </div>
+          
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {focusAreas.map((area: any, index: number) => {
