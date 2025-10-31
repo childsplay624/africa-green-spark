@@ -96,7 +96,7 @@ export function Navigation() {
           </div>
 
           {/* Centered Navigation */}
-          <div className="hidden md:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
+          <div className="hidden nav:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex space-x-6">
               {navItems.map((item) => (
                 item.subItems ? (
@@ -144,7 +144,7 @@ export function Navigation() {
           </div>
 
           {/* Right-aligned Buttons */}
-          <div className="hidden md:flex items-center space-x-4 ml-auto">
+          <div className="hidden nav:flex items-center space-x-4 ml-auto">
             {isAuthenticated ? (
               <>
                 <NotificationCenter />
@@ -169,7 +169,7 @@ export function Navigation() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-primary hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
+            className="nav:hidden inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-primary hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -177,7 +177,7 @@ export function Navigation() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden">
+          <div className="nav:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-background border-t border-border">
               {navItems.map((item) => (
                 item.subItems ? (
