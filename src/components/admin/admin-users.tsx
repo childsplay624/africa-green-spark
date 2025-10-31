@@ -65,14 +65,19 @@ export function AdminUsers() {
   const updateUserRole = async (userId: string, newRole: string) => {
     try {
       // Delete existing roles
-      await supabase.from("aesc_user_roles").delete().eq("user_id", userId);
+      const { error: deleteError } = await supabase
+        .from("aesc_user_roles")
+        .delete()
+        .eq("user_id", userId);
+
+      if (deleteError) throw deleteError;
 
       // Insert new role
-      const { error } = await supabase
+      const { error: insertError } = await supabase
         .from("aesc_user_roles")
         .insert([{ user_id: userId, role: newRole as "admin" | "moderator" | "user" }]);
 
-      if (error) throw error;
+      if (insertError) throw insertError;
 
       toast({
         title: "Success",
