@@ -258,9 +258,9 @@ export default function Forum() {
                       <CardContent className="p-6">
                         <div className="flex items-start gap-4">
                           <Avatar className="w-12 h-12">
-                            <AvatarImage src={discussion.author.avatar_url || undefined} />
+                            <AvatarImage src={discussion.author?.avatar_url || undefined} />
                             <AvatarFallback>
-                              {discussion.author.full_name?.split(' ').map(n => n[0]).join('') || discussion.author.email[0].toUpperCase()}
+                              {discussion.author?.full_name?.split(' ').map(n => n[0]).join('') || discussion.author?.email?.[0]?.toUpperCase() || 'U'}
                             </AvatarFallback>
                           </Avatar>
                           
@@ -277,7 +277,7 @@ export default function Forum() {
                                   )}
                                 </h3>
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <span>by {discussion.author.full_name || discussion.author.email}</span>
+                                  <span>by {discussion.author?.full_name || discussion.author?.email || 'Anonymous'}</span>
                                   <span>•</span>
                                   <Clock className="w-4 h-4" />
                                   <span>{getTimeAgo(discussion.created_at)}</span>
@@ -364,7 +364,7 @@ export default function Forum() {
                           <p className="text-muted-foreground mb-4 line-clamp-2">{discussion.content}</p>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-muted-foreground">
-                              by {discussion.author.full_name || discussion.author.email}
+                              by {discussion.author?.full_name || discussion.author?.email || 'Anonymous'}
                             </span>
                             <div className="flex gap-4 text-sm text-muted-foreground">
                               <span>{discussion.replies_count} replies</span>

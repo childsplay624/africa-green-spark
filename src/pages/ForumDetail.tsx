@@ -262,9 +262,9 @@ export default function ForumDetail() {
           <CardContent className="p-6">
             <div className="flex items-start gap-4 mb-6">
               <Avatar className="w-12 h-12">
-                <AvatarImage src={post.author.avatar_url || undefined} />
+                <AvatarImage src={post.author?.avatar_url || undefined} />
                 <AvatarFallback>
-                  {post.author.full_name?.split(' ').map(n => n[0]).join('') || post.author.email[0].toUpperCase()}
+                  {post.author?.full_name?.split(' ').map(n => n[0]).join('') || post.author?.email?.[0]?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
@@ -278,7 +278,7 @@ export default function ForumDetail() {
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  by {post.author.full_name || post.author.email} • {new Date(post.created_at).toLocaleDateString()}
+                  by {post.author?.full_name || post.author?.email || 'Anonymous'} • {new Date(post.created_at).toLocaleDateString()}
                 </p>
               </div>
               {canModerate && (
@@ -349,15 +349,15 @@ export default function ForumDetail() {
                 <CardContent className="p-4">
                   <div className="flex gap-3">
                     <Avatar className="w-8 h-8">
-                      <AvatarImage src={reply.author.avatar_url || undefined} />
+                      <AvatarImage src={reply.author?.avatar_url || undefined} />
                       <AvatarFallback>
-                        {reply.author.full_name?.split(' ').map(n => n[0]).join('') || reply.author.email[0].toUpperCase()}
+                        {reply.author?.full_name?.split(' ').map(n => n[0]).join('') || reply.author?.email?.[0]?.toUpperCase() || 'U'}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="font-medium text-sm">
-                          {reply.author.full_name || reply.author.email}
+                          {reply.author?.full_name || reply.author?.email || 'Anonymous'}
                         </span>
                         <span className="text-xs text-muted-foreground">
                           {new Date(reply.created_at).toLocaleDateString()}
