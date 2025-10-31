@@ -32,7 +32,11 @@ export function AdminDashboard() {
       supabase.from("payment_records").select("amount").eq("status", "completed"),
       supabase.from("user_activities").select("id", { count: "exact", head: true })
         .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
-      supabase.from("site_visits").select("id", { count: "exact", head: true })
+      // Count unique sessions, excluding bots
+      supabase.from("site_visits")
+        .select("session_id", { count: "exact", head: true })
+        .eq("is_bot", false)
+        .not("session_id", "is", null)
     ]);
 
     const totalRevenue = revenue.data?.reduce((sum, record) => sum + Number(record.amount), 0) || 0;
@@ -102,7 +106,7 @@ export function AdminDashboard() {
     { title: "Active Memberships", value: stats.activeMemberships, icon: CreditCard, color: "text-orange-500" },
     { title: "Total Revenue", value: `$${stats.totalRevenue.toFixed(2)}`, icon: DollarSign, color: "text-emerald-500" },
     { title: "Recent Activity (7d)", value: stats.recentActivity, icon: Activity, color: "text-pink-500" },
-    { title: "Total Site Visits", value: stats.totalVisits, icon: TrendingUp, color: "text-cyan-500" },
+    { title: "Unique Visitors", value: stats.totalVisits, icon: TrendingUp, color: "text-cyan-500" },
   ];
 
   return (

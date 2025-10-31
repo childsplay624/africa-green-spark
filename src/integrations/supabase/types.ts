@@ -897,24 +897,30 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_bot: boolean | null
           page_path: string
           referrer: string | null
+          session_id: string | null
           user_agent: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
+          is_bot?: boolean | null
           page_path: string
           referrer?: string | null
+          session_id?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
+          is_bot?: boolean | null
           page_path?: string
           referrer?: string | null
+          session_id?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
