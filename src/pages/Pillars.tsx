@@ -141,9 +141,9 @@ export default function Pillars() {
                         {pillar.description}
                       </CardDescription>
                       <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="details" className="border-0">
-                          <AccordionTrigger className="text-muted-foreground hover:text-foreground py-2 hover:no-underline text-left">
-                            Read more
+                        <AccordionItem value="details">
+                          <AccordionTrigger className="text-sm font-medium text-primary hover:text-primary/80 py-3">
+                            Learn more about this pillar
                           </AccordionTrigger>
                           <AccordionContent>
                             <CardDescription className="text-base leading-relaxed pt-2">
