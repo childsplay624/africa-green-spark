@@ -118,7 +118,7 @@ export default function Pillars() {
               return (
                 <AnimatedCard key={pillar.number} delay={index * 0.1}>
                   <Card className="h-full group hover:shadow-strong transition-all duration-300 border-0 shadow-medium overflow-hidden">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${pillar.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+                    <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${pillar.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
                     <CardHeader className="relative">
                       <div className="flex items-start gap-4">
                         <div className={`w-16 h-16 ${pillar.bgColor} rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform relative`}>
@@ -141,7 +141,7 @@ export default function Pillars() {
                         {pillar.description}
                       </CardDescription>
                       <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="details" className="border-0">
+                        <AccordionItem value={`details-${pillar.number}`} className="border-0">
                           <AccordionTrigger className="text-muted-foreground hover:text-foreground py-2 hover:no-underline text-left">
                             Read more
                           </AccordionTrigger>
