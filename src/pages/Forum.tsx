@@ -395,7 +395,7 @@ export default function Forum() {
                         <p className="text-muted-foreground mb-4 line-clamp-2">{discussion.content}</p>
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-muted-foreground">
-                            by {discussion.author.full_name || discussion.author.email}
+                            by {discussion.author?.full_name || discussion.author?.email || 'Anonymous'}
                           </span>
                           <div className="flex gap-4 text-sm text-muted-foreground">
                             <span>{discussion.replies_count} replies</span>
