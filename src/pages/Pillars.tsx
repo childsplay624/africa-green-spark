@@ -137,10 +137,13 @@ export default function Pillars() {
                       </div>
                     </CardHeader>
                     <CardContent className="relative">
+                      <CardDescription className="text-base leading-relaxed mb-4">
+                        {pillar.description}
+                      </CardDescription>
                       <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="details" className="border-0">
-                          <AccordionTrigger className="text-muted-foreground hover:text-foreground py-2 hover:no-underline">
-                            <span className="text-sm">{pillar.description}</span>
+                          <AccordionTrigger className="text-muted-foreground hover:text-foreground py-2 hover:no-underline text-left">
+                            Read more
                           </AccordionTrigger>
                           <AccordionContent>
                             <CardDescription className="text-base leading-relaxed pt-2">
