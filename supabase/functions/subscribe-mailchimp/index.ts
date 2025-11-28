@@ -1,8 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-
-const MAILCHIMP_API_KEY = Deno.env.get("MAILCHIMP_API_KEY");
-const MAILCHIMP_AUDIENCE_ID = Deno.env.get("MAILCHIMP_AUDIENCE_ID");
-const MAILCHIMP_SERVER_PREFIX = Deno.env.get("MAILCHIMP_SERVER_PREFIX");
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,6 +20,27 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Initialize Supabase client to fetch configuration
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Fetch Mailchimp configuration from cms_site_settings
+    const { data: settings } = await supabase
+      .from('cms_site_settings')
+      .select('setting_key, setting_value')
+      .in('setting_key', ['MAILCHIMP_API_KEY', 'MAILCHIMP_AUDIENCE_ID', 'MAILCHIMP_SERVER_PREFIX']);
+
+    const settingsMap = (settings || []).reduce((acc: Record<string, string>, item) => {
+      acc[item.setting_key] = item.setting_value || '';
+      return acc;
+    }, {});
+
+    // Use settings from database first, fall back to environment variables
+    const MAILCHIMP_API_KEY = settingsMap['MAILCHIMP_API_KEY'] || Deno.env.get("MAILCHIMP_API_KEY");
+    const MAILCHIMP_AUDIENCE_ID = settingsMap['MAILCHIMP_AUDIENCE_ID'] || Deno.env.get("MAILCHIMP_AUDIENCE_ID");
+    const MAILCHIMP_SERVER_PREFIX = settingsMap['MAILCHIMP_SERVER_PREFIX'] || Deno.env.get("MAILCHIMP_SERVER_PREFIX");
+
     const { email, firstName, lastName }: SubscribeRequest = await req.json();
 
     if (!email) {
