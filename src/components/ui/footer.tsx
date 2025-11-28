@@ -10,12 +10,19 @@ import {
   Instagram,
   Mail,
   Phone,
-  MapPin
+  MapPin,
+  Loader2,
+  CheckCircle
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Footer = () => {
   const [logoUrl, setLogoUrl] = useState("/logo.png");
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     loadLogo();
@@ -37,6 +44,40 @@ const Footer = () => {
     }
   };
 
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('subscribe-mailchimp', {
+        body: { email }
+      });
+
+      if (error) throw error;
+
+      setIsSubscribed(true);
+      toast({
+        title: "Successfully subscribed!",
+        description: data.message || "You'll receive updates on Africa's energy transition.",
+      });
+      setEmail("");
+      
+      // Reset after animation
+      setTimeout(() => setIsSubscribed(false), 3000);
+    } catch (error: any) {
+      console.error("Subscription error:", error);
+      toast({
+        title: "Subscription failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <footer className="bg-primary text-primary-foreground">
       {/* Newsletter Section */}
@@ -49,16 +90,36 @@ const Footer = () => {
             <p className="text-sm sm:text-base text-primary-foreground/80 mb-4 sm:mb-6">
               Get the latest insights, reports, and updates on sustainable energy initiatives across Africa.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <Input 
                 type="email" 
                 placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                required
               />
-              <Button variant="secondary" className="whitespace-nowrap">
-                Subscribe
+              <Button 
+                type="submit"
+                variant="secondary" 
+                className="whitespace-nowrap"
+                disabled={isLoading || isSubscribed}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Subscribing...
+                  </>
+                ) : isSubscribed ? (
+                  <>
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Subscribed!
+                  </>
+                ) : (
+                  "Subscribe"
+                )}
               </Button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
