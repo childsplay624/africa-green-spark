@@ -1,25 +1,47 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, CheckCircle } from "lucide-react";
+import { Mail, CheckCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return;
+
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('subscribe-mailchimp', {
+        body: { email }
+      });
+
+      if (error) throw error;
+
       setIsSubscribed(true);
       toast({
         title: "Successfully subscribed!",
-        description: "You'll receive updates on Africa's sustainability journey.",
+        description: data.message || "You'll receive updates on Africa's sustainability journey.",
       });
       setEmail("");
+      
       // Reset after animation
       setTimeout(() => setIsSubscribed(false), 3000);
+    } catch (error: any) {
+      console.error("Subscription error:", error);
+      toast({
+        title: "Subscription failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -49,9 +71,14 @@ export function NewsletterSection() {
             type="submit" 
             variant="cta"
             className="bg-white text-primary hover:bg-white/90 min-w-[120px]"
-            disabled={isSubscribed}
+            disabled={isSubscribed || isLoading}
           >
-            {isSubscribed ? (
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Subscribing...
+              </>
+            ) : isSubscribed ? (
               <>
                 <CheckCircle className="h-4 w-4 mr-2" />
                 Subscribed!
