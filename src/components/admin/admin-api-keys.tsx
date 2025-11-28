@@ -6,28 +6,40 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Key, Eye, EyeOff, Save } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { supabase } from "@/integrations/supabase/client";
+
+type KeyType = "resend" | "flutterwave" | "paystack" | "mailchimp_api" | "mailchimp_server" | "mailchimp_audience";
 
 export function AdminApiKeys() {
   const { toast } = useToast();
-  const [showKeys, setShowKeys] = useState({
+  const [showKeys, setShowKeys] = useState<Record<KeyType, boolean>>({
     resend: false,
     flutterwave: false,
     paystack: false,
+    mailchimp_api: false,
+    mailchimp_server: false,
+    mailchimp_audience: false,
   });
   
-  const [apiKeys, setApiKeys] = useState({
+  const [apiKeys, setApiKeys] = useState<Record<KeyType, string>>({
     resend: "",
     flutterwave: "",
     paystack: "",
+    mailchimp_api: "",
+    mailchimp_server: "",
+    mailchimp_audience: "",
   });
 
-  const [saving, setSaving] = useState({
+  const [saving, setSaving] = useState<Record<KeyType, boolean>>({
     resend: false,
     flutterwave: false,
     paystack: false,
+    mailchimp_api: false,
+    mailchimp_server: false,
+    mailchimp_audience: false,
   });
 
-  const handleSave = async (keyType: "resend" | "flutterwave" | "paystack") => {
+  const handleSave = async (keyType: KeyType) => {
     const keyValue = apiKeys[keyType];
     
     if (!keyValue.trim()) {
@@ -42,13 +54,30 @@ export function AdminApiKeys() {
     setSaving({ ...saving, [keyType]: true });
 
     try {
-      // In a real implementation, this would call an edge function to update the secret
-      // For now, we'll simulate the update
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/update-api-keys`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ keyType, keyValue }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to update API key');
+      }
       
       toast({
         title: "Success",
-        description: `${keyType.toUpperCase()} API key updated successfully`,
+        description: `API key updated successfully`,
       });
       
       // Clear the input after successful save
@@ -73,7 +102,7 @@ export function AdminApiKeys() {
   }: {
     title: string;
     description: string;
-    keyType: "resend" | "flutterwave" | "paystack";
+    keyType: KeyType;
     placeholder: string;
   }) => (
     <div className="space-y-4 p-4 border rounded-lg">
@@ -161,6 +190,32 @@ export function AdminApiKeys() {
           />
 
           <div className="pt-4 border-t">
+            <h4 className="font-semibold text-lg mb-4">Mailchimp Configuration</h4>
+            <div className="space-y-6">
+              <KeyInputSection
+                title="Mailchimp API Key"
+                description="Your Mailchimp API key for newsletter subscriptions"
+                keyType="mailchimp_api"
+                placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-us19"
+              />
+
+              <KeyInputSection
+                title="Mailchimp Server Prefix"
+                description="The server prefix from your Mailchimp API key (e.g., us19, us20)"
+                keyType="mailchimp_server"
+                placeholder="us19"
+              />
+
+              <KeyInputSection
+                title="Mailchimp Audience ID"
+                description="The List ID / Audience ID where subscribers will be added"
+                keyType="mailchimp_audience"
+                placeholder="xxxxxxxxxx"
+              />
+            </div>
+          </div>
+
+          <div className="pt-4 border-t">
             <h4 className="font-medium mb-2">Documentation Links</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
@@ -171,6 +226,9 @@ export function AdminApiKeys() {
               </li>
               <li>
                 • <a href="https://paystack.com/docs/api" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Paystack API Docs</a>
+              </li>
+              <li>
+                • <a href="https://mailchimp.com/developer/marketing/guides/quick-start/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Mailchimp API Docs</a>
               </li>
             </ul>
           </div>
