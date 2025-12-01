@@ -9,11 +9,13 @@ export default {
       center: true,
       padding: "2rem",
       screens: {
-        nav: "785px",
         "2xl": "1400px",
       },
     },
     extend: {
+      screens: {
+        nav: "785px",
+      },
       fontFamily: {
         heading: ["Inter", "system-ui", "sans-serif"],
         display: ["Inter", "system-ui", "sans-serif"],
