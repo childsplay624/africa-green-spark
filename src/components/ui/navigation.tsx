@@ -115,21 +115,21 @@ export function Navigation() {
   return (
     <nav className="bg-background/95 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-soft">
       <div className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-20">
-          {/* Logo - Extreme left */}
-          <div className="flex-shrink-0 mr-auto">
+        <div className="flex items-center justify-between h-20 gap-4">
+          {/* Logo */}
+          <div className="flex-shrink-0">
             <Link to="/" className="group">
               <img
                 src={logoUrl}
                 alt="Site Logo"
-                className="h-20 object-contain transition-transform group-hover:scale-105"
+                className="h-16 sm:h-20 object-contain transition-transform group-hover:scale-105"
               />
             </Link>
           </div>
 
-          {/* Centered Navigation */}
-          <div className="hidden nav:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
-            <div className="flex space-x-6">
+          {/* Centered Navigation - Desktop */}
+          <div className="hidden nav:flex items-center justify-center flex-1">
+            <div className="flex items-center space-x-6">
               {navItems.map((item) => (
                 item.subItems ? (
                   <DropdownMenu key={item.name}>
@@ -161,7 +161,7 @@ export function Navigation() {
                     key={item.name}
                     to={item.href}
                     className={cn(
-                      "text-sm font-medium transition-colors hover:text-primary relative",
+                      "text-sm font-medium transition-colors hover:text-primary relative whitespace-nowrap",
                       isActive(item.href) ? "text-primary" : "text-muted-foreground",
                     )}
                   >
@@ -175,8 +175,8 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* Right-aligned Buttons */}
-          <div className="hidden nav:flex items-center space-x-4 ml-auto">
+          {/* Right side - Social + Auth */}
+          <div className="hidden nav:flex items-center gap-2 flex-shrink-0">
             {/* Social Media Icons */}
             {Object.entries(socialLinks).map(([platform, url]) => {
               const Icon = socialIcons[platform as keyof typeof socialIcons];
@@ -206,10 +206,10 @@ export function Navigation() {
               </>
             ) : (
               <>
-                <Button variant="ghost" asChild>
+                <Button variant="ghost" size="sm" asChild>
                   <Link to="/auth">Join Us</Link>
                 </Button>
-                <Button asChild>
+                <Button size="sm" asChild>
                   <Link to="/partnerships">Partner With Us</Link>
                 </Button>
               </>
@@ -219,7 +219,8 @@ export function Navigation() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="nav:hidden inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-primary hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
+            className="nav:hidden inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-primary hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary flex-shrink-0"
+            aria-label="Toggle menu"
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
