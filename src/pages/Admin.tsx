@@ -1,6 +1,6 @@
 import { useAdminCheck } from "@/hooks/use-admin-check";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, MessageSquare, CreditCard, Shield, Bell, LayoutDashboard, FileText, Key } from "lucide-react";
+import { Users, MessageSquare, CreditCard, Shield, Bell, LayoutDashboard, FileText, Key, Share2 } from "lucide-react";
 import { AdminUsers } from "@/components/admin/admin-users";
 import { AdminForums } from "@/components/admin/admin-forums";
 import { AdminPosts } from "@/components/admin/admin-posts";
@@ -18,6 +18,7 @@ import { AdminApiKeys } from "@/components/admin/admin-api-keys";
 import { CmsVisionMission } from "@/components/admin/cms-vision-mission";
 import { CmsCoreValues } from "@/components/admin/cms-core-values";
 import { CmsStrategicPillars } from "@/components/admin/cms-strategic-pillars";
+import CmsSocialMedia from "@/components/admin/cms-social-media";
 
 export default function Admin() {
   const { loading } = useAdminCheck();
@@ -87,6 +88,10 @@ export default function Admin() {
               <Key className="w-4 h-4 mr-2" />
               API Keys
             </TabsTrigger>
+            <TabsTrigger value="social" className="data-[state=active]:bg-background">
+              <Share2 className="w-4 h-4 mr-2" />
+              Social Media
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard">
@@ -134,6 +139,10 @@ export default function Admin() {
 
           <TabsContent value="api-keys">
             <AdminApiKeys />
+          </TabsContent>
+
+          <TabsContent value="social">
+            <CmsSocialMedia />
           </TabsContent>
         </Tabs>
       </div>

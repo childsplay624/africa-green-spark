@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, ChevronDown } from "lucide-react";
+import { Menu, X, User, ChevronDown, Facebook, Twitter, Linkedin, Instagram, Youtube } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationCenter } from "@/components/notification-center";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,6 +36,7 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [logoUrl, setLogoUrl] = useState("/logo.png");
+  const [socialLinks, setSocialLinks] = useState<Record<string, string>>({});
   const location = useLocation();
 
   useEffect(() => {
@@ -61,6 +62,29 @@ export function Navigation() {
       if (data?.setting_value) {
         setLogoUrl(data.setting_value);
       }
+
+      // Load social media links
+      const { data: socialData } = await supabase
+        .from("cms_site_settings")
+        .select("setting_key, setting_value")
+        .in("setting_key", [
+          "social_facebook",
+          "social_twitter",
+          "social_linkedin",
+          "social_instagram",
+          "social_youtube",
+        ]);
+
+      if (socialData) {
+        const links: Record<string, string> = {};
+        socialData.forEach((item) => {
+          if (item.setting_value) {
+            const key = item.setting_key.replace("social_", "");
+            links[key] = item.setting_value;
+          }
+        });
+        setSocialLinks(links);
+      }
     } catch (error) {
       console.error("Error loading logo:", error);
     }
@@ -78,6 +102,14 @@ export function Navigation() {
       return location.pathname === "/";
     }
     return location.pathname.startsWith(href);
+  };
+
+  const socialIcons = {
+    facebook: Facebook,
+    twitter: Twitter,
+    linkedin: Linkedin,
+    instagram: Instagram,
+    youtube: Youtube,
   };
 
   return (
@@ -145,6 +177,24 @@ export function Navigation() {
 
           {/* Right-aligned Buttons */}
           <div className="hidden nav:flex items-center space-x-4 ml-auto">
+            {/* Social Media Icons */}
+            {Object.entries(socialLinks).map(([platform, url]) => {
+              const Icon = socialIcons[platform as keyof typeof socialIcons];
+              if (!Icon) return null;
+              return (
+                <a
+                  key={platform}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  aria-label={platform}
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              );
+            })}
+            
             {isAuthenticated ? (
               <>
                 <NotificationCenter />
