@@ -87,6 +87,36 @@ export default function Forum() {
     }
   };
 
+  const handleReply = (e: React.MouseEvent, postId: string) => {
+    e.stopPropagation();
+    incrementViews(postId);
+    navigate(`/forum/${postId}#reply`);
+  };
+
+  const handleShare = async (e: React.MouseEvent, postId: string, title: string) => {
+    e.stopPropagation();
+    const url = `${window.location.origin}/forum/${postId}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url });
+      } catch (err) {
+        // User cancelled or share failed, fallback to clipboard
+        await navigator.clipboard.writeText(url);
+        toast({
+          title: "Link copied",
+          description: "Discussion link copied to clipboard",
+        });
+      }
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: "Link copied",
+        description: "Discussion link copied to clipboard",
+      });
+    }
+  };
+
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -321,11 +351,11 @@ export default function Forum() {
                                   <ThumbsUp className={cn("w-4 h-4 mr-1", likedPosts.has(discussion.id) && "fill-current")} />
                                   {discussion.likes_count}
                                 </Button>
-                                <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
+                                <Button variant="ghost" size="sm" onClick={(e) => handleReply(e, discussion.id)}>
                                   <Reply className="w-4 h-4 mr-1" />
                                   Reply
                                 </Button>
-                                <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
+                                <Button variant="ghost" size="sm" onClick={(e) => handleShare(e, discussion.id, discussion.title)}>
                                   <Share2 className="w-4 h-4" />
                                 </Button>
                               </div>
