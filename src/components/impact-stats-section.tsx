@@ -140,13 +140,13 @@ export function ImpactStatsSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
+          <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6">
             Our{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
               Impact
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             Measuring progress toward a sustainable Africa through tangible outcomes 
             and strategic milestones.
           </p>
@@ -180,7 +180,7 @@ export function ImpactStatsSection() {
 
         {/* Milestones */}
         <div className="max-w-4xl mx-auto">
-          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-center text-foreground mb-8 sm:mb-12">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-center text-white mb-8 sm:mb-12">
             Key Milestones
           </h3>
           
