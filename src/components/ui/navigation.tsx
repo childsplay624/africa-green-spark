@@ -129,7 +129,7 @@ export function Navigation() {
 
           {/* Centered Navigation - Desktop */}
           <div className="hidden nav:flex items-center justify-center flex-1">
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
               {navItems.map((item) => (
                 item.subItems ? (
                   <DropdownMenu key={item.name}>
