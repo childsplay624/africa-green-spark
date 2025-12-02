@@ -24,9 +24,18 @@ import {
   Clock,
   TrendingUp,
   Eye,
-  Reply
+  Reply,
+  Link,
+  Facebook,
+  Twitter
 } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import * as LucideIcons from "lucide-react";
 import forumHero from "@/assets/forum-hero.jpg";
 
@@ -93,28 +102,40 @@ export default function Forum() {
     navigate(`/forum/${postId}#reply`);
   };
 
-  const handleShare = async (e: React.MouseEvent, postId: string, title: string) => {
+  const getShareUrl = (postId: string) => `${window.location.origin}/forum/${postId}`;
+
+  const handleCopyLink = async (e: React.MouseEvent, postId: string) => {
     e.stopPropagation();
-    const url = `${window.location.origin}/forum/${postId}`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, url });
-      } catch (err) {
-        // User cancelled or share failed, fallback to clipboard
-        await navigator.clipboard.writeText(url);
-        toast({
-          title: "Link copied",
-          description: "Discussion link copied to clipboard",
-        });
-      }
-    } else {
-      await navigator.clipboard.writeText(url);
-      toast({
-        title: "Link copied",
-        description: "Discussion link copied to clipboard",
-      });
-    }
+    const url = getShareUrl(postId);
+    await navigator.clipboard.writeText(url);
+    toast({
+      title: "Link copied",
+      description: "Discussion link copied to clipboard",
+    });
+  };
+
+  const handleShareFacebook = (e: React.MouseEvent, postId: string) => {
+    e.stopPropagation();
+    const url = getShareUrl(postId);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+  };
+
+  const handleShareTwitter = (e: React.MouseEvent, postId: string, title: string) => {
+    e.stopPropagation();
+    const url = getShareUrl(postId);
+    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`, '_blank', 'width=600,height=400');
+  };
+
+  const handleShareLinkedIn = (e: React.MouseEvent, postId: string) => {
+    e.stopPropagation();
+    const url = getShareUrl(postId);
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+  };
+
+  const handleShareWhatsApp = (e: React.MouseEvent, postId: string, title: string) => {
+    e.stopPropagation();
+    const url = getShareUrl(postId);
+    window.open(`https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`, '_blank');
   };
 
   const getTimeAgo = (dateString: string) => {
@@ -355,9 +376,35 @@ export default function Forum() {
                                   <Reply className="w-4 h-4 mr-1" />
                                   Reply
                                 </Button>
-                                <Button variant="ghost" size="sm" onClick={(e) => handleShare(e, discussion.id, discussion.title)}>
-                                  <Share2 className="w-4 h-4" />
-                                </Button>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                    <Button variant="ghost" size="sm">
+                                      <Share2 className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                                    <DropdownMenuItem onClick={(e) => handleShareFacebook(e, discussion.id)}>
+                                      <Facebook className="w-4 h-4 mr-2" />
+                                      Facebook
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => handleShareTwitter(e, discussion.id, discussion.title)}>
+                                      <Twitter className="w-4 h-4 mr-2" />
+                                      X (Twitter)
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => handleShareLinkedIn(e, discussion.id)}>
+                                      <LucideIcons.Linkedin className="w-4 h-4 mr-2" />
+                                      LinkedIn
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => handleShareWhatsApp(e, discussion.id, discussion.title)}>
+                                      <LucideIcons.MessageCircle className="w-4 h-4 mr-2" />
+                                      WhatsApp
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => handleCopyLink(e, discussion.id)}>
+                                      <Link className="w-4 h-4 mr-2" />
+                                      Copy Link
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
                             </div>
                           </div>
