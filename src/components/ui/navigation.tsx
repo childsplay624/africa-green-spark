@@ -270,6 +270,27 @@ export function Navigation() {
                   </Link>
                 )
               ))}
+              {/* Social Media Icons - Mobile */}
+              {Object.keys(socialLinks).length > 0 && (
+                <div className="flex items-center justify-center gap-4 pt-4 border-t border-border">
+                  {Object.entries(socialLinks).map(([platform, url]) => {
+                    const Icon = socialIcons[platform as keyof typeof socialIcons];
+                    if (!Icon) return null;
+                    return (
+                      <a
+                        key={platform}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                        aria-label={platform}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
               <div className="pt-4 space-y-2">
                 {isAuthenticated ? (
                   <Button variant="outline" className="w-full" asChild>
