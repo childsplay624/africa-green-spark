@@ -141,10 +141,7 @@ export function ImpactStatsSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6">
-            Our{" "}
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Impact
-            </span>
+            Our Impact
           </h2>
           <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             Measuring progress toward a sustainable Africa through tangible outcomes 
