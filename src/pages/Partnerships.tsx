@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Handshake, 
   Building2, 
@@ -16,7 +17,8 @@ import {
   ArrowRight,
   CheckCircle,
   Star,
-  DollarSign
+  DollarSign,
+  Loader2
 } from "lucide-react";
 import partnershipsHero from "@/assets/partnerships-hero.jpg";
 
@@ -137,10 +139,77 @@ export default function Partnerships() {
   const [heroData, setHeroData] = useState<any>(null);
   const [partners, setPartners] = useState<any[]>([]);
   const [pageContent, setPageContent] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    organization: "",
+    organizationType: "",
+    name: "",
+    email: "",
+    partnershipInterest: "",
+    preferredLevel: "",
+  });
 
   useEffect(() => {
     loadData();
   }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.email || !formData.organization) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase.functions.invoke("send-contact-form", {
+        body: {
+          formType: "partnership",
+          ...formData,
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Partnership Request Submitted!",
+        description: "Thank you for your interest. Our team will review your request and get back to you soon.",
+      });
+      
+      // Reset form
+      setFormData({
+        organization: "",
+        organizationType: "",
+        name: "",
+        email: "",
+        partnershipInterest: "",
+        preferredLevel: "",
+      });
+    } catch (error: any) {
+      console.error("Error sending partnership form:", error);
+      toast({
+        title: "Error",
+        description: "Failed to submit your request. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const loadData = async () => {
     const [heroResult, partnersResult, contentResult] = await Promise.all([
@@ -362,32 +431,58 @@ export default function Partnerships() {
 
           <Card className="border-0 shadow-strong">
             <CardContent className="p-8">
-              <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Organization Name</label>
-                    <Input placeholder="Your organization name" />
+                    <label className="block text-sm font-medium mb-2">Organization Name *</label>
+                    <Input 
+                      name="organization"
+                      value={formData.organization}
+                      onChange={handleInputChange}
+                      placeholder="Your organization name" 
+                      required
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Organization Type</label>
-                    <Input placeholder="Government, NGO, Private, Academic, etc." />
+                    <Input 
+                      name="organizationType"
+                      value={formData.organizationType}
+                      onChange={handleInputChange}
+                      placeholder="Government, NGO, Private, Academic, etc." 
+                    />
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">Contact Name</label>
-                    <Input placeholder="Primary contact person" />
+                    <Input 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="Primary contact person" 
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Email Address</label>
-                    <Input type="email" placeholder="contact@organization.com" />
+                    <label className="block text-sm font-medium mb-2">Email Address *</label>
+                    <Input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="contact@organization.com" 
+                      required
+                    />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Partnership Interest</label>
                   <Textarea 
+                    name="partnershipInterest"
+                    value={formData.partnershipInterest}
+                    onChange={handleInputChange}
                     placeholder="Describe your organization's goals and how you envision partnering with AE&SC..."
                     className="min-h-[120px]"
                   />
@@ -395,12 +490,26 @@ export default function Partnerships() {
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Preferred Partnership Level</label>
-                  <Input placeholder="Strategic, Implementation, or Supporting Partner" />
+                  <Input 
+                    name="preferredLevel"
+                    value={formData.preferredLevel}
+                    onChange={handleInputChange}
+                    placeholder="Strategic, Implementation, or Supporting Partner" 
+                  />
                 </div>
 
-                <Button type="submit" variant="hero" size="lg" className="w-full">
-                  Submit Partnership Request
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      Submit Partnership Request
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>
