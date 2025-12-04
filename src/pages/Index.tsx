@@ -4,7 +4,6 @@ import { ImpactStatsSection } from "@/components/impact-stats-section";
 import { AnimatedSection } from "@/hooks/use-scroll-animation";
 import { NewsInsightsSection } from "@/components/news-insights-section";
 import { PartnersSection } from "@/components/partners-section";
-import { NewsletterSection } from "@/components/newsletter-section";
 
 const Index = () => {
   return (
@@ -27,10 +26,6 @@ const Index = () => {
       
       <AnimatedSection animation="fade-up" delay={500}>
         <PartnersSection />
-      </AnimatedSection>
-      
-      <AnimatedSection animation="fade-up" delay={600}>
-        <NewsletterSection />
       </AnimatedSection>
     </div>
   );
