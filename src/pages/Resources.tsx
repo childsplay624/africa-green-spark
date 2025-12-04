@@ -406,27 +406,6 @@ export default function Resources() {
                   </Card>
                 ))}
               </div>
-
-              {/* Newsletter Signup */}
-              <Card className="mt-8 border-0 shadow-medium bg-gradient-primary text-white">
-                <CardContent className="p-6 text-center">
-                  <h3 className="font-heading font-bold text-xl mb-3">
-                    Stay Updated
-                  </h3>
-                  <p className="text-white/90 mb-4">
-                    Get the latest resources and insights delivered to your inbox
-                  </p>
-                  <div className="flex gap-2">
-                    <Input 
-                      placeholder="Enter your email" 
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                    />
-                    <Button variant="cta" className="bg-white text-primary hover:bg-white/90">
-                      Subscribe
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
