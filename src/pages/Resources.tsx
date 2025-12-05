@@ -315,7 +315,7 @@ export default function Resources() {
                 </h2>
                 <Button variant="outline" size="sm" asChild>
                   <Link to="/news">
-                    View All
+                    View All News
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
