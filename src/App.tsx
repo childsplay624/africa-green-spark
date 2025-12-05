@@ -24,6 +24,8 @@ import Membership from "./pages/Membership";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import News from "./pages/News";
+import NewsDetail from "./pages/NewsDetail";
 import Footer from "@/components/ui/footer";
 
 const queryClient = new QueryClient();
@@ -48,6 +50,8 @@ function AppContent() {
         <Route path="/strategic-focus" element={<StrategicFocus />} />
         <Route path="/partnerships" element={<Partnerships />} />
         <Route path="/resources" element={<Resources />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/forum" element={<Forum />} />
         <Route path="/forum/:postId" element={<ForumDetail />} />
         <Route path="/contact" element={<Contact />} />
