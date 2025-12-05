@@ -22,6 +22,7 @@ const navItems = [
       { name: "Our Teams", href: "/about/teams" },
       { name: "6 Pillars", href: "/about/pillars" },
       { name: "Key Deliverables", href: "/about/deliverables" },
+      { name: "News & Insights", href: "/news" },
     ]
   },
   { name: "Initiatives", href: "/initiatives" },
