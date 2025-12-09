@@ -198,8 +198,8 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-secondary flex-shrink-0" />
-                <a href="mailto:info@aesc.org" className="text-primary-foreground/80 hover:text-secondary transition-colors">
-                  info@aesc.org
+                <a href="mailto:info@aesc.global" className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  info@aesc.global
                 </a>
               </div>
               <div className="flex items-center gap-3">
